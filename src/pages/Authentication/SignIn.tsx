@@ -7,7 +7,7 @@ const SignIn: React.FC = () => {
   return (
     <>
       <div className='h-[100vh] rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark'>
-        <div className='h-full flex flex-wrap items-center'>
+        <div className='flex h-full flex-wrap items-center'>
           <div className='hidden w-full xl:block xl:w-1/2'>
             <div className='px-26 py-17.5 text-center'>
               <Link className='mb-5.5 inline-block' to='/'>
