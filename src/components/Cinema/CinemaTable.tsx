@@ -1,24 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { cinema } from '../../types/cinema';
-const CinemaTable: React.FC = () => {
-  const [cinemas, setCinemas] = useState<cinema[]>([]);
+interface cinemasprops {
+  cinemas : cinema[];
+  fetchCinemas: () => void;
+}
+const CinemaTable: React.FC<cinemasprops> = ({cinemas,fetchCinemas}) => {
 
   useEffect(() => {
-    const fetchCinemas = async () => {
-      try {
-        const response = await fetch('https://bl924snd-3000.asse.devtunnels.ms/cinema'); // Corrected fetch URL
-        if (!response.ok) {
-          throw new Error('Failed to fetch data');
-        }
-        const data = await response.json();
-        setCinemas(data);
-      } catch (error) {
-        console.error('Error fetching cinemas:', error);
-        // You can handle errors here, e.g., set a state to display an error message
-      }
-    };
-
     fetchCinemas();
   }, []);
 

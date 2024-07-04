@@ -203,7 +203,7 @@ const CinemaDetail: React.FC = () => {
               </button>
               {/* Nút xóa rạp */}
               <button
-                className="mt-4 px-4 py-2 bg-primary text-white rounded-lg shadow-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary"
+                className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg shadow-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary"
                 onClick={handleDeleteCinema}
                 style={{ alignSelf: 'flex-end' }}
               >
