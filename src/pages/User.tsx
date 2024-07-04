@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 const User = () => {
   return (
@@ -7,7 +7,7 @@ const User = () => {
       {/* Add content to display show-related information */}
       <p>This will display show listings, schedules, reviews, etc.</p>
     </div>
-  );
-};
+  )
+}
 
-export default User;
+export default User

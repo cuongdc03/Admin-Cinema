@@ -1,27 +1,53 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import Breadcrumb from '../Breadcrumbs/Breadcrumb';
-import CinemaTable from './CinemaTable';
+import React, { useState, useEffect } from 'react'
+import { cinema } from '../../types/cinema'
+import Breadcrumb from '../Breadcrumbs/Breadcrumb'
+import { deleteCinema, getCinemas, updateCinema } from '../../apis/cinema'
+import Table from '../Table'
 
 const Cinema: React.FC = () => {
+  const [cinemas, setCinemas] = useState<cinema[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  const handleDeleteCinema = async (cinema: cinema) => {
+    try {
+      await deleteCinema(cinema.id, setCinemas)
+    } catch (error) {
+      console.error('Error deleting cinema:', error)
+    }
+  }
+
+  const handleStatusChange = async (cinema: cinema) => {
+    try {
+      await updateCinema(cinema.id, cinema, setCinemas)
+    } catch (error) {
+      console.error('Error updating cinema status:', error)
+    }
+  }
+
+  const fetchCinemaList = async () => {
+    const cinemas = await getCinemas()
+    setCinemas(cinemas)
+  }
+
+  useEffect(() => {
+    fetchCinemaList()
+  }, [])
+
+  const displayedColumns: (keyof cinema)[] = ['id', 'name', 'address', 'provinceCity']
+
   return (
     <div>
       <Breadcrumb pageName='Cinema' />
-      <Link
-        to=""
-        className="inline-flex items-center justify-center rounded-md border border-primary py-2 px-10 text-center font-medium text-primary hover:bg-opacity-90 lg:px-20 xl:px-20 mb-8 mx-4"
-      >
-        Refresh 
-      </Link>
-      <Link
-        to="create"
-        className="inline-flex items-center justify-center rounded-md border border-primary py-2 px-10 text-center font-medium text-primary hover:bg-opacity-90 lg:px-20 xl:px-20 mb-8 mx-4"
-      >
-        Create 
-      </Link>
-      <CinemaTable />
+      <Table
+        rows={cinemas}
+        displayedColumns={displayedColumns}
+        onDelete={handleDeleteCinema}
+        onStatusChange={handleStatusChange}
+        isCinema={true}
+      />
     </div>
-  );
-};
+  )
+}
 
-export default Cinema;
+export default Cinema

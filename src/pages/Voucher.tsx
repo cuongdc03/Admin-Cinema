@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 const Voucher = () => {
   return (
@@ -7,7 +7,7 @@ const Voucher = () => {
       {/* Add content to display Voucher-related information */}
       <p>This will display Voucher listings, schedules, reviews, etc.</p>
     </div>
-  );
-};
+  )
+}
 
-export default Voucher;
+export default Voucher
