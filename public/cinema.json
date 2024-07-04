@@ -1,0 +1,45 @@
+[
+    {
+      "id": 1,
+      "name": "HCinemaHaDong",
+      "address": "Ha Dong, Ha Noi",
+      "date": "01-07-2024",
+      "provinceCityId": 1
+    },
+    {
+      "id": 2,
+      "name": "HCinema Hanoi Centerpoint",
+      "address": "27 Le Van Luong (No. 85 Old Le Van Luong), Nhan Chinh Ward, Thanh Xuan District, Hanoi City.",
+      "date": "10-03-2024",
+      "provinceCityId": 1
+    },
+    {
+      "id": 3,
+      "name": "HCinema Mac Plaza (Machinco)",
+      "address": "Floor 7, Mac Plaza Shopping Center, 10 Tran Phu, Ha Dong District, Hanoi City",
+      "date": "10-03-2024",
+      "provinceCityId": 1
+    },
+    {
+      "id": 4,
+      "name": "HCinema Vincom Royal City",
+      "address": "Floor B2 - Area R4, Vincom Mega Mall Royal City, 72A Nguyen Trai, Thanh Xuan, Hanoi.",
+      "date": "10-03-2024",
+      "provinceCityId": 1
+    },
+    {
+      "id": 5,
+      "name": "HCinema Vincom Ocean Park",
+      "address": "Floor 4, Vincom Ocean Park Shopping Center, Gia Lam District, Hanoi",
+      "date": "10-03-2024",
+      "provinceCityId": 1
+    },
+    {
+      "id": 6,
+      "name": "HCinema Aeon Ha Dong",
+      "address": "Floor 3 & 4 – AEON MALL Ha Dong, Duong Noi Ward, Ha Dong District, Hanoi",
+      "date": "10-03-2024",
+      "provinceCityId": 1
+    }
+  ]
+  
