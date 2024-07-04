@@ -59,22 +59,27 @@ const FilmDetail: React.FC = () => {
     <>
       <Breadcrumb pageName="Film Detail" />
 
-      <div className="grid grid-cols-1 gap-9 sm:grid-cols-2">
-        <div className="flex flex-col gap-9 py-9">
+      <div className="grid grid-cols-3 gap-9">
+        <div className="flex flex-col gap-9 py-9 col-span-2">
           <div className="rounded-sm border border-stroke shadow-default dark:border-strokedark">
             <div className="border-b border-stroke py-2 px-6.5 dark:border-strokedark">
               <h2 className="text-2xl font-semibold text-black dark:text-white">
                 {filmDetail.filmName}
               </h2>
             </div>
-            <div className="flex flex-col gap-5.5 p-6.5">
+            <div className=" grid grid-cols-2 gap-5.5 p-6.5">
               <div>
                 <label className="mb-3 block text-black dark:text-white font-extrabold">
                   Duration
                 </label>
                 <p className="text-sm text-black dark:text-white">{filmDetail.duration} minutes</p>
               </div>
-
+              <div>
+                <label className="mb-3 block text-black dark:text-white font-extrabold">
+                  Category
+                </label>
+                <p className="text-sm text-black dark:text-white">{filmDetail.category}</p>
+              </div>
               <div>
                 <label className="mb-3 block text-black dark:text-white font-extrabold">
                   Date Start
@@ -130,14 +135,6 @@ const FilmDetail: React.FC = () => {
                 </label>
                 <p className="text-sm text-black dark:text-white">{filmDetail.ageRate}</p>
               </div>
-
-              <div>
-                <label className="mb-3 block text-black dark:text-white font-extrabold">
-                  Category
-                </label>
-                <p className="text-sm text-black dark:text-white">{filmDetail.category}</p>
-              </div>
-
               <button
                 className="mt-4 px-4 py-2 bg-primary text-white rounded-lg shadow-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary"
                 onClick={handleSaveChanges}
@@ -153,6 +150,9 @@ const FilmDetail: React.FC = () => {
               </button>
             </div>
           </div>
+        </div>
+        <div className='col-span-1 py-9 w-full'>
+          <img src={filmDetail.poster} className='w-full rounded-lg'></img>
         </div>
       </div>
     </>
