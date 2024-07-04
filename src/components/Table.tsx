@@ -5,45 +5,30 @@ import Switch from '@mui/material/Switch'
 import { MdDelete, MdEdit } from 'react-icons/md'
 import { BsSearch } from 'react-icons/bs'
 import { FaArchive } from 'react-icons/fa'
-import { createTheme } from '@mui/material/styles'
-import { ThemeProvider } from '@mui/material/styles'
-import { toast } from 'react-toastify'
+import { ThemeProvider, createTheme } from '@mui/material/styles'
+import { COLUMN_WIDTHS, PAGE_SIZE_OPTIONS, THEME } from '@/components/constant'
 
 interface TableProps<T> {
   rows: T[]
-  onDelete: (T: T) => void
-  onStatusChange: (T: T) => void
+  onDelete: (item: T) => void
+  onStatusChange: (item: T) => void
   displayedColumns: (keyof T)[]
   isCinema: boolean
 }
 
-const Table: React.FC<TableProps<any>> = ({ rows, onDelete, onStatusChange, displayedColumns, isCinema }) => {
+const Table = <T extends { id: number; status?: boolean; [key: string]: any }>({
+  rows,
+  onDelete,
+  onStatusChange,
+  displayedColumns,
+  isCinema
+}: TableProps<T>) => {
   const [searchQuery, setSearchQuery] = useState('')
   const [showModal, setShowModal] = useState(false)
-  const [selectedItem, setSelectedItem] = useState<any | null>(null)
-  const theme = createTheme({
-    palette: {
-      primary: {
-        main: '#1976D2',
-        contrastText: '#fff'
-      },
-      mode: 'light'
-    },
-    components: {
-      MuiDataGrid: {
-        styleOverrides: {
-          columnHeaderTitleContainer: ({ theme }) => ({
-            '&.MuiDataGrid-columnHeaderTitleContainer--withBackground': {
-              color: theme.palette.primary.contrastText
-            },
-            '&.MuiDataGrid-columnHeaderTitleContainer--withBackground.dark': {
-              color: '#ccc'
-            }
-          })
-        }
-      }
-    }
-  })
+  const [selectedItem, setSelectedItem] = useState<T | null>(null)
+
+  const theme = createTheme(THEME)
+
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value)
   }
@@ -55,25 +40,72 @@ const Table: React.FC<TableProps<any>> = ({ rows, onDelete, onStatusChange, disp
       })
     : rows
 
+  const handleArchiveClick = (item: T) => {
+    setSelectedItem(item)
+    setShowModal(true)
+  }
+
+  const handleStatusChange = async (item: T) => {
+    try {
+      const updatedObject = { ...item, status: !item.status }
+      await onStatusChange(updatedObject)
+    } catch (error) {}
+  }
+
+  const handleDelete = async (item: T) => {
+    setSelectedItem(item)
+    setShowModal(true)
+  }
+
+  const handleConfirmDelete = async () => {
+    try {
+      if (selectedItem) {
+        await onDelete(selectedItem)
+        setSelectedItem(null)
+      }
+      setShowModal(false)
+    } catch (error) {}
+  }
+
+  const handleConfirmArchive = async () => {
+    try {
+      if (selectedItem) {
+        await handleStatusChange(selectedItem)
+        setSelectedItem(null)
+      }
+      setShowModal(false)
+    } catch (error) {}
+  }
+
+  const handleCancelDelete = () => {
+    setShowModal(false)
+    setSelectedItem(null)
+  }
+
   const columns: GridColDef[] = displayedColumns.map((key) => ({
-    field: key,
-    headerName: key.charAt(0).toUpperCase() + key.slice(1),
+    field: key as string,
+    headerName: key.toString().charAt(0).toUpperCase() + key.toString().slice(1),
     headerClassName: 'bg-gray-200 dark:bg-boxdark dark:text-white',
     cellClassName: 'bg-gray-200 dark:bg-boxdark dark:text-white',
     resizable: false,
-    width: displayedColumns.length === 4 ? 250 : 200,
-    renderCell: (params) =>
-      key === 'status' ? (
-        <Switch checked={params.row.status === 1} onChange={() => handleStatusChange(params.row)} />
-      ) : (
-        params.value
-      )
+    width: displayedColumns.length === 4 ? COLUMN_WIDTHS.expanded : COLUMN_WIDTHS.default,
+    renderCell: (params) => {
+      if (key === 'status') {
+        return (
+          <Switch checked={params.row.status as boolean} onChange={() => handleStatusChange(params.row)} disabled />
+        )
+      } else if (key === 'provinceCityName') {
+        return (params.row as any).provinceCity?.name
+      }
+      return params.value
+    }
   }))
 
   columns.push({
     field: 'actions',
     headerName: 'Actions',
     headerClassName: 'bg-gray-200 dark:bg-boxdark dark:text-white text-center',
+    width: COLUMN_WIDTHS.actions,
     resizable: false,
     renderCell: (params) => (
       <div className='flex h-full w-full items-center justify-center gap-4'>
@@ -85,7 +117,7 @@ const Table: React.FC<TableProps<any>> = ({ rows, onDelete, onStatusChange, disp
         </Link>
         {isCinema ? (
           <button
-            onClick={() => handleDelete(params.row)}
+            onClick={() => handleArchiveClick(params.row)}
             className='mr-2 rounded bg-yellow-500 px-4 py-2 font-bold text-white hover:bg-yellow-700'
           >
             <FaArchive />
@@ -102,39 +134,9 @@ const Table: React.FC<TableProps<any>> = ({ rows, onDelete, onStatusChange, disp
     )
   })
 
-  const handleDelete = async (T: any) => {
-    setSelectedItem(T)
-    setShowModal(true)
-  }
-
-  const handleConfirmDelete = async () => {
-    try {
-      if (selectedItem) {
-        onDelete(selectedItem)
-        setSelectedItem(null)
-      }
-      setShowModal(false)
-    } catch (error) {
-      toast.error('Delete failed')
-    }
-  }
-
-  const handleCancelDelete = () => {
-    setShowModal(false)
-    setSelectedItem(null)
-  }
-
-  const handleStatusChange = async (T: any) => {
-    try {
-      const updatedOjbect = { ...T, status: T.status === 1 ? 0 : 1 }
-      await onStatusChange(updatedOjbect)
-    } catch (error) {}
-  }
-
   return (
-    <div className='flex flex-col '>
+    <div className='flex flex-col'>
       <div className='mb-4 flex items-center justify-between'>
-        {' '}
         <div className='relative flex items-center'>
           <input
             type='text'
@@ -146,21 +148,12 @@ const Table: React.FC<TableProps<any>> = ({ rows, onDelete, onStatusChange, disp
           <BsSearch className='top-2.75 absolute right-3' size={20} />
         </div>
         <div className='flex items-center'>
-          {' '}
           <Link
             to='create'
-            className='relative mr-2 items-center justify-center rounded-md border border-primary px-10 py-2 text-center font-medium text-primary hover:bg-opacity-90' // Thêm margin-right
+            className='relative mr-2 items-center justify-center rounded-md border border-primary px-10 py-2 text-center font-medium text-primary hover:bg-opacity-90'
           >
             Create
           </Link>
-          {isCinema && (
-            <Link
-              to='archive'
-              className='relative items-center justify-center rounded-md border border-yellow-500 px-10 py-2 text-center font-medium text-yellow-500 hover:bg-yellow-100'
-            >
-              Archive
-            </Link>
-          )}
         </div>
       </div>
       <ThemeProvider theme={theme}>
@@ -169,7 +162,7 @@ const Table: React.FC<TableProps<any>> = ({ rows, onDelete, onStatusChange, disp
             className='rounded-sm border border-stroke shadow-default dark:border-strokedark dark:bg-boxdark'
             rows={filteredRows}
             columns={columns}
-            pageSizeOptions={[5, 10, 20]}
+            pageSizeOptions={PAGE_SIZE_OPTIONS}
             disableRowSelectionOnClick
             autoHeight
             disableColumnFilter
@@ -191,7 +184,7 @@ const Table: React.FC<TableProps<any>> = ({ rows, onDelete, onStatusChange, disp
               Cancel
             </button>
             <button
-              onClick={handleConfirmDelete}
+              onClick={isCinema ? handleConfirmArchive : handleConfirmDelete}
               className='rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700'
             >
               {isCinema ? 'Archive' : 'Delete'}

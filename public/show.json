@@ -1,0 +1,104 @@
+[
+    {
+        "id": 1,
+        "name": "CGV",
+        "address": "123 Nguyen Ba Hoc",
+        "provinceCityId": 1,
+        "screens": [
+            {
+                "name": "Lahm",
+                "status": 1,
+                "id": 1,
+                "shows": [
+                    {
+                        "id": 1,
+                        "timeStart": "18:00:00",
+                        "price": 150000,
+                        "status": false,
+                        "filmId": 1,
+                        "film": {
+                            "filmName": "Inception"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "name": "BHD Star Cineplex Bitexco ",
+        "address": "123 Nguyen Ba Hoc",
+        "provinceCityId": 2,
+        "screens": [
+            {
+                "name": "Tah",
+                "status": 1,
+                "id": 3,
+                "shows": [
+                    {
+                        "id": 211,
+                        "timeStart": "18:00:00",
+                        "price": 50000,
+                        "status": null,
+                        "filmId": 1,
+                        "film": {
+                            "filmName": "Inception"
+                        }
+                    },
+                    {
+                        "id": 212,
+                        "timeStart": "18:00:00",
+                        "price": 50000,
+                        "status": null,
+                        "filmId": 1,
+                        "film": {
+                            "filmName": "Inception"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "Havertz",
+                "status": 1,
+                "id": 4,
+                "shows": [
+                    {
+                        "id": 213,
+                        "timeStart": "18:00:00",
+                        "price": 50000,
+                        "status": null,
+                        "filmId": 1,
+                        "film": {
+                            "filmName": "Inception"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "name": "CGV ",
+        "address": "195 Ba Trieu, Le Duan",
+        "provinceCityId": 9,
+        "screens": [
+            {
+                "name": "wirtz",
+                "status": 0,
+                "id": 16,
+                "shows": [
+                    {
+                        "id": 214,
+                        "timeStart": "18:00:00",
+                        "price": 50000,
+                        "status": null,
+                        "filmId": 1,
+                        "film": {
+                            "filmName": "Inception"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]
