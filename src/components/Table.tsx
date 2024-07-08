@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
-import  Switch  from '@mui/material/Switch';
+import Switch from '@mui/material/Switch';
+import { MdDelete, MdEdit } from 'react-icons/md';
 
 interface TableTestProps<T> {
   rows: T[];
@@ -20,8 +21,8 @@ const TableTest: React.FC<TableTestProps<any>> = ({ rows, onDelete, onStatusChan
     headerName: key.charAt(0).toUpperCase() + key.slice(1),
     headerClassName: 'bg-gray-200 dark:bg-boxdark dark:text-white',
     cellClassName: 'bg-gray-200 dark:bg-boxdark dark:text-white',
-    flex: 1, // Cho phép cột tự điều chỉnh chiều rộng
-    width: 150, // Khóa chiều rộng cột (nếu cần)
+    resizable: false,
+    width: 200, // Khóa chiều rộng cột (nếu cần)
     renderCell: (params) => (
       key === 'status' ? (
         <Switch
@@ -37,57 +38,65 @@ const TableTest: React.FC<TableTestProps<any>> = ({ rows, onDelete, onStatusChan
   columns.push({
     field: 'actions',
     headerName: 'Actions',
-    headerClassName: 'bg-gray-200 dark:bg-boxdark dark:text-white',
-    width: 150,
+    headerClassName: 'bg-gray-200 dark:bg-boxdark dark:text-white text-center',
+    width: 140,
     renderCell: (params) => (
-      <>
+      <div className="flex justify-center items-center"> 
+        {/* Thêm items-center để căn giữa theo chiều dọc */}
         <button
-          onClick={() => handleDelete(params.row)} // Gọi handleDelete với đối tượng cinema
-          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+          onClick={() => handleDelete(params.row)}
+          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-2"
         >
-          Xoá
+          <MdDelete /> 
         </button>
         <Link
-          to={`/cinema/${params.row.id}`} // Chuyển hướng đến trang cập nhật
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2"
+          to={`${params.row.id}`}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
-          Update
+          <MdEdit /> 
         </Link>
-      </>
+      </div>
     ),
   });
 
   const handleDelete = async (cinema: any) => {
     try {
-      await onDelete(cinema); // Gọi onDelete với đối tượng cinema
-      // Cập nhật lại dữ liệu trong rows (nếu cần)
+      await onDelete(cinema); 
     } catch (error) {
       console.error(`Error deleting cinema:`, error);
-      // Xử lý lỗi (ví dụ: hiển thị thông báo lỗi)
     }
   };
 
   const handleStatusChange = async (cinema: any) => {
     try {
-      // Thay đổi trạng thái status
       const updatedCinema = { ...cinema, status: cinema.status === 1 ? 0 : 1 };
       await onStatusChange(updatedCinema); 
-      // Cập nhật lại dữ liệu trong rows (nếu cần)
     } catch (error) {
       console.error(`Error changing status:`, error);
-      // Xử lý lỗi (ví dụ: hiển thị thông báo lỗi)
     }
   };
 
   return (
-    <div style={{ height: 600, width: '100%' }}>
-      <DataGrid
-        className="rounded-sm border border-stroke shadow-default dark:border-strokedark dark:bg-boxdark"
-        rows={rows}
-        columns={columns}
-        pageSizeOptions={[5, 10, 20]}
-        disableRowSelectionOnClick
-      />
+    <div className="flex flex-col">
+      <div className="flex justify-end mb-4"> {/* Căn nút Create sang bên phải */}
+        <Link
+          to="create"
+          className="inline-flex items-center justify-center rounded-md border border-primary py-2 px-10 text-center font-medium text-primary hover:bg-opacity-90 lg:px-20 xl:px-20 mb-8 mx-4"
+        >
+          Create 
+        </Link>
+      </div>
+      <div style={{ height: 600, width: '100%' }}>
+        <DataGrid
+          className="rounded-sm border border-stroke shadow-default dark:border-strokedark dark:bg-boxdark"
+          rows={rows}
+          columns={columns}
+          pageSizeOptions={[5, 10, 20]}
+          disableRowSelectionOnClick
+          autoHeight
+          autoWidth
+        />
+      </div>
     </div>
   );
 };

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import TableTest from '../Table';
-import { cinema } from '../../types/cinema'; // Import kiểu dữ liệu cinema
+import { cinema } from '../../types/cinema'; 
+import Breadcrumb from '../Breadcrumbs/Breadcrumb';
 
 const Cinema: React.FC = () => {
   const [cinemas, setCinemas] = useState<cinema[]>([]);
-  const [isLoading, setIsLoading] = useState(true); // Trạng thái loading
-  const [error, setError] = useState<string | null>(null); // Trạng thái lỗi
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const handleDeleteCinema = async (cinema: cinema) => {
     try {
@@ -15,11 +16,9 @@ const Cinema: React.FC = () => {
       if (!response.ok) {
         throw new Error('Failed to delete cinema');
       }
-      // Cập nhật lại dữ liệu `cinemas` sau khi xóa thành công
       setCinemas(cinemas.filter((c) => c.id !== cinema.id));
     } catch (error) {
       console.error('Error deleting cinema:', error);
-      // Xử lý lỗi (ví dụ: hiển thị thông báo lỗi)
     }
   };
 
@@ -35,11 +34,9 @@ const Cinema: React.FC = () => {
         throw new Error('Failed to update cinema status');
       }
 
-      // Cập nhật lại trạng thái cinema trong mảng cinemas
       setCinemas(cinemas.map((c) => (c.id === cinema.id ? cinema : c)));
     } catch (error) {
       console.error('Error updating cinema status:', error);
-      // Xử lý lỗi (ví dụ: hiển thị thông báo lỗi)
     }
   };
 
@@ -64,10 +61,12 @@ const Cinema: React.FC = () => {
     fetchData();
   }, []);
 
-  const displayedColumns: (keyof cinema)[] = ['id', 'name', 'address', 'provinceCity', 'status']; // Các thuộc tính muốn hiển thị
+  const displayedColumns: (keyof cinema)[] = ['id', 'name', 'address', 'provinceCity', 'status'];
 
   return (
+
     <div>
+      <Breadcrumb pageName="Cinema" />
       {isLoading ? (
         <p>Loading cinemas...</p>
       ) : error ? (
@@ -77,7 +76,7 @@ const Cinema: React.FC = () => {
           rows={cinemas}
           displayedColumns={displayedColumns}
           onDelete={handleDeleteCinema}
-          onStatusChange={handleStatusChange} // Pass hàm handleStatusChange
+          onStatusChange={handleStatusChange} 
         />
       )}
     </div>

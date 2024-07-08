@@ -15,6 +15,7 @@ import Cinema from './components/Cinema/Cinema';
 import CinemaCreate from './components/Cinema/CinemaCreate';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import FilmCreate from './components/Film/FilmCreate';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -87,6 +88,15 @@ function App() {
             <>
               <PageTitle title="Film Detail | CineStar" />
               <FilmDetail />
+            </>
+          }
+        />
+          <Route
+          path="/film/Create"
+          element={
+            <>
+              <PageTitle title="Film Create | CineStar" />
+              <FilmCreate />
             </>
           }
         />
