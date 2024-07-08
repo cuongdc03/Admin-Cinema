@@ -1,5 +1,5 @@
-import  { useState, useEffect } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
 import DefaultLayout from './layout/DefaultLayout';
@@ -13,6 +13,8 @@ import FilmDetail from './components/Film/FilmDetail';
 import CinemaDetail from './components/Cinema/CinemaDetail';
 import Cinema from './components/Cinema/Cinema';
 import CinemaCreate from './components/Cinema/CinemaCreate';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -32,6 +34,7 @@ function App() {
     <Loader />
   ) : (
     <DefaultLayout>
+      <ToastContainer />
       <Routes>
         <Route
           path="/dashboard"
@@ -84,15 +87,6 @@ function App() {
             <>
               <PageTitle title="Film Detail | CineStar" />
               <FilmDetail />
-            </>
-          }
-        />
-                <Route
-          path="/film/create"
-          element={
-            <>
-              <PageTitle title="Create Film| CineStar" />
-              <CinemaDetail />
             </>
           }
         />

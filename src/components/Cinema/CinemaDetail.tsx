@@ -3,10 +3,14 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { cinema } from '../../types/cinema';
 import Breadcrumb from '../Breadcrumbs/Breadcrumb';
 import ScreenList from './ScreenList';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const CinemaDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [cinemaDetail, setCinemaDetail] = useState<cinema | null>(null);
+  const [provinceCities, setProvinceCities] = useState<{ id: number; name: string }[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
@@ -28,30 +32,64 @@ const CinemaDetail: React.FC = () => {
       }
     };
 
+    const fetchProvinceCities = async () => {
+      try {
+        const response = await fetch('https://bl924snd-3000.asse.devtunnels.ms/admin/provincecity');
+        if (!response.ok) {
+          throw new Error('Failed to fetch province/city data');
+        }
+        const data = await response.json();
+        setProvinceCities(data);
+      } catch (error) {
+        console.error('Error fetching province/city data:', error);
+      }
+    };
+
     fetchCinema();
+    fetchProvinceCities();
   }, [id]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setCinemaDetail(prevDetail => prevDetail ? { ...prevDetail, [name]: value } : null);
+    if (name === 'provinceCity') {
+      const selectedCity = provinceCities.find(city => city.name === value);
+      const provinceCityId = selectedCity ? selectedCity.id : 0;
+      setCinemaDetail(prevDetail => prevDetail ? { ...prevDetail, [name]: value, provinceCityId: provinceCityId } : null);
+    } else {
+      setCinemaDetail(prevDetail => prevDetail ? { ...prevDetail, [name]: value } : null);
+    }
   };
+  
 
   const handleSaveChanges = async () => {
     try {
-      const response = await fetch(`https://bl924snd-3000.asse.devtunnels.ms/cinema`, {
+      const cinemaData = {
+        id: cinemaDetail?.id,
+        name: cinemaDetail?.name,
+        address: cinemaDetail?.address,
+        provinceCityId: cinemaDetail?.provinceCityId,
+      };
+  
+      const response = await fetch(`https://bl924snd-3000.asse.devtunnels.ms/admin/cinema`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(cinemaDetail),
+        body: JSON.stringify(cinemaData),
       });
+  
       if (!response.ok) {
         throw new Error('Failed to save changes');
       }
-      console.log('Changes saved:', cinemaDetail);
+  
+      // Hiển thị thông báo Toastify khi chỉnh sửa thành công
+      toast.success('Edit Successfully');
+  
+      console.log('Changes saved:', cinemaData);
       navigate('/cinema');
     } catch (error) {
       console.error('Error saving changes:', error);
+      toast.error('Failed to save changes');
     }
   };
 
@@ -68,14 +106,16 @@ const CinemaDetail: React.FC = () => {
         throw new Error('Failed to delete cinema');
       }
       console.log('Cinema deleted');
+      toast.success('Cinema deleted successfully'); // Hiển thị thông báo khi xóa thành công
       navigate('/cinema');
     } catch (error) {
       console.error('Error deleting cinema:', error);
+      toast.error('Failed to delete cinema'); // Hiển thị thông báo khi xóa thất bại
     } finally {
       setShowModal(false); 
     }
   };
-
+  
   const closeModal = () => {
     setShowModal(false); 
   };
@@ -91,7 +131,6 @@ const CinemaDetail: React.FC = () => {
   return (
     <>
       <Breadcrumb pageName="Cinema Detail" />
-
       {/* Modal xác nhận */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
@@ -182,16 +221,21 @@ const CinemaDetail: React.FC = () => {
 
               <div>
                 <label className="mb-3 block text-black dark:text-white font-extrabold">
-                  Province/City ID
+                  Province/City
                 </label>
-                <input
-                  type="text"
+                <select
                   name="provinceCity"
+                  value={cinemaDetail?.provinceCity || ''}
                   required
-                  value={cinemaDetail?.provinceCity.toString() || ''}
                   className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                   onChange={handleInputChange}
-                />
+                >
+                  {provinceCities.map(city => (
+                    <option  className="right-2"key={city.id} value={city.name}>
+                      {city.name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               {/* Nút lưu thay đổi */}

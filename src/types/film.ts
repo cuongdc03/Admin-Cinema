@@ -13,4 +13,5 @@ export type film = {
     ageRate: string;
     category: string;
     poster: string;
+    status: boolean;
 }

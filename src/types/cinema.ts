@@ -4,4 +4,5 @@ export type cinema = {
     address:string;
     provinceCity: string;
     provinceCityId: number;
+    status: boolean;
 };

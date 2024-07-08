@@ -1,8 +1,11 @@
-import { useState } from 'react';
+import React from 'react';
 
-const SwitcherFour = () => {
-  const [enabled, setEnabled] = useState<boolean>(false);
+interface SwitcherFourProps {
+  enabled: boolean;
+  toggle: () => void;
+}
 
+const SwitcherFour: React.FC<SwitcherFourProps> = ({ enabled, toggle }) => {
   return (
     <div>
       <label
@@ -14,9 +17,8 @@ const SwitcherFour = () => {
             type="checkbox"
             id="toggle4"
             className="sr-only"
-            onChange={() => {
-              setEnabled(!enabled);
-            }}
+            checked={enabled}
+            onChange={toggle}
           />
           <div className="block h-8 w-14 rounded-full bg-black"></div>
           <div

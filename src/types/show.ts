@@ -6,4 +6,5 @@ export type show = {
     timeStart: string;
     price: number;
     seatMatrix: string;
+    status: boolean;
 }

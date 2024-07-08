@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Breadcrumb from '../Breadcrumbs/Breadcrumb';
 import { cinema } from '../../types/cinema';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const CinemaCreate: React.FC = () => {
@@ -11,7 +11,8 @@ const CinemaCreate: React.FC = () => {
     name: '',
     address: '',
     provinceCity: '',
-    provinceCityId: 0
+    provinceCityId: 0,
+    status: false
   });
 
   const [provinceCities, setProvinceCities] = useState<{ id: number; name: string }[]>([]);
@@ -21,7 +22,9 @@ const CinemaCreate: React.FC = () => {
     fetch('https://bl924snd-3000.asse.devtunnels.ms/admin/provincecity')
       .then(response => response.json())
       .then(data => setProvinceCities(data))
-      .catch(error => console.error('Error fetching province/city data:', error));
+      .catch(error => {
+        toast.error('Error fetching province/city data. Please try again.');
+      });
   }, []);
 
   const navigate = useNavigate();
@@ -65,14 +68,12 @@ const CinemaCreate: React.FC = () => {
       body: JSON.stringify(cinemaData),
     })
       .then(response => {
-        console.log('Response:', response); // Log the response for debugging
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         return response.json();
       })
       .then(data => {
-        console.log('Cinema created:', data);
         toast.success('Cinema created successfully!');
         setError(''); // Clear error message if any
         setTimeout(() => {
@@ -80,7 +81,6 @@ const CinemaCreate: React.FC = () => {
         }, 2000);
       })
       .catch(error => {
-        console.error('Error creating cinema:', error);
         toast.error('Error creating cinema. Please try again.');
       });
   };
@@ -88,8 +88,6 @@ const CinemaCreate: React.FC = () => {
   return (
     <>
       <Breadcrumb pageName="Create New Cinema" />
-      <ToastContainer />
-
       <div className="grid grid-cols-1 gap-9 sm:grid-cols-2">
         <div className="flex flex-col gap-9">
           <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
