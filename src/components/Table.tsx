@@ -6,14 +6,14 @@ import { MdDelete, MdEdit } from 'react-icons/md';
 
 interface TableTestProps<T> {
   rows: T[];
-  onDelete: (cinema: T) => void; // Hàm xử lý xóa nhận đối tượng cinema
-  onStatusChange: (cinema: T) => void; // Hàm xử lý thay đổi trạng thái
+  onDelete: (T: T) => void; 
+  onStatusChange: (T: T) => void; // Hàm xử lý thay đổi trạng thái
   displayedColumns: (keyof T)[]; // Các thuộc tính muốn hiển thị
 }
 
 const TableTest: React.FC<TableTestProps<any>> = ({ rows, onDelete, onStatusChange, displayedColumns }) => {
   if (rows.length === 0) {
-    return <p className="text-center text-gray-500">Không có dữ liệu</p>;
+    return <p className="text-center text-gray-500">Fail to fetch data</p>;
   }
 
   const columns: GridColDef[] = displayedColumns.map((key) => ({
@@ -41,8 +41,7 @@ const TableTest: React.FC<TableTestProps<any>> = ({ rows, onDelete, onStatusChan
     headerClassName: 'bg-gray-200 dark:bg-boxdark dark:text-white text-center',
     width: 140,
     renderCell: (params) => (
-      <div className="flex justify-center items-center"> 
-        {/* Thêm items-center để căn giữa theo chiều dọc */}
+      <div className="flex justify-center items-center w-full h-full"> 
         <button
           onClick={() => handleDelete(params.row)}
           className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-2"
@@ -51,7 +50,7 @@ const TableTest: React.FC<TableTestProps<any>> = ({ rows, onDelete, onStatusChan
         </button>
         <Link
           to={`${params.row.id}`}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex"
         >
           <MdEdit /> 
         </Link>
@@ -78,7 +77,7 @@ const TableTest: React.FC<TableTestProps<any>> = ({ rows, onDelete, onStatusChan
 
   return (
     <div className="flex flex-col">
-      <div className="flex justify-end mb-4"> {/* Căn nút Create sang bên phải */}
+      <div className="flex justify-end ">
         <Link
           to="create"
           className="inline-flex items-center justify-center rounded-md border border-primary py-2 px-10 text-center font-medium text-primary hover:bg-opacity-90 lg:px-20 xl:px-20 mb-8 mx-4"

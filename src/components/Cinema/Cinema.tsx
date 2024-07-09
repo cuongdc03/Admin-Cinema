@@ -67,18 +67,12 @@ const Cinema: React.FC = () => {
 
     <div>
       <Breadcrumb pageName="Cinema" />
-      {isLoading ? (
-        <p>Loading cinemas...</p>
-      ) : error ? (
-        <p>Error: {error}</p>
-      ) : (
         <TableTest
           rows={cinemas}
           displayedColumns={displayedColumns}
           onDelete={handleDeleteCinema}
           onStatusChange={handleStatusChange} 
         />
-      )}
     </div>
   );
 };

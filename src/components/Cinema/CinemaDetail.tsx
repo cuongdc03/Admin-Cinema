@@ -6,13 +6,12 @@ import ScreenList from './ScreenList';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
 const CinemaDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [cinemaDetail, setCinemaDetail] = useState<cinema | null>(null);
   const [provinceCities, setProvinceCities] = useState<{ id: number; name: string }[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(false); // Khai báo showModal
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -59,7 +58,6 @@ const CinemaDetail: React.FC = () => {
       setCinemaDetail(prevDetail => prevDetail ? { ...prevDetail, [name]: value } : null);
     }
   };
-  
 
   const handleSaveChanges = async () => {
     try {
@@ -69,7 +67,7 @@ const CinemaDetail: React.FC = () => {
         address: cinemaDetail?.address,
         provinceCityId: cinemaDetail?.provinceCityId,
       };
-  
+
       const response = await fetch(`https://bl924snd-3000.asse.devtunnels.ms/admin/cinema`, {
         method: 'PUT',
         headers: {
@@ -77,14 +75,13 @@ const CinemaDetail: React.FC = () => {
         },
         body: JSON.stringify(cinemaData),
       });
-  
+
       if (!response.ok) {
         throw new Error('Failed to save changes');
       }
-  
-      // Hiển thị thông báo Toastify khi chỉnh sửa thành công
+
       toast.success('Edit Successfully');
-  
+
       console.log('Changes saved:', cinemaData);
       navigate('/cinema');
     } catch (error) {
@@ -106,16 +103,16 @@ const CinemaDetail: React.FC = () => {
         throw new Error('Failed to delete cinema');
       }
       console.log('Cinema deleted');
-      toast.success('Cinema deleted successfully'); // Hiển thị thông báo khi xóa thành công
+      toast.success('Cinema deleted successfully');
       navigate('/cinema');
     } catch (error) {
       console.error('Error deleting cinema:', error);
-      toast.error('Failed to delete cinema'); // Hiển thị thông báo khi xóa thất bại
+      toast.error('Failed to delete cinema');
     } finally {
       setShowModal(false); 
     }
   };
-  
+
   const closeModal = () => {
     setShowModal(false); 
   };
@@ -244,14 +241,6 @@ const CinemaDetail: React.FC = () => {
                 onClick={handleSaveChanges}
               >
                 Save Changes
-              </button>
-              {/* Nút xóa rạp */}
-              <button
-                className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg shadow-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary"
-                onClick={handleDeleteCinema}
-                style={{ alignSelf: 'flex-end' }}
-              >
-                Delete Cinema
               </button>
             </div>
           </div>

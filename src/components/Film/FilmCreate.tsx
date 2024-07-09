@@ -16,7 +16,7 @@ const FilmCreate: React.FC = () => {
     dubbing: false,
     format: '',
     ageRate: '',
-    poster: '', // Không cần poster lúc này
+    poster: '',
   });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
