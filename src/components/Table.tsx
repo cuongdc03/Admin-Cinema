@@ -3,6 +3,8 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 import Switch from '@mui/material/Switch';
 import { MdDelete, MdEdit } from 'react-icons/md';
+import { BsSearch } from 'react-icons/bs';
+
 
 interface TableTestProps<T> {
   rows: T[];
@@ -12,9 +14,20 @@ interface TableTestProps<T> {
 }
 
 const TableTest: React.FC<TableTestProps<any>> = ({ rows, onDelete, onStatusChange, displayedColumns }) => {
-  if (rows.length === 0) {
-    return <p className="text-center text-gray-500">Fail to fetch data</p>;
-  }
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const filteredRows = searchQuery
+    ? rows.filter((row) => {
+        const searchText = searchQuery.toLowerCase();
+        return Object.values(row).some((value) =>
+          value.toString().toLowerCase().includes(searchText)
+        );
+      })
+    : rows;
 
   const columns: GridColDef[] = displayedColumns.map((key) => ({
     field: key,
@@ -22,12 +35,12 @@ const TableTest: React.FC<TableTestProps<any>> = ({ rows, onDelete, onStatusChan
     headerClassName: 'bg-gray-200 dark:bg-boxdark dark:text-white',
     cellClassName: 'bg-gray-200 dark:bg-boxdark dark:text-white',
     resizable: false,
-    width: 200, // Khóa chiều rộng cột (nếu cần)
+    width: 200, 
     renderCell: (params) => (
       key === 'status' ? (
         <Switch
-          checked={params.row.status === 1} // Kiểm tra trạng thái
-          onChange={() => handleStatusChange(params.row)} // Gọi handleStatusChange
+          checked={params.row.status === 1}
+          onChange={() => handleStatusChange(params.row)}
         />
       ) : (
         params.value
@@ -40,6 +53,7 @@ const TableTest: React.FC<TableTestProps<any>> = ({ rows, onDelete, onStatusChan
     headerName: 'Actions',
     headerClassName: 'bg-gray-200 dark:bg-boxdark dark:text-white text-center',
     width: 140,
+    resizable: false,
     renderCell: (params) => (
       <div className="flex justify-center items-center w-full h-full"> 
         <button
@@ -55,6 +69,7 @@ const TableTest: React.FC<TableTestProps<any>> = ({ rows, onDelete, onStatusChan
           <MdEdit /> 
         </Link>
       </div>
+      
     ),
   });
 
@@ -77,27 +92,42 @@ const TableTest: React.FC<TableTestProps<any>> = ({ rows, onDelete, onStatusChan
 
   return (
     <div className="flex flex-col">
-      <div className="flex justify-end ">
-        <Link
-          to="create"
-          className="inline-flex items-center justify-center rounded-md border border-primary py-2 px-10 text-center font-medium text-primary hover:bg-opacity-90 lg:px-20 xl:px-20 mb-8 mx-4"
-        >
-          Create 
-        </Link>
+      <div className="flex justify-between items-center mb-4"> 
+        <div className="relative flex items-center">
+          <div className="relative flex items-center"> {/* Thêm flex items-center */}
+            <input
+              type="text"
+              className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={handleSearchChange}
+            />
+            <BsSearch className="absolute right-2 top-2" size={20} /> {/* Đặt icon vào bên trong */}
+          </div>
+        </div>
+        <div className="flex items-center ">
+          <Link
+            to="create"
+            className=" inline-flex items-center justify-center rounded-md border border-primary py-2 px-10 text-center font-medium text-primary hover:bg-opacity-90 lg:px-20 xl:px-20 mb-8 mx-4 h-10"
+          >
+            Create 
+          </Link>
+        </div>
       </div>
       <div style={{ height: 600, width: '100%' }}>
-        <DataGrid
+        <DataGrid 
           className="rounded-sm border border-stroke shadow-default dark:border-strokedark dark:bg-boxdark"
-          rows={rows}
+          rows={filteredRows} 
           columns={columns}
           pageSizeOptions={[5, 10, 20]}
           disableRowSelectionOnClick
           autoHeight
-          autoWidth
+          disableColumnFilter
+          disableColumnSelector
+          resize
         />
       </div>
     </div>
   );
 };
-
 export default TableTest;

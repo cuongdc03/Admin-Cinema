@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import Breadcrumb from '../Breadcrumbs/Breadcrumb';
-import FilmTable from '../Tables/FilmTable';
 import TableTest from '../Table';
 import { film } from '../../types/film';
 

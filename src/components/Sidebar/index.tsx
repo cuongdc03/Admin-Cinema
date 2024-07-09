@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom'; // Using Link instead of NavLink
+import { Link, useLocation } from 'react-router-dom'; 
 import SidebarLinkGroup from './SidebarLinkGroup';
 import Logo from '../../images/logo/header-logo.webp';
 import { FaHome } from "react-icons/fa";

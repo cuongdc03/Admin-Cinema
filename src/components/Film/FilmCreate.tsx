@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import Breadcrumb from '../Breadcrumbs/Breadcrumb';
 
 const FilmCreate: React.FC = () => {
@@ -61,17 +61,14 @@ const FilmCreate: React.FC = () => {
       if (!response.ok) {
         throw new Error('Failed to create film');
       }
-      console.log('Film created successfully');
       navigate('/film');
     } catch (error) {
-      console.error('Error creating film:', error);
     }
   };
 
   return (
     <>
       <Breadcrumb pageName="Create Film" />
-
       <div className="grid grid-cols-3 gap-9">
         <div className="flex flex-col gap-9 py-9 col-span-2">
           <div className="rounded-sm border border-stroke shadow-default dark:border-strokedark">

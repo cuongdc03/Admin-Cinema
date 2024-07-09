@@ -11,7 +11,7 @@ const CinemaDetail: React.FC = () => {
   const [cinemaDetail, setCinemaDetail] = useState<cinema | null>(null);
   const [provinceCities, setProvinceCities] = useState<{ id: number; name: string }[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showModal, setShowModal] = useState(false); // Khai báo showModal
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
