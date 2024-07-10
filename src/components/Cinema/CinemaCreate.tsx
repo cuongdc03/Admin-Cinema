@@ -17,6 +17,7 @@ const CinemaCreate: React.FC = () => {
 
   const [provinceCities, setProvinceCities] = useState<{ id: number; name: string }[]>([]);
   const [error, setError] = useState<string>('');
+  const [isFormValid, setIsFormValid] = useState(false);
 
   useEffect(() => {
     fetch('https://bl924snd-3000.asse.devtunnels.ms/admin/provincecity')
@@ -45,10 +46,12 @@ const CinemaCreate: React.FC = () => {
         [name]: value,
       }));
     }
+
+    setIsFormValid(!!newCinema.name && !!newCinema.address && !!newCinema.provinceCity);
   };
 
   const handleSaveChanges = () => {
-    if (!newCinema.name || !newCinema.address || !newCinema.provinceCity) {
+    if (!isFormValid) {
       setError('Please fill out all fields.');
       toast.error('Please fill out all fields.');
       return;
@@ -75,7 +78,7 @@ const CinemaCreate: React.FC = () => {
       })
       .then(data => {
         toast.success('Cinema created successfully!');
-        setError(''); // Clear error message if any
+        setError(''); 
         setTimeout(() => {
           navigate('/cinema');
         }, 2000);
@@ -96,7 +99,7 @@ const CinemaCreate: React.FC = () => {
             <div className="flex flex-col gap-5.5 p-6.5">
               <div>
                 <label className="mb-3 block text-black dark:text-white font-extrabold">
-                  Cinema Name
+                  Cinema Name <span className="text-red-500">*</span> 
                 </label>
                 <input
                   type="text"
@@ -109,7 +112,7 @@ const CinemaCreate: React.FC = () => {
 
               <div>
                 <label className="mb-3 block text-black dark:text-white font-extrabold">
-                  Address
+                  Address <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -122,7 +125,7 @@ const CinemaCreate: React.FC = () => {
 
               <div>
                 <label className="mb-3 block text-black dark:text-white font-extrabold">
-                  Province/City
+                  Province/City <span className="text-red-500">*</span>
                 </label>
                 <select
                   name="provinceCity"
@@ -142,10 +145,14 @@ const CinemaCreate: React.FC = () => {
               <button
                 className="mt-4 px-4 py-2 bg-primary text-white rounded-lg shadow-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary"
                 onClick={handleSaveChanges}
+                disabled={!isFormValid}
               >
                 Save Cinema
               </button>
               
+              {error && (
+                <div className="text-red-500">{error}</div>
+              )}
             </div>
           </div>
         </div>

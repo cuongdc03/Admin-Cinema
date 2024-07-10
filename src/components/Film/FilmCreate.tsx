@@ -53,7 +53,7 @@ const FilmCreate: React.FC = () => {
         formData.append('poster', selectedFile);
       }
 
-      const response = await fetch('https://bl924snd-3000.asse.devtunnels.ms/admin/film', { // URL API của bạn
+      const response = await fetch('https://bl924snd-3000.asse.devtunnels.ms/admin/film', { 
         method: 'POST',
         body: formData,
       });

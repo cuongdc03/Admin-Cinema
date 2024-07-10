@@ -5,27 +5,33 @@ interface SidebarLinkGroupProps {
   title: string;
   items: {
     title: string;
-    icon: React.ReactElement; // Now expects a React element
+    icon: React.ReactElement;
     path: string;
+    active?: boolean; 
   }[];
 }
 
 const SidebarLinkGroup = ({ title, items }: SidebarLinkGroupProps) => {
   return (
     <div className="mb-4">
-      <h4 className="font-bold text-sm uppercase text-gray-400">
+      <h6 className="mb-2 text-sm font-medium text-white uppercase dark:text-white">
         {title}
-      </h4>
-      <ul className="mt-2 space-y-1">
-      {items.map((item, index) => (
-        <li key={index}>
-          <Link to={item.path} className="flex items-center px-3 py-2 rounded-md hover:bg-gray-100">
-            {item.icon}  
-            <span className="ml-2 font-medium text-gray-500">{item.title}</span>
-          </Link>
-        </li>
-      ))}
-    </ul>
+      </h6>
+      <ul className="space-y-2">
+        {items.map((item, index) => (
+          <li key={index}>
+            <Link
+              to={item.path}
+              className={`flex items-center px-4 py-2 rounded-md text-sm font-medium ${
+                item.active ? 'text-gray-300 dark:text-gray-400' : 'text-gray-500 dark:text-gray-600' 
+              }`}
+            >
+              {item.icon}
+              <span className="ml-4">{item.title}</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

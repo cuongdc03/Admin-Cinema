@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { cinema } from '../../types/cinema';
-import Breadcrumb from '../Breadcrumbs/Breadcrumb';
 import ScreenList from './ScreenList';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api'; 
+import Breadcrumb from '../Breadcrumbs/Breadcrumb';
 
+interface EditCinemaProps {
+  cinemaId: number; 
+}
 const CinemaDetail: React.FC = () => {
+  const [mapCenter, setMapCenter] = useState({ lat: 0, lng: 0 });
   const { id } = useParams<{ id: string }>();
   const [cinemaDetail, setCinemaDetail] = useState<cinema | null>(null);
   const [provinceCities, setProvinceCities] = useState<{ id: number; name: string }[]>([]);
@@ -17,13 +22,21 @@ const CinemaDetail: React.FC = () => {
   useEffect(() => {
     const fetchCinema = async () => {
       try {
-        const response = await fetch(`https://bl924snd-3000.asse.devtunnels.ms/cinema/${id}`);
+        const response = await fetch(`https://bl924snd-3000.asse.devtunnels.ms/admin/cinema/${id}`);
         if (!response.ok) {
           throw new Error('Failed to fetch cinema details');
         }
         const data = await response.json();
         const { id: cinemaId, name, address, provinceCity, provinceCityId } = data;
         setCinemaDetail({ id: cinemaId, name, address, provinceCity, provinceCityId });
+
+        // Fetch map coordinates only after cinemaDetail is available
+        const responseCoordinates = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${data.address}&key='AIzaSyDVTj5roBXMJwloduHiXL8eELpsJqSYLEs'`);
+        const coordinatesData = await responseCoordinates.json();
+        if (coordinatesData.results.length > 0) {
+          const { lat, lng } = coordinatesData.results[0].geometry.location;
+          setMapCenter({ lat, lng });
+        }
         setLoading(false);
       } catch (error) {
         console.error('Error fetching cinema details:', error);
@@ -46,7 +59,7 @@ const CinemaDetail: React.FC = () => {
 
     fetchCinema();
     fetchProvinceCities();
-  }, [id]);
+  }, [id]); 
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -90,10 +103,6 @@ const CinemaDetail: React.FC = () => {
     }
   };
 
-  const handleDeleteCinema = async () => {
-    setShowModal(true); 
-  };
-
   const confirmDeleteCinema = async () => {
     try {
       const response = await fetch(`https://bl924snd-3000.asse.devtunnels.ms/admin/cinema/${id}`, {
@@ -112,6 +121,7 @@ const CinemaDetail: React.FC = () => {
       setShowModal(false); 
     }
   };
+  
 
   const closeModal = () => {
     setShowModal(false); 
@@ -234,14 +244,29 @@ const CinemaDetail: React.FC = () => {
                   ))}
                 </select>
               </div>
-
-              {/* Nút lưu thay đổi */}
               <button
                 className="mt-4 px-4 py-2 bg-primary text-white rounded-lg shadow-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary"
                 onClick={handleSaveChanges}
               >
                 Save Changes
               </button>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col gap-9 py-9">
+          <div className="rounded-sm ">
+            <div className=" border-stroke  px-6.5">
+            <LoadScript googleMapsApiKey='AIzaSyDVTj5roBXMJwloduHiXL8eELpsJqSYLEs'>
+          <GoogleMap
+            mapContainerStyle={{ height: '475px', width: '100%' }}
+            center={mapCenter}
+            zoom={15}
+          >
+            {cinemaDetail && mapCenter.lat !== 0 && (
+              <Marker position={mapCenter} />
+            )}
+          </GoogleMap>
+        </LoadScript>
             </div>
           </div>
         </div>
@@ -258,7 +283,7 @@ const CinemaDetail: React.FC = () => {
             Create Screen
           </Link>
         </div>
-        <ScreenList />
+        <ScreenList cinemaId={cinemaDetail.id} />
       </div>
     </>
   );

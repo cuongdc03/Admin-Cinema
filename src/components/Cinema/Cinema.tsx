@@ -61,7 +61,7 @@ const Cinema: React.FC = () => {
     fetchData();
   }, []);
 
-  const displayedColumns: (keyof cinema)[] = ['id', 'name', 'address', 'provinceCity', 'status'];
+  const displayedColumns: (keyof cinema)[] = ['id', 'name', 'address', 'provinceCity'];
 
   return (
 
@@ -72,6 +72,7 @@ const Cinema: React.FC = () => {
           displayedColumns={displayedColumns}
           onDelete={handleDeleteCinema}
           onStatusChange={handleStatusChange} 
+          isCinema={true}
         />
     </div>
   );

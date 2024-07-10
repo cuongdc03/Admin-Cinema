@@ -87,36 +87,43 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               title: 'Dashboard',
               icon: <FaHome/>,
               path: '/dashboard',
+              active: pathname.startsWith('/dashboard'), 
             },
             {
               title: 'Cinema',
               icon: <TbTheater/>,
               path: '/cinema',
+              active: pathname.startsWith('/cinema'),
             },
             {
               title: 'Film',
               icon: <LuFilm/>,
               path: '/film',
+              active: pathname.startsWith('/film'),
             },
             {
               title: 'Show',
               icon: <GiFilmSpool/>,
               path: '/show',
+              active: pathname.startsWith('/show'),
             },
             {
               title: 'Ticket',
               icon:  <TbTicket/>,
               path: '/ticket',
+              active: pathname.startsWith('/ticket'),
             },
             {
               title: 'User',
               icon: <MdPeople/>,
               path: '/user',
+              active: pathname.startsWith('/user'),
             },
             {
               title: 'Voucher',
               icon: <GoGift/>,
               path: '/voucher',
+              active: pathname.startsWith('/voucher'),
             },
           ]}
         />
