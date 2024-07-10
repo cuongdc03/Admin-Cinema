@@ -17,33 +17,42 @@ interface ErrorData {
   message: string;
 }
 
-export const request = (method: string) => async (
-  url: string,
-  { query, body = {}, headers, signalKey, _csrf = '', ...rest }: RequestOptions = {}
-): Promise<any> => {
-  const addCSRFToken = httpConstants.METHODS_WITH_CSRF_TOKEN.includes(method);
-  const addBody = httpConstants.METHODS_WITH_BODY.includes(method);
+export const request =
+  (method: string) =>
+  async (
+    url: string,
+    {
+      query,
+      body = {},
+      headers,
+      signalKey,
+      _csrf = '',
+      ...rest
+    }: RequestOptions = {},
+  ): Promise<any> => {
+    const addCSRFToken = httpConstants.METHODS_WITH_CSRF_TOKEN.includes(method);
+    const addBody = httpConstants.METHODS_WITH_BODY.includes(method);
 
-  try {
-    const response = await fetch(getUrlPathWithQuery({ url, query }), {
-      method,
-      mode: httpConstants.CORS_MODE,
-      headers: {
-        'Content-Type': httpConstants.CONTENT_TYPE_JSON,
-        ...(addCSRFToken && { [httpConstants.CSRF_HEADER]: _csrf }),
-        ...headers,
-      },
-      credentials: httpConstants.SAME_ORIGIN,
-      ...(signalKey && { signal: abortAndGetSignalSafe(signalKey) }),
-      ...(addBody && { body: JSON.stringify(body) }),
-      ...rest,
-    });
+    try {
+      const response = await fetch(getUrlPathWithQuery({ url, query }), {
+        method,
+        mode: httpConstants.CORS_MODE,
+        headers: {
+          'Content-Type': httpConstants.CONTENT_TYPE_JSON,
+          ...(addCSRFToken && { [httpConstants.CSRF_HEADER]: _csrf }),
+          ...headers,
+        },
+        credentials: httpConstants.SAME_ORIGIN,
+        ...(signalKey && { signal: abortAndGetSignalSafe(signalKey) }),
+        ...(addBody && { body: JSON.stringify(body) }),
+        ...rest,
+      });
 
-    return handleResponse(response);
-  } catch (error) {
-    return handleError(error);
-  }
-};
+      return handleResponse(response);
+    } catch (error) {
+      return handleError(error);
+    }
+  };
 
 export const customFetch = {
   get: request('GET'),
@@ -57,16 +66,22 @@ interface UrlQueryOptions {
   query?: Record<string, string | number | boolean>;
 }
 
-export const getUrlPathWithQuery = ({ url: partialUrl, query = {} }: UrlQueryOptions): string => {
+export const getUrlPathWithQuery = ({
+  url: partialUrl,
+  query = {},
+}: UrlQueryOptions): string => {
   const url = new URL(partialUrl, httpConstants.BASE_URL);
   const searchParams = new URLSearchParams(
     Object.entries({
       ...Object.fromEntries(url.searchParams),
       ...query,
-    }).reduce((acc, [key, value]) => {
-      acc[key] = String(value);
-      return acc;
-    }, {} as Record<string, string>)
+    }).reduce(
+      (acc, [key, value]) => {
+        acc[key] = String(value);
+        return acc;
+      },
+      {} as Record<string, string>,
+    ),
   );
 
   return `${url.href}?${searchParams}`;
@@ -82,7 +97,10 @@ const handleResponse = async (response: Response): Promise<any> => {
   }
 };
 
-const abortRequestSafe = (key: string, reason: string = httpConstants.ABORT_ERROR_NAME): void => {
+const abortRequestSafe = (
+  key: string,
+  reason: string = httpConstants.ABORT_ERROR_NAME,
+): void => {
   ABORT_REQUEST_CONTROLLERS.get(key)?.abort?.(reason);
 };
 
@@ -102,7 +120,7 @@ const handleError = (error: any): Promise<never> => {
           status: httpConstants.ABORT_ERROR_STATUS,
           message: httpConstants.ABORT_ERROR_MESSAGE,
         }
-      : error
+      : error,
   );
 };
 

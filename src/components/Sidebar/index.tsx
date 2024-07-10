@@ -1,15 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom'; 
+import { Link, useLocation } from 'react-router-dom';
 import SidebarLinkGroup from './SidebarLinkGroup';
 import Logo from '../../images/logo/header-logo.webp';
-import { FaHome } from "react-icons/fa";
-import { TbTheater, TbTicket } from "react-icons/tb";
-import { LuFilm } from "react-icons/lu";
-import { GiFilmSpool } from "react-icons/gi";
-import { MdPeople } from "react-icons/md";
-import { GoGift } from "react-icons/go";
-
-
+import { FaHome } from 'react-icons/fa';
+import { TbTheater, TbTicket } from 'react-icons/tb';
+import { LuFilm } from 'react-icons/lu';
+import { GiFilmSpool } from 'react-icons/gi';
+import { MdPeople } from 'react-icons/md';
+import { GoGift } from 'react-icons/go';
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -25,7 +23,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
   const storedSidebarExpanded = localStorage.getItem('sidebar-expanded');
   const [sidebarExpanded, setSidebarExpanded] = useState(
-    storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true'
+    storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true',
   );
 
   // close on click outside
@@ -85,43 +83,43 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
           items={[
             {
               title: 'Dashboard',
-              icon: <FaHome/>,
+              icon: <FaHome />,
               path: '/dashboard',
-              active: pathname.startsWith('/dashboard'), 
+              active: pathname.startsWith('/dashboard'),
             },
             {
               title: 'Cinema',
-              icon: <TbTheater/>,
+              icon: <TbTheater />,
               path: '/cinema',
               active: pathname.startsWith('/cinema'),
             },
             {
               title: 'Film',
-              icon: <LuFilm/>,
+              icon: <LuFilm />,
               path: '/film',
               active: pathname.startsWith('/film'),
             },
             {
               title: 'Show',
-              icon: <GiFilmSpool/>,
+              icon: <GiFilmSpool />,
               path: '/show',
               active: pathname.startsWith('/show'),
             },
             {
               title: 'Ticket',
-              icon:  <TbTicket/>,
+              icon: <TbTicket />,
               path: '/ticket',
               active: pathname.startsWith('/ticket'),
             },
             {
               title: 'User',
-              icon: <MdPeople/>,
+              icon: <MdPeople />,
               path: '/user',
               active: pathname.startsWith('/user'),
             },
             {
               title: 'Voucher',
-              icon: <GoGift/>,
+              icon: <GoGift />,
               path: '/voucher',
               active: pathname.startsWith('/voucher'),
             },

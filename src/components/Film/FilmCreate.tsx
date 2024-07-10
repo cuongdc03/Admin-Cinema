@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {  useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Breadcrumb from '../Breadcrumbs/Breadcrumb';
 
 const FilmCreate: React.FC = () => {
@@ -20,12 +20,17 @@ const FilmCreate: React.FC = () => {
   });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = event.target;
     setFilmData({ ...filmData, [name]: value });
   };
 
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>, name: string) => {
+  const handleCheckboxChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    name: string,
+  ) => {
     setFilmData({ ...filmData, [name]: event.target.checked });
   };
 
@@ -53,17 +58,19 @@ const FilmCreate: React.FC = () => {
         formData.append('poster', selectedFile);
       }
 
-      const response = await fetch('https://bl924snd-3000.asse.devtunnels.ms/admin/film', { 
-        method: 'POST',
-        body: formData,
-      });
+      const response = await fetch(
+        'https://bl924snd-3000.asse.devtunnels.ms/admin/film',
+        {
+          method: 'POST',
+          body: formData,
+        },
+      );
 
       if (!response.ok) {
         throw new Error('Failed to create film');
       }
       navigate('/film');
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   return (
@@ -220,22 +227,38 @@ const FilmCreate: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className='col-span-1 py-9 w-full'>
-          <div className='rounded-lg border border-stroke shadow-default dark:border-strokedark'>
-            <input 
+        <div className="col-span-1 py-9 w-full">
+          <div className="rounded-lg border border-stroke shadow-default dark:border-strokedark">
+            <input
               type="file"
-              accept="image/*" 
+              accept="image/*"
               onChange={handleFileChange}
-              className="hidden" 
-              id="posterInput" 
+              className="hidden"
+              id="posterInput"
             />
-            <label htmlFor="posterInput" className="flex items-center justify-center w-full px-4 py-2 rounded-md border border-gray-300 text-gray-500 hover:bg-gray-100 cursor-pointer">
+            <label
+              htmlFor="posterInput"
+              className="flex items-center justify-center w-full px-4 py-2 rounded-md border border-gray-300 text-gray-500 hover:bg-gray-100 cursor-pointer"
+            >
               <span className="font-medium">Choose Picture</span>
-              <svg className="ml-2 -mr-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.5 12h15m0 0l-6.75-6.75M17.25 12l6.75 6.75" /></svg>
+              <svg
+                className="ml-2 -mr-1 w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4.5 12h15m0 0l-6.75-6.75M17.25 12l6.75 6.75"
+                />
+              </svg>
             </label>
-            <img 
-              src={filmData.poster || 'placeholder.jpg'} 
-              className='w-full rounded-lg mt-2'
+            <img
+              src={filmData.poster || 'placeholder.jpg'}
+              className="w-full rounded-lg mt-2"
             />
           </div>
         </div>

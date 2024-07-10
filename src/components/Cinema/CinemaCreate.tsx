@@ -12,42 +12,48 @@ const CinemaCreate: React.FC = () => {
     address: '',
     provinceCity: '',
     provinceCityId: 0,
-    status: false
+    status: false,
   });
 
-  const [provinceCities, setProvinceCities] = useState<{ id: number; name: string }[]>([]);
+  const [provinceCities, setProvinceCities] = useState<
+    { id: number; name: string }[]
+  >([]);
   const [error, setError] = useState<string>('');
   const [isFormValid, setIsFormValid] = useState(false);
 
   useEffect(() => {
     fetch('https://bl924snd-3000.asse.devtunnels.ms/admin/provincecity')
-      .then(response => response.json())
-      .then(data => setProvinceCities(data))
-      .catch(error => {
+      .then((response) => response.json())
+      .then((data) => setProvinceCities(data))
+      .catch((error) => {
         toast.error('Error fetching province/city data. Please try again.');
       });
   }, []);
 
   const navigate = useNavigate();
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = event.target;
     setError('');
     if (name === 'provinceCity') {
-      const selectedCity = provinceCities.find(city => city.name === value);
-      setNewCinema(prevCinema => ({
+      const selectedCity = provinceCities.find((city) => city.name === value);
+      setNewCinema((prevCinema) => ({
         ...prevCinema,
         [name]: value,
-        provinceCityId: selectedCity ? selectedCity.id : 0
+        provinceCityId: selectedCity ? selectedCity.id : 0,
       }));
     } else {
-      setNewCinema(prevCinema => ({
+      setNewCinema((prevCinema) => ({
         ...prevCinema,
         [name]: value,
       }));
     }
 
-    setIsFormValid(!!newCinema.name && !!newCinema.address && !!newCinema.provinceCity);
+    setIsFormValid(
+      !!newCinema.name && !!newCinema.address && !!newCinema.provinceCity,
+    );
   };
 
   const handleSaveChanges = () => {
@@ -70,20 +76,20 @@ const CinemaCreate: React.FC = () => {
       },
       body: JSON.stringify(cinemaData),
     })
-      .then(response => {
+      .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         return response.json();
       })
-      .then(data => {
+      .then((data) => {
         toast.success('Cinema created successfully!');
-        setError(''); 
+        setError('');
         setTimeout(() => {
           navigate('/cinema');
         }, 2000);
       })
-      .catch(error => {
+      .catch((error) => {
         toast.error('Error creating cinema. Please try again.');
       });
   };
@@ -94,12 +100,11 @@ const CinemaCreate: React.FC = () => {
       <div className="grid grid-cols-1 gap-9 sm:grid-cols-2">
         <div className="flex flex-col gap-9">
           <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-            <div className="border-b border-stroke py-2 px-6.5 dark:border-strokedark">
-            </div>
+            <div className="border-b border-stroke py-2 px-6.5 dark:border-strokedark"></div>
             <div className="flex flex-col gap-5.5 p-6.5">
               <div>
                 <label className="mb-3 block text-black dark:text-white font-extrabold">
-                  Cinema Name <span className="text-red-500">*</span> 
+                  Cinema Name <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -133,15 +138,17 @@ const CinemaCreate: React.FC = () => {
                   onChange={handleChange}
                   className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                 >
-                  <option value="" disabled>Select Province/City</option>
-                  {provinceCities.map(city => (
+                  <option value="" disabled>
+                    Select Province/City
+                  </option>
+                  {provinceCities.map((city) => (
                     <option key={city.id} value={city.name}>
                       {city.name}
                     </option>
                   ))}
                 </select>
               </div>
-              
+
               <button
                 className="mt-4 px-4 py-2 bg-primary text-white rounded-lg shadow-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary"
                 onClick={handleSaveChanges}
@@ -149,10 +156,8 @@ const CinemaCreate: React.FC = () => {
               >
                 Save Cinema
               </button>
-              
-              {error && (
-                <div className="text-red-500">{error}</div>
-              )}
+
+              {error && <div className="text-red-500">{error}</div>}
             </div>
           </div>
         </div>

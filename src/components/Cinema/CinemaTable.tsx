@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { cinema } from '../../types/cinema';
 import SwitcherFour from '../Switchers/SwitcherFour';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
-import { MdModeEditOutline } from "react-icons/md";
+import { MdModeEditOutline } from 'react-icons/md';
 interface cinemasProps {
   cinemas: cinema[];
   fetchCinemas: () => void;
@@ -22,7 +22,7 @@ const CinemaTable: React.FC<cinemasProps> = ({ cinemas, fetchCinemas }) => {
   }, [cinemas]);
 
   const toggleSwitch = (index: number) => {
-    setSwitchStates(prevStates => {
+    setSwitchStates((prevStates) => {
       const newStates = [...prevStates];
       newStates[index] = !newStates[index];
       return newStates;
@@ -47,8 +47,8 @@ const CinemaTable: React.FC<cinemasProps> = ({ cinemas, fetchCinemas }) => {
         <div className="col-span-3 flex items-center">
           <p className="font-medium">ProvinceCity</p>
         </div>
-        <div className='col-span-2 flex items-center'>
-          <p className='font-medium'>Status</p>
+        <div className="col-span-2 flex items-center">
+          <p className="font-medium">Status</p>
         </div>
         <div className="col-span-1 flex items-center">
           <p className="font-medium">Action</p>
@@ -78,24 +78,24 @@ const CinemaTable: React.FC<cinemasProps> = ({ cinemas, fetchCinemas }) => {
               {cinema.provinceCity}
             </p>
           </div>
-          <div className='col-span-2'>
+          <div className="col-span-2">
             <SwitcherFour
               enabled={switchStates[index]}
               toggle={() => toggleSwitch(index)}
             />
           </div>
-          <div className='col-span-1 flex items-center'>
+          <div className="col-span-1 flex items-center">
             <Link
               to={`/cinema/${cinema.id}`}
               className="text-sm text-blue-600 hover:underline"
             >
-              <MdModeEditOutline/>
+              <MdModeEditOutline />
             </Link>
             <Link
               to={`/cinema/${cinema.id}`}
               className="text-sm text-blue-600 hover:underline"
             >
-              <RiDeleteBin6Fill/>
+              <RiDeleteBin6Fill />
             </Link>
           </div>
         </div>

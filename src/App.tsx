@@ -5,7 +5,7 @@ import PageTitle from './components/PageTitle';
 import DefaultLayout from './layout/DefaultLayout';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Film from './components/Film/Film';
-import Show from './components/Show/Show'
+import Show from './components/Show/Show';
 import Ticket from './pages/Ticket';
 import User from './pages/User';
 import Voucher from './pages/Voucher';
@@ -91,7 +91,7 @@ function App() {
             </>
           }
         />
-          <Route
+        <Route
           path="/film/Create"
           element={
             <>

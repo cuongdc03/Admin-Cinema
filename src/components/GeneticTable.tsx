@@ -19,16 +19,20 @@ interface TableProps<T> {
   onCheckboxChange?: (index: number) => void; // Hàm xử lý khi checkbox thay đổi
 }
 
-const GenericTable: React.FC<TableProps<any>> = ({ data, columns, onCheckboxChange }) => {
-  const [selectedRows, setSelectedRows] = useState<number[]>([]); 
-  const [selectAll, setSelectAll] = useState(false); 
+const GenericTable: React.FC<TableProps<any>> = ({
+  data,
+  columns,
+  onCheckboxChange,
+}) => {
+  const [selectedRows, setSelectedRows] = useState<number[]>([]);
+  const [selectAll, setSelectAll] = useState(false);
 
   const handleCheckboxChange = (index: number) => {
-    setSelectedRows(prevRows => {
+    setSelectedRows((prevRows) => {
       if (prevRows.includes(index)) {
-        return prevRows.filter(row => row !== index); 
+        return prevRows.filter((row) => row !== index);
       } else {
-        return [...prevRows, index]; 
+        return [...prevRows, index];
       }
     });
     onCheckboxChange && onCheckboxChange(index); // Gọi hàm onCheckboxChange nếu có
@@ -36,7 +40,9 @@ const GenericTable: React.FC<TableProps<any>> = ({ data, columns, onCheckboxChan
 
   const toggleAllSwitches = () => {
     setSelectAll(!selectAll);
-    setSelectedRows(selectAll ? [] : Array.from({ length: data.length }, (_, index) => index));
+    setSelectedRows(
+      selectAll ? [] : Array.from({ length: data.length }, (_, index) => index),
+    );
   };
 
   const renderColumn = (item: any, column: TableColumn, index: number) => {
@@ -53,11 +59,17 @@ const GenericTable: React.FC<TableProps<any>> = ({ data, columns, onCheckboxChan
       return (
         <SwitcherFour
           enabled={item[column.switchStateKey]} // Sử dụng column.switchStateKey để truy cập trạng thái
-          toggle={() => column.switchToggleHandler && column.switchToggleHandler(index)}
+          toggle={() =>
+            column.switchToggleHandler && column.switchToggleHandler(index)
+          }
         />
       );
     } else {
-      return <p className="text-sm text-black dark:text-white">{item[column.field]}</p>;
+      return (
+        <p className="text-sm text-black dark:text-white">
+          {item[column.field]}
+        </p>
+      );
     }
   };
 
@@ -69,7 +81,11 @@ const GenericTable: React.FC<TableProps<any>> = ({ data, columns, onCheckboxChan
         </h4>
       </div>
 
-      <div className={`grid grid-cols-${columns.filter(c => !c.hidden).length + 1} border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-12 md:px-6 2xl:px-7.5`}>
+      <div
+        className={`grid grid-cols-${
+          columns.filter((c) => !c.hidden).length + 1
+        } border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-12 md:px-6 2xl:px-7.5`}
+      >
         <div className="col-span-1 flex items-center">
           {/* Checkbox for selecting all rows */}
           <input
@@ -78,20 +94,24 @@ const GenericTable: React.FC<TableProps<any>> = ({ data, columns, onCheckboxChan
             onChange={toggleAllSwitches}
           />
         </div>
-        {columns.filter(c => !c.hidden).map(column => (
-          <div
-            key={column.name}
-            className={`col-span-${column.width} flex items-center`}
-          >
-            <p className="font-medium">{column.name}</p>
-          </div>
-        ))}
+        {columns
+          .filter((c) => !c.hidden)
+          .map((column) => (
+            <div
+              key={column.name}
+              className={`col-span-${column.width} flex items-center`}
+            >
+              <p className="font-medium">{column.name}</p>
+            </div>
+          ))}
       </div>
 
       {data.map((item, index) => (
         <div
           key={index}
-          className={`grid grid-cols-${columns.filter(c => !c.hidden).length} border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-12 md:px-6 2xl:px-7.5`}
+          className={`grid grid-cols-${
+            columns.filter((c) => !c.hidden).length
+          } border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-12 md:px-6 2xl:px-7.5`}
         >
           <div className="col-span-1 flex items-center">
             {/* Checkbox for each row */}
@@ -102,8 +122,8 @@ const GenericTable: React.FC<TableProps<any>> = ({ data, columns, onCheckboxChan
             />
           </div>
           {columns
-            .filter(c => !c.hidden)
-            .map(column => (
+            .filter((c) => !c.hidden)
+            .map((column) => (
               <div
                 key={column.name}
                 className={`col-span-${column.width} flex items-center`}

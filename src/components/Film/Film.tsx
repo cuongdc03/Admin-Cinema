@@ -9,7 +9,9 @@ const Film: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('https://bl924snd-3000.asse.devtunnels.ms/film');
+        const response = await fetch(
+          'https://bl924snd-3000.asse.devtunnels.ms/film',
+        );
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }
@@ -22,12 +24,18 @@ const Film: React.FC = () => {
 
     fetchData();
   }, []);
-  const displayedColumns: (keyof film)[] = ['id', 'filmName', 'director', 'category', 'status']; // Các thuộc tính muốn hiển thị
+  const displayedColumns: (keyof film)[] = [
+    'id',
+    'filmName',
+    'director',
+    'category',
+    'status',
+  ]; // Các thuộc tính muốn hiển thị
 
   return (
     <>
       <Breadcrumb pageName="Film" />
-      <TableTest rows={Films} displayedColumns={displayedColumns}/>
+      <TableTest rows={Films} displayedColumns={displayedColumns} />
     </>
   );
 };

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import DropdownUser from './DropdownUser';
-import LogoIcon from '../../images/logo/header-logo.webp'; 
+import LogoIcon from '../../images/logo/header-logo.webp';
 import DarkModeSwitcher from './DarkModeSwitcher';
 
 const Header = (props: {
@@ -55,12 +55,12 @@ const Header = (props: {
           {/* <!-- Hamburger Toggle BTN --> */}
 
           <Link className="block flex-shrink-0 lg:hidden" to="/">
-            <img src={LogoIcon} className="w-64 h-20" alt="Logo" /> {/* Thay đổi kích thước logo tại đây */}
+            <img src={LogoIcon} className="w-64 h-20" alt="Logo" />{' '}
+            {/* Thay đổi kích thước logo tại đây */}
           </Link>
         </div>
 
-        <div className="hidden sm:block">
-        </div>
+        <div className="hidden sm:block"></div>
 
         <div className="flex items-center gap-3 2xsm:gap-7">
           <ul className="flex items-center gap-2 2xsm:gap-4">

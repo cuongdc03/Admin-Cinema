@@ -4,17 +4,19 @@ import { cinema } from '../../types/cinema';
 import ScreenList from './ScreenList';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api'; 
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import Breadcrumb from '../Breadcrumbs/Breadcrumb';
 
 interface EditCinemaProps {
-  cinemaId: number; 
+  cinemaId: number;
 }
 const CinemaDetail: React.FC = () => {
   const [mapCenter, setMapCenter] = useState({ lat: 0, lng: 0 });
   const { id } = useParams<{ id: string }>();
   const [cinemaDetail, setCinemaDetail] = useState<cinema | null>(null);
-  const [provinceCities, setProvinceCities] = useState<{ id: number; name: string }[]>([]);
+  const [provinceCities, setProvinceCities] = useState<
+    { id: number; name: string }[]
+  >([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
@@ -22,16 +24,32 @@ const CinemaDetail: React.FC = () => {
   useEffect(() => {
     const fetchCinema = async () => {
       try {
-        const response = await fetch(`https://bl924snd-3000.asse.devtunnels.ms/admin/cinema/${id}`);
+        const response = await fetch(
+          `https://bl924snd-3000.asse.devtunnels.ms/admin/cinema/${id}`,
+        );
         if (!response.ok) {
           throw new Error('Failed to fetch cinema details');
         }
         const data = await response.json();
-        const { id: cinemaId, name, address, provinceCity, provinceCityId } = data;
-        setCinemaDetail({ id: cinemaId, name, address, provinceCity, provinceCityId });
+        const {
+          id: cinemaId,
+          name,
+          address,
+          provinceCity,
+          provinceCityId,
+        } = data;
+        setCinemaDetail({
+          id: cinemaId,
+          name,
+          address,
+          provinceCity,
+          provinceCityId,
+        });
 
         // Fetch map coordinates only after cinemaDetail is available
-        const responseCoordinates = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${data.address}&key='AIzaSyDVTj5roBXMJwloduHiXL8eELpsJqSYLEs'`);
+        const responseCoordinates = await fetch(
+          `https://maps.googleapis.com/maps/api/geocode/json?address=${data.address}&key='AIzaSyDVTj5roBXMJwloduHiXL8eELpsJqSYLEs'`,
+        );
         const coordinatesData = await responseCoordinates.json();
         if (coordinatesData.results.length > 0) {
           const { lat, lng } = coordinatesData.results[0].geometry.location;
@@ -46,7 +64,9 @@ const CinemaDetail: React.FC = () => {
 
     const fetchProvinceCities = async () => {
       try {
-        const response = await fetch('https://bl924snd-3000.asse.devtunnels.ms/admin/provincecity');
+        const response = await fetch(
+          'https://bl924snd-3000.asse.devtunnels.ms/admin/provincecity',
+        );
         if (!response.ok) {
           throw new Error('Failed to fetch province/city data');
         }
@@ -59,16 +79,24 @@ const CinemaDetail: React.FC = () => {
 
     fetchCinema();
     fetchProvinceCities();
-  }, [id]); 
+  }, [id]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = e.target;
     if (name === 'provinceCity') {
-      const selectedCity = provinceCities.find(city => city.name === value);
+      const selectedCity = provinceCities.find((city) => city.name === value);
       const provinceCityId = selectedCity ? selectedCity.id : 0;
-      setCinemaDetail(prevDetail => prevDetail ? { ...prevDetail, [name]: value, provinceCityId: provinceCityId } : null);
+      setCinemaDetail((prevDetail) =>
+        prevDetail
+          ? { ...prevDetail, [name]: value, provinceCityId: provinceCityId }
+          : null,
+      );
     } else {
-      setCinemaDetail(prevDetail => prevDetail ? { ...prevDetail, [name]: value } : null);
+      setCinemaDetail((prevDetail) =>
+        prevDetail ? { ...prevDetail, [name]: value } : null,
+      );
     }
   };
 
@@ -81,13 +109,16 @@ const CinemaDetail: React.FC = () => {
         provinceCityId: cinemaDetail?.provinceCityId,
       };
 
-      const response = await fetch(`https://bl924snd-3000.asse.devtunnels.ms/admin/cinema`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
+      const response = await fetch(
+        `https://bl924snd-3000.asse.devtunnels.ms/admin/cinema`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(cinemaData),
         },
-        body: JSON.stringify(cinemaData),
-      });
+      );
 
       if (!response.ok) {
         throw new Error('Failed to save changes');
@@ -105,9 +136,12 @@ const CinemaDetail: React.FC = () => {
 
   const confirmDeleteCinema = async () => {
     try {
-      const response = await fetch(`https://bl924snd-3000.asse.devtunnels.ms/admin/cinema/${id}`, {
-        method: 'DELETE',
-      });
+      const response = await fetch(
+        `https://bl924snd-3000.asse.devtunnels.ms/admin/cinema/${id}`,
+        {
+          method: 'DELETE',
+        },
+      );
       if (!response.ok) {
         throw new Error('Failed to delete cinema');
       }
@@ -118,13 +152,12 @@ const CinemaDetail: React.FC = () => {
       console.error('Error deleting cinema:', error);
       toast.error('Failed to delete cinema');
     } finally {
-      setShowModal(false); 
+      setShowModal(false);
     }
   };
-  
 
   const closeModal = () => {
-    setShowModal(false); 
+    setShowModal(false);
   };
 
   if (loading) {
@@ -237,8 +270,8 @@ const CinemaDetail: React.FC = () => {
                   className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                   onChange={handleInputChange}
                 >
-                  {provinceCities.map(city => (
-                    <option  className="right-2"key={city.id} value={city.name}>
+                  {provinceCities.map((city) => (
+                    <option className="right-2" key={city.id} value={city.name}>
                       {city.name}
                     </option>
                   ))}
@@ -256,17 +289,17 @@ const CinemaDetail: React.FC = () => {
         <div className="flex flex-col gap-9 py-9">
           <div className="rounded-sm ">
             <div className=" border-stroke  px-6.5">
-            <LoadScript googleMapsApiKey='AIzaSyDVTj5roBXMJwloduHiXL8eELpsJqSYLEs'>
-          <GoogleMap
-            mapContainerStyle={{ height: '475px', width: '100%' }}
-            center={mapCenter}
-            zoom={15}
-          >
-            {cinemaDetail && mapCenter.lat !== 0 && (
-              <Marker position={mapCenter} />
-            )}
-          </GoogleMap>
-        </LoadScript>
+              <LoadScript googleMapsApiKey="AIzaSyDVTj5roBXMJwloduHiXL8eELpsJqSYLEs">
+                <GoogleMap
+                  mapContainerStyle={{ height: '475px', width: '100%' }}
+                  center={mapCenter}
+                  zoom={15}
+                >
+                  {cinemaDetail && mapCenter.lat !== 0 && (
+                    <Marker position={mapCenter} />
+                  )}
+                </GoogleMap>
+              </LoadScript>
             </div>
           </div>
         </div>

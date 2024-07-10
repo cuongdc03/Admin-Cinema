@@ -7,7 +7,7 @@ interface SidebarLinkGroupProps {
     title: string;
     icon: React.ReactElement;
     path: string;
-    active?: boolean; 
+    active?: boolean;
   }[];
 }
 
@@ -23,7 +23,9 @@ const SidebarLinkGroup = ({ title, items }: SidebarLinkGroupProps) => {
             <Link
               to={item.path}
               className={`flex items-center px-4 py-2 rounded-md text-sm font-medium ${
-                item.active ? 'text-gray-300 dark:text-gray-400' : 'text-gray-500 dark:text-gray-600' 
+                item.active
+                  ? 'text-gray-300 dark:text-gray-400'
+                  : 'text-gray-500 dark:text-gray-600'
               }`}
             >
               {item.icon}
