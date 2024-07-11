@@ -1,8 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { Link } from 'react-router-dom';
 import { MdDelete, MdEdit } from 'react-icons/md';
-import { BsEyeFill } from 'react-icons/bs';
 
 interface ScreenListProps {
   cinemaId: number;
@@ -52,39 +50,35 @@ const ScreenList: React.FC<ScreenListProps> = ({ cinemaId, onEdit }) => {
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 150, resizable: false },
     { field: 'name', headerName: 'Screen Name', width: 200, resizable: false },
-    { field: 'len', headerName: 'Length', width: 150, resizable: false },
-    { field: 'width', headerName: 'Width', width: 150, resizable: false },
     {
       field: 'totalSeats',
       headerName: 'Total Seats',
       width: 200,
       resizable: false,
     },
+    // Action column should be the last one
     {
       field: 'actions',
       headerName: 'Actions',
       resizable: false,
+      headerAlign: 'center',
+      align: 'center',
       width: 200,
       renderCell: (params) => (
         <div className="flex justify-center items-center gap-4 h-full">
+            <button
+            onClick={() => handleEdit(params.row)}
+            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex"
+          >
+            <MdEdit />
+          </button>
           <button
             onClick={() => handleDelete(params.row)}
             className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-2"
           >
             <MdDelete />
           </button>
-          <Link
-            to={`/screen/${params.row.id}/seatmatrix`}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex"
-          >
-            <BsEyeFill />
-          </Link>
-          <button
-            onClick={() => handleEdit(params.row)}
-            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex"
-          >
-            <MdEdit />
-          </button>
+
         </div>
       ),
     },
@@ -106,7 +100,6 @@ const ScreenList: React.FC<ScreenListProps> = ({ cinemaId, onEdit }) => {
   };
 
   const handleEdit = (screen: any) => {
-    // Call the function in EditCinema to set screenToEdit and showModal
     onEdit(screen);
   };
 
