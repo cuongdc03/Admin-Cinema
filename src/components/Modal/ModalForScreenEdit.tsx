@@ -1,63 +1,54 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, Input, Button, Select, Row, Col, Space } from 'antd';
+import { Modal, Input, message } from 'antd';
 import SeatMatrixEditor from '../SeatMatrix/SeatMatrixEditor';
+import { Button } from '@mui/material';
 
-interface CustomModalforScreenProps {
-  isVisible: boolean;
-  onClose: () => void;
-  onSave: (screenData: any) => void; // Callback to save changes
-  screenId: number; // Screen ID to fetch data
+interface Seat {
+  price: number;
+  isSeat: boolean;
+  name: string;
+  isOff: boolean;
+  isSold: boolean;
+  onHold: string;
+  colId: number;
+  seatId: number;
 }
 
-const CustomModalforScreen: React.FC<CustomModalforScreenProps> = ({
+interface RowData {
+  rowName: string;
+  rowSeats: Seat[];
+}
+
+interface ModalForScreenEditProps {
+  isVisible: boolean;
+  onClose: () => void;
+  onSave: (screenData: any) => void;
+  screen: any;
+}
+
+const ModalForScreenEdit: React.FC<ModalForScreenEditProps> = ({
   isVisible,
   onClose,
   onSave,
-  screenId,
+  screen,
 }) => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [screenData, setScreenData] = useState({
-    id: '',
-    name: '',
-    width: '',
-    height: '',
-    seatMatrix: '',
-  });
-  const [seatMatrix, setSeatMatrix] = useState<any[]>([]);
+  const [seatMatrix, setSeatMatrix] = useState<RowData[]>([]);
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    const fetchScreenData = async () => {
-      try {
-        const response = await fetch(
-          `https://bl924snd-3000.asse.devtunnels.ms/screen/${screenId}`,
-        );
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch screen data');
-        }
-
-        const data = await response.json();
-        setScreenData(data); // Update screenData state
-        setSeatMatrix(JSON.parse(data.seatMatrix || '[]')); // Parse seatMatrix and update state
-      } catch (error) {
-        console.error('Error fetching screen data:', error);
-      }
-    };
-
-    if (screenId) {
-      fetchScreenData();
-      console.log(screenData)
+    if (screen) {
+      setSeatMatrix(screen.seatMatrix ? JSON.parse(screen.seatMatrix).data : []);
     }
-  }, [screenId]);
+  }, [screen]);
 
-  const handleInputChange = (e: any) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setScreenData({ ...screenData, [name]: value });
+    onSave({ ...screen, [name]: value });
   };
 
-  const handleSeatMatrixChange = (newMatrix: any[]) => {
-    setSeatMatrix(newMatrix);
+  const handleSeatMatrixChange = (newMatrix: string) => {
+    onSave({ ...screen, seatMatrix: newMatrix });
   };
 
   const handleNextStep = () => {
@@ -67,14 +58,26 @@ const CustomModalforScreen: React.FC<CustomModalforScreenProps> = ({
   const handleSaveChanges = async () => {
     try {
       setIsSaving(true);
-      // Convert seatMatrix to the format you need
-      const formattedSeatMatrix = JSON.stringify(seatMatrix);
-      const updatedScreenData = { ...screenData, seatMatrix: formattedSeatMatrix };
-      await onSave(updatedScreenData);
+
+      // Gọi API để lưu thay đổi
+      const response = await fetch(`https://bl924snd-3000.asse.devtunnels.ms//admin/screen/${screen.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(screen), 
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to save screen: ${response.status}`);
+      }
+
+      message.success('Update screen successfully');
       onClose();
-      setIsSaving(false);
     } catch (error) {
       console.error('Error saving screen data:', error);
+      message.error('Update screen failed');
+    } finally {
       setIsSaving(false);
     }
   };
@@ -82,16 +85,17 @@ const CustomModalforScreen: React.FC<CustomModalforScreenProps> = ({
   const handleBackStep = () => {
     setCurrentStep((prevStep) => prevStep - 1);
   };
-console.log(screenData);
 
   return (
     <Modal
+      height={800}
+      width={800}
       title="Edit Screen"
       visible={isVisible}
       onCancel={onClose}
       footer={
-        currentStep === 3 ? (
-          <Button key="submit" type="primary" loading={isSaving} onClick={handleSaveChanges}>
+        currentStep === 2 ? (
+          <Button key="submit" type="primary" loading={isSaving} onClick={handleSaveChanges} className='bg-blue-400'>
             Save Changes
           </Button>
         ) : (
@@ -108,28 +112,63 @@ console.log(screenData);
         )
       }
     >
-      {currentStep === 1 && (
-        <Form layout="vertical" onFinish={handleNextStep}>
-          <Form.Item label="Screen ID" name="id">
-            <Input value={screenData.id} onChange={handleInputChange} disabled />
-          </Form.Item>
-          <Form.Item label="Screen Name" name="name">
-            <Input value={screenData.name} onChange={handleInputChange} />
-          </Form.Item>
-          <Form.Item label="Width" name="width">
-            <Input type="number" value={screenData.width} onChange={handleInputChange} />
-          </Form.Item>
-          <Form.Item label="Height" name="height">
-            <Input type="number" value={screenData.height} onChange={handleInputChange} />
-          </Form.Item>
-        </Form>
+      {/* Step 1: Thông tin cơ bản */}
+      {currentStep === 1 && screen && (
+        <div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              Screen ID
+            </label>
+            <Input
+              value={screen.id}
+              onChange={handleInputChange}
+              disabled
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              Screen Name
+            </label>
+            <Input
+              name="name"
+              value={screen.name}
+              onChange={handleInputChange}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              Width
+            </label>
+            <Input
+              type="number"
+              name="width"
+              value={screen.width}
+              onChange={handleInputChange}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              Height
+            </label>
+            <Input
+              type="number"
+              name="len"
+              value={screen.len}
+              onChange={handleInputChange}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
+          </div>
+        </div>
       )}
 
-      {currentStep === 2 && (
-        <div>
-          {/* Implement Seat Matrix Editor here */}
-          <SeatMatrixEditor
-            seatMatrix={seatMatrix}
+      {/* Step 2: Chỉnh sửa ma trận ghế */}
+      {currentStep === 2 && screen && (
+        <div className='flex justify-center'>
+          <SeatMatrixEditor 
+            seatMatrix={screen.seatMatrix}
             onChange={handleSeatMatrixChange}
           />
         </div>
@@ -138,6 +177,4 @@ console.log(screenData);
   );
 };
 
-// SeatMatrixEditor component (Implement based on your needs)
-
-export default CustomModalforScreen;
+export default ModalForScreenEdit;

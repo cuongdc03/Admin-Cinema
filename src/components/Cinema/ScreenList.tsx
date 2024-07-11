@@ -1,18 +1,21 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { MdDelete, MdEdit } from 'react-icons/md';
-import CustomModalforScreen from '../Modal/ModalForScreenEdit'; // Import your custom modal
+import ModalForScreenEdit from '../Modal/ModalForScreenEdit';
+
 
 interface ScreenListProps {
   cinemaId: number;
-  onEdit: (screen: any) => void; // Callback to EditCinema
+  screenList: any[];
+  onEdit: (screen: any) => void;
 }
 
-const ScreenList: React.FC<ScreenListProps> = ({ cinemaId, onEdit }) => {
-  const [screens, setScreens] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
+const ScreenList: React.FC<ScreenListProps> = ({ cinemaId, screenList, onEdit }) => {
+  const [screens, setScreens] = useState<any[]>(screenList);
+  const [loading, setLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedScreen, setSelectedScreen] = useState<any | null>(null);
+  const [modalKey, setModalKey] = useState(0);
 
   const countSeats = useCallback((screen: any) => {
     if (screen.seatMatrix) {
@@ -25,39 +28,24 @@ const ScreenList: React.FC<ScreenListProps> = ({ cinemaId, onEdit }) => {
   }, []);
 
   useEffect(() => {
-    const fetchScreens = async () => {
-      try {
-        const response = await fetch(
-          `https://bl924snd-3000.asse.devtunnels.ms/admin/cinema/${cinemaId}`,
-        );
-        if (!response.ok) {
-          throw new Error('Failed to fetch screens');
-        }
-        const data = await response.json();
-        // Add totalSeats when fetching the data
-        const updatedScreens = data.screenList.map((screen: any) => ({
-          ...screen,
-          totalSeats: countSeats(screen),
-        }));
-        setScreens(updatedScreens);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching screens:', error);
-        setLoading(false);
-      }
-    };
-
-    fetchScreens();
-  }, [cinemaId, countSeats]);
+    setScreens(screenList.map((screen: any) => ({
+      ...screen,
+      totalSeats: countSeats(screen),
+    })));
+  }, [screenList, countSeats]);
 
   const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 150, resizable: false },
-    { field: 'name', headerName: 'Screen Name', width: 200, resizable: false },
+    { field: 'id', headerName: 'ID', width: 300, resizable: false },
+    { field: 'name', headerName: 'Screen Name', width: 300, resizable: false },
     {
       field: 'totalSeats',
       headerName: 'Total Seats',
       width: 200,
       resizable: false,
+      renderCell: (params) => {
+        const screen = params.row;
+        return screen.totalSeats || 0; // Display totalSeats if available, otherwise 0
+      },
     },
     {
       field: 'actions',
@@ -66,6 +54,7 @@ const ScreenList: React.FC<ScreenListProps> = ({ cinemaId, onEdit }) => {
       headerAlign: 'center',
       align: 'center',
       width: 200,
+      headerClassName: 'ml-auto', // Áp dụng class Tailwind
       renderCell: (params) => (
         <div className="flex justify-center items-center gap-4 h-full">
             <button
@@ -103,13 +92,16 @@ const ScreenList: React.FC<ScreenListProps> = ({ cinemaId, onEdit }) => {
 
   const handleEdit = (screen: any) => {
     setSelectedScreen(screen);
-    setIsModalOpen(true); // Show the modal when Edit is clicked
+    setModalKey((prevKey) => prevKey + 1); // Tăng key mỗi khi mở Modal
+    setIsModalOpen(true);
   };
   const handleScreenSave = async (screenData: any) => {
     try {
-      // ... (your save logic)
+      // ... Implement your save logic here ...
+      console.log("Saving screen data:", screenData);
+      onEdit(screenData);
     } catch (error) {
-      // ... (handle error)
+      // ... Handle errors ...
     } finally {
       setIsModalOpen(false);
     }
@@ -120,23 +112,24 @@ const ScreenList: React.FC<ScreenListProps> = ({ cinemaId, onEdit }) => {
         <div>Loading screens...</div>
       ) : (
         <>
-        <DataGrid
-          className="rounded-sm border border-stroke shadow-default dark:border-strokedark dark:bg-boxdark"
-          rows={screens}
-          columns={columns}
-          pageSizeOptions={[5, 10, 20]}
-          disableRowSelectionOnClick
-          autoHeight
-          disableColumnFilter
-          disableColumnSelector
-        />
-        <CustomModalforScreen
+          <DataGrid
+            className="rounded-sm border border-stroke shadow-default dark:border-strokedark dark:bg-boxdark"
+            rows={screens}
+            columns={columns}
+            pageSizeOptions={[5, 10, 20]}
+            disableRowSelectionOnClick
+            autoHeight
+            disableColumnFilter
+            disableColumnSelector
+          />
+        <ModalForScreenEdit
+        key={modalKey} 
         isVisible={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSave={handleScreenSave}
-        screenId={selectedScreen?.id || 0}
-      />
-      </>
+        screen={selectedScreen}
+        />
+        </>
       )}
     </div>
   );

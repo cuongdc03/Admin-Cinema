@@ -5,4 +5,5 @@ export type cinema = {
   provinceCity: string;
   provinceCityId: number;
   status: boolean;
+  screenList:string;
 };

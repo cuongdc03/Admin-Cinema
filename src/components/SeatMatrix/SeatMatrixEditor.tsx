@@ -1,47 +1,82 @@
 import React, { useState } from 'react';
+import screenimg from '../../assets/img-screen.png';
+import SeatComponent from '../Seat/SeatComponent';
 
 interface SeatMatrixEditorProps {
-  seatMatrix: any[];
-  onChange: (newMatrix: any[]) => void;
+  seatMatrix: string;
+  onChange: (newMatrix: string) => void;
+}
+
+interface Seat {
+  price: number;
+  isSeat: boolean;
+  name: string;
+  isOff: boolean;
+  isSold: boolean;
+  onHold: string;
+  colId: number;
+  seatId: number;
+}
+
+interface RowData {
+  rowName: string;
+  rowSeats: Seat[];
 }
 
 const SeatMatrixEditor: React.FC<SeatMatrixEditorProps> = ({
   seatMatrix,
   onChange,
 }) => {
-  const [updatedSeatMatrix, setUpdatedSeatMatrix] = useState(seatMatrix);
+  const [updatedSeatMatrix, setUpdatedSeatMatrix] = useState<RowData[]>(
+    JSON.parse(seatMatrix).data || []
+  );
 
-  const handleSeatChange = (row: number, col: number) => {
+  const handleSeatChange = (rowIndex: number, colIndex: number) => {
     setUpdatedSeatMatrix((prevMatrix) => {
       const newMatrix = [...prevMatrix];
-      newMatrix[row].rowSeats[col].isSeat = !newMatrix[row].rowSeats[col].isSeat;
+      newMatrix[rowIndex].rowSeats[colIndex].isSeat =
+        !newMatrix[rowIndex].rowSeats[colIndex].isSeat;
       return newMatrix;
     });
   };
 
+  const handleSave = () => {
+    const newSeatMatrix = JSON.stringify({ data: updatedSeatMatrix });
+    onChange(newSeatMatrix);
+  };
+
   return (
     <div>
-      {/* Hiển thị ma trận ghế */}
-      {updatedSeatMatrix.map((row, rowIndex) => (
-        <div key={rowIndex}>
-          {row.rowSeats.map((seat, colIndex) => (
-            <button
-              key={colIndex}
-              onClick={() => handleSeatChange(rowIndex, colIndex)}
-              style={{
-                backgroundColor: seat.isSeat ? 'green' : 'red',
-                margin: '2px',
+      <div className='bg-black'> 
+        <img src={screenimg} alt="Screen" /> {/* Added alt attribute for accessibility */}
+      </div>
+      <div className='flex justify-center' // You might want to adjust styling here 
+        style={{
+          display: 'grid',
+          gridTemplateColumns: `repeat(${
+            updatedSeatMatrix[0]?.rowSeats.length || 1
+          }, 30px)`,
+        }}
+      >
+        {updatedSeatMatrix.map((row, rowIndex) =>
+          row.rowSeats.map((seat, colIndex) => (
+            <SeatComponent
+              key={`${rowIndex}-${colIndex}`}
+              seat={seat}
+              onToggle={(updatedSeat) => {
+                setUpdatedSeatMatrix((prevMatrix) => {
+                  const newMatrix = [...prevMatrix];
+                  newMatrix[rowIndex].rowSeats[colIndex] = updatedSeat;
+                  return newMatrix;
+                });
               }}
-            >
-              {seat.isSeat ? 'Seat' : 'Disable'}
-            </button>
-          ))}
-        </div>
-      ))}
-      {/* Nút "Save" */}
-      <button onClick={() => onChange(updatedSeatMatrix)}>Save</button>
+            />
+          ))
+        )}
+      </div> 
+      <button onClick={handleSave}>Save</button>
     </div>
-  );
-};
+  ); 
+}; // Closing parenthesis for the component
 
 export default SeatMatrixEditor;

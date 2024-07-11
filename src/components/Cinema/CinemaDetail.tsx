@@ -37,6 +37,7 @@ const CinemaDetail: React.FC = () => {
           address,
           provinceCity,
           provinceCityId,
+          screenList // Fetch screenList directly from API
         } = data;
         setCinemaDetail({
           id: cinemaId,
@@ -44,6 +45,8 @@ const CinemaDetail: React.FC = () => {
           address,
           provinceCity,
           provinceCityId,
+          status,
+          screenList
         });
 
         // Fetch map coordinates only after cinemaDetail is available
@@ -64,7 +67,7 @@ const CinemaDetail: React.FC = () => {
 
     const fetchProvinceCities = async () => {
       try {
-        const response = await fetch(
+        const response = await fetch( 
           'https://bl924snd-3000.asse.devtunnels.ms/admin/provincecity',
         );
         if (!response.ok) {
@@ -78,7 +81,7 @@ const CinemaDetail: React.FC = () => {
     };
 
     fetchCinema();
-    fetchProvinceCities();
+    fetchProvinceCities(); // Fetch province cities only once when the component mounts
   }, [id]);
 
   const handleInputChange = (
@@ -316,7 +319,15 @@ const CinemaDetail: React.FC = () => {
             Create Screen
           </Link>
         </div>
-        <ScreenList cinemaId={cinemaDetail.id} />
+        {cinemaDetail.screenList && ( 
+          <ScreenList
+            cinemaId={cinemaDetail.id}
+            screenList={cinemaDetail.screenList}
+            onEdit={(screen: any) => {
+
+            }}
+          />
+        )}
       </div>
     </>
   );

@@ -146,27 +146,35 @@ const TableTest: React.FC<TableTestProps<any>> = ({
   };
 
   return (
-    <div className="flex flex-col">
-      <div className="flex justify-between items-center mb-4">
-        <div className="relative flex items-center">
-          <div className="relative">
-            <input
-              type="text"
-              className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full" // Add w-full for full width
-              placeholder="Search..."
-              value={searchQuery}
-              onChange={handleSearchChange}
-            />
-            <BsSearch className="absolute right-3 top-2" size={20} />
-          </div>
-        </div>
-        <div className="flex items-center ">
+    <div className="flex flex-col ">
+      {/* Thanh search và button Create cùng hàng */}
+      <div className="flex justify-between items-center mb-4"> {/* Sử dụng justify-between */}
+  <div className="relative flex items-center"> 
+    <input
+      type="text"
+      className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+      placeholder="Search..."
+      value={searchQuery}
+      onChange={handleSearchChange}
+    />
+    <BsSearch className="absolute right-3 top-2.75" size={20} />
+  </div>
+  <div className="flex items-center"> {/* Nhóm nút Create và Archive */}
           <Link
             to="create"
-            className=" inline-flex items-center justify-center rounded-md border border-primary py-2 px-10 text-center font-medium text-primary hover:bg-opacity-90 lg:px-20 xl:px-20 mb-8 mx-4 h-10"
+            className="relative items-center justify-center rounded-md border border-primary py-2 px-10 text-center font-medium text-primary hover:bg-opacity-90 mr-2" // Thêm margin-right
           >
             Create
           </Link>
+          {/* Hiển thị nút Archive nếu isCinema là true */}
+          {isCinema && ( 
+            <Link
+              to="archive" // Hoặc sử dụng onClick để xử lý logic archive
+              className="relative items-center justify-center rounded-md border border-yellow-500 py-2 px-10 text-center font-medium text-yellow-500 hover:bg-yellow-100"
+            >
+              Archive
+            </Link>
+          )}
         </div>
       </div>
       <ThemeProvider theme={theme}>

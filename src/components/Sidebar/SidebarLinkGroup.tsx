@@ -22,11 +22,9 @@ const SidebarLinkGroup = ({ title, items }: SidebarLinkGroupProps) => {
           <li key={index}>
             <Link
               to={item.path}
-              className={`flex items-center px-4 py-2 rounded-md text-sm font-medium ${
-                item.active
-                  ? 'text-gray-300 dark:text-gray-400'
-                  : 'text-gray-500 dark:text-gray-600'
-              }`}
+              className={`flex items-center px-4 py-2 rounded-md text-sm font-medium 
+                ${item.active ? 'bg-gray-700 text-white' : 'text-gray-500 hover:bg-gray-100'}
+              `} 
             >
               {item.icon}
               <span className="ml-4">{item.title}</span>
