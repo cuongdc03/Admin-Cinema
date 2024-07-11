@@ -38,6 +38,7 @@ const SeatMatrixEditor: React.FC<SeatMatrixEditorProps> = ({
           ))}
         </div>
       ))}
+      {/* Nút "Save" */}
       <button onClick={() => onChange(updatedSeatMatrix)}>Save</button>
     </div>
   );

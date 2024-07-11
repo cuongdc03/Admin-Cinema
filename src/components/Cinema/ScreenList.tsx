@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { MdDelete, MdEdit } from 'react-icons/md';
+import CustomModalforScreen from '../Modal/ModalForScreenEdit'; // Import your custom modal
 
 interface ScreenListProps {
   cinemaId: number;
@@ -10,6 +11,8 @@ interface ScreenListProps {
 const ScreenList: React.FC<ScreenListProps> = ({ cinemaId, onEdit }) => {
   const [screens, setScreens] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
+  const [selectedScreen, setSelectedScreen] = useState<any | null>(null);
 
   const countSeats = useCallback((screen: any) => {
     if (screen.seatMatrix) {
@@ -56,7 +59,6 @@ const ScreenList: React.FC<ScreenListProps> = ({ cinemaId, onEdit }) => {
       width: 200,
       resizable: false,
     },
-    // Action column should be the last one
     {
       field: 'actions',
       headerName: 'Actions',
@@ -100,14 +102,24 @@ const ScreenList: React.FC<ScreenListProps> = ({ cinemaId, onEdit }) => {
   };
 
   const handleEdit = (screen: any) => {
-    onEdit(screen);
+    setSelectedScreen(screen);
+    setIsModalOpen(true); // Show the modal when Edit is clicked
   };
-
+  const handleScreenSave = async (screenData: any) => {
+    try {
+      // ... (your save logic)
+    } catch (error) {
+      // ... (handle error)
+    } finally {
+      setIsModalOpen(false);
+    }
+  };
   return (
     <div style={{ height: 400, width: '100%' }}>
       {loading ? (
         <div>Loading screens...</div>
       ) : (
+        <>
         <DataGrid
           className="rounded-sm border border-stroke shadow-default dark:border-strokedark dark:bg-boxdark"
           rows={screens}
@@ -118,6 +130,13 @@ const ScreenList: React.FC<ScreenListProps> = ({ cinemaId, onEdit }) => {
           disableColumnFilter
           disableColumnSelector
         />
+        <CustomModalforScreen
+        isVisible={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleScreenSave}
+        screenId={selectedScreen?.id || 0}
+      />
+      </>
       )}
     </div>
   );
