@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import TableTest from '../Table';
 import { cinema } from '../../types/cinema';
 import Breadcrumb from '../Breadcrumbs/Breadcrumb';
+import { deleteCinema, getCinemas, updateCinema } from '../../apis/cinema';
 
 const Cinema: React.FC = () => {
   const [cinemas, setCinemas] = useState<cinema[]>([]);
@@ -10,16 +11,7 @@ const Cinema: React.FC = () => {
 
   const handleDeleteCinema = async (cinema: cinema) => {
     try {
-      const response = await fetch(
-        `https://bl924snd-3000.asse.devtunnels.ms/cinema/${cinema.id}`,
-        {
-          method: 'DELETE',
-        },
-      );
-      if (!response.ok) {
-        throw new Error('Failed to delete cinema');
-      }
-      setCinemas(cinemas.filter((c) => c.id !== cinema.id));
+      await deleteCinema(cinema.id, setCinemas);
     } catch (error) {
       console.error('Error deleting cinema:', error);
     }
@@ -27,46 +19,19 @@ const Cinema: React.FC = () => {
 
   const handleStatusChange = async (cinema: cinema) => {
     try {
-      const response = await fetch(
-        `https://bl924snd-3000.asse.devtunnels.ms/cinema/${cinema.id}`,
-        {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(cinema),
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error('Failed to update cinema status');
-      }
-
-      setCinemas(cinemas.map((c) => (c.id === cinema.id ? cinema : c)));
+      await updateCinema(cinema.id, cinema, setCinemas);
     } catch (error) {
       console.error('Error updating cinema status:', error);
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const response = await fetch(
-          'https://bl924snd-3000.asse.devtunnels.ms/cinema',
-        );
-        if (!response.ok) {
-          throw new Error('Failed to fetch data');
-        }
-        const data = await response.json();
-        setCinemas(data);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const fetchCinemaList = async () => {
+      const cinemas = await getCinemas();
+      setCinemas(cinemas);
+  };
 
-    fetchData();
+  useEffect(() => {
+    fetchCinemaList();
   }, []);
 
   const displayedColumns: (keyof cinema)[] = [
