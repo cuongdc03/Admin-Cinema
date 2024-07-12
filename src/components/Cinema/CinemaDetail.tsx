@@ -31,22 +31,24 @@ const CinemaDetail: React.FC = () => {
           throw new Error('Failed to fetch cinema details');
         }
         const data = await response.json();
+        // Ensure you're fetching provinceCityName from API
         const {
           id: cinemaId,
           name,
           address,
-          provinceCity,
+          provinceCityName, // Fetch provinceCityName
           provinceCityId,
-          screenList // Fetch screenList directly from API
+          screenList, 
+          status 
         } = data;
         setCinemaDetail({
           id: cinemaId,
           name,
           address,
-          provinceCity,
+          provinceCity: provinceCityName, // Assign provinceCityName
           provinceCityId,
-          status,
-          screenList
+          status, 
+          screenList,
         });
 
         // Fetch map coordinates only after cinemaDetail is available
@@ -67,7 +69,7 @@ const CinemaDetail: React.FC = () => {
 
     const fetchProvinceCities = async () => {
       try {
-        const response = await fetch( 
+        const response = await fetch(
           'https://bl924snd-3000.asse.devtunnels.ms/admin/provincecity',
         );
         if (!response.ok) {
@@ -81,7 +83,7 @@ const CinemaDetail: React.FC = () => {
     };
 
     fetchCinema();
-    fetchProvinceCities(); // Fetch province cities only once when the component mounts
+    fetchProvinceCities();
   }, [id]);
 
   const handleInputChange = (
@@ -93,7 +95,7 @@ const CinemaDetail: React.FC = () => {
       const provinceCityId = selectedCity ? selectedCity.id : 0;
       setCinemaDetail((prevDetail) =>
         prevDetail
-          ? { ...prevDetail, [name]: value, provinceCityId: provinceCityId }
+          ? { ...prevDetail, provinceCity: value, provinceCityId: provinceCityId }
           : null,
       );
     } else {
@@ -268,7 +270,8 @@ const CinemaDetail: React.FC = () => {
                 </label>
                 <select
                   name="provinceCity"
-                  value={cinemaDetail?.provinceCity || ''}
+                  // Use cinemaDetail?.provinceCity
+                  value={cinemaDetail?.provinceCity || ''} 
                   required
                   className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                   onChange={handleInputChange}

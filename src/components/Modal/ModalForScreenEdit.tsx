@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Input, message } from 'antd';
 import SeatMatrixEditor from '../SeatMatrix/SeatMatrixEditor';
 import { Button } from '@mui/material';
+import { toast } from 'react-toastify';
 
 interface Seat {
   price: number;
@@ -72,11 +73,10 @@ const ModalForScreenEdit: React.FC<ModalForScreenEditProps> = ({
         throw new Error(`Failed to save screen: ${response.status}`);
       }
 
-      message.success('Update screen successfully');
+      toast.success('Update screen successfully');
       onClose();
     } catch (error) {
-      console.error('Error saving screen data:', error);
-      message.error('Update screen failed');
+      toast.error('Update screen failed');
     } finally {
       setIsSaving(false);
     }

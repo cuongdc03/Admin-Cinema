@@ -48,9 +48,9 @@ const SeatMatrixEditor: React.FC<SeatMatrixEditorProps> = ({
   return (
     <div>
       <div className='bg-black'> 
-        <img src={screenimg} alt="Screen" /> {/* Added alt attribute for accessibility */}
+        <img src={screenimg} alt="Screen" className='filter invert-0'/> 
       </div>
-      <div className='flex justify-center' // You might want to adjust styling here 
+      <div className='flex justify-center'
         style={{
           display: 'grid',
           gridTemplateColumns: `repeat(${
