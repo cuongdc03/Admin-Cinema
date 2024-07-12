@@ -8,7 +8,7 @@ import { FaArchive } from 'react-icons/fa';
 import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@mui/material/styles';
 
-interface TableTestProps<T> {
+interface TableProps<T> {
   rows: T[];
   onDelete: (T: T) => void;
   onStatusChange: (T: T) => void; // Hàm xử lý thay đổi trạng thái
@@ -16,7 +16,7 @@ interface TableTestProps<T> {
   isCinema: boolean; // Thêm thuộc tính để xác định đối tượng là Cinema
 }
 
-const TableTest: React.FC<TableTestProps<any>> = ({
+const Table: React.FC<TableProps<any>> = ({
   rows,
   onDelete,
   onStatusChange,
@@ -224,4 +224,4 @@ const TableTest: React.FC<TableTestProps<any>> = ({
   );
 };
 
-export default TableTest;
+export default Table;

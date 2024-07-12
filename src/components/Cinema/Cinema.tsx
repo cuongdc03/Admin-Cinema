@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import TableTest from '../Table';
 import { cinema } from '../../types/cinema';
 import Breadcrumb from '../Breadcrumbs/Breadcrumb';
 import { deleteCinema, getCinemas, updateCinema } from '../../apis/cinema';
+import Table from '../Table';
 
 const Cinema: React.FC = () => {
   const [cinemas, setCinemas] = useState<cinema[]>([]);
@@ -44,7 +44,7 @@ const Cinema: React.FC = () => {
   return (
     <div>
       <Breadcrumb pageName="Cinema" />
-      <TableTest
+      <Table
         rows={cinemas}
         displayedColumns={displayedColumns}
         onDelete={handleDeleteCinema}
