@@ -88,6 +88,7 @@ const ModalForScreenEdit: React.FC<ModalForScreenEditProps> = ({
 
   return (
     <Modal
+      zIndex={100}
       height={800}
       width={800}
       title="Edit Screen"

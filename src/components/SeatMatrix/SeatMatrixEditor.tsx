@@ -47,10 +47,11 @@ const SeatMatrixEditor: React.FC<SeatMatrixEditorProps> = ({
 
   return (
     <div>
-      <div className='bg-black'> 
-        <img src={screenimg} alt="Screen" className='filter invert-0'/> 
+      <div className="bg-black">
+        <img src={screenimg} alt="Screen" className="filter invert-0" />
       </div>
-      <div className='flex justify-center'
+      <div 
+        className="flex justify-center gap-2" // Thêm class "gap-2" 
         style={{
           display: 'grid',
           gridTemplateColumns: `repeat(${
@@ -73,10 +74,8 @@ const SeatMatrixEditor: React.FC<SeatMatrixEditorProps> = ({
             />
           ))
         )}
-      </div> 
-      <button onClick={handleSave}>Save</button>
+      </div>
     </div>
-  ); 
-}; // Closing parenthesis for the component
-
+  );
+}
 export default SeatMatrixEditor;

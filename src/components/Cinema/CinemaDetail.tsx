@@ -6,6 +6,9 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import Breadcrumb from '../Breadcrumbs/Breadcrumb';
+import { updateCinema } from '../../apis/cinema';
+
+const apiKey = import.meta.env.VITE_API_KEY;
 
 interface EditCinemaProps {
   cinemaId: number;
@@ -53,7 +56,7 @@ const CinemaDetail: React.FC = () => {
 
         // Fetch map coordinates only after cinemaDetail is available
         const responseCoordinates = await fetch(
-          `https://maps.googleapis.com/maps/api/geocode/json?address=${data.address}&key='AIzaSyDVTj5roBXMJwloduHiXL8eELpsJqSYLEs'`,
+          `https://maps.googleapis.com/maps/api/geocode/json?address=${data.address}&key=${apiKey}`,
         );
         const coordinatesData = await responseCoordinates.json();
         if (coordinatesData.results.length > 0) {
@@ -104,40 +107,31 @@ const CinemaDetail: React.FC = () => {
       );
     }
   };
-
   const handleSaveChanges = async () => {
     try {
-      const cinemaData = {
-        id: cinemaDetail?.id,
-        name: cinemaDetail?.name,
-        address: cinemaDetail?.address,
-        provinceCityId: cinemaDetail?.provinceCityId,
-      };
-
-      const response = await fetch(
-        `https://bl924snd-3000.asse.devtunnels.ms/admin/cinema`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(cinemaData),
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error('Failed to save changes');
+      if (!cinemaDetail) {
+        throw new Error('Cinema details not found');
       }
 
-      toast.success('Edit Successfully');
+      await updateCinema(
+        cinemaDetail.id,
+        {
+          name: cinemaDetail.name,
+          address: cinemaDetail.address,
+          provinceCityId: cinemaDetail.provinceCityId,
+        }, 
+        // Không cần truyền setCinemas vì updateCinema đã xử lý
+      );
 
-      console.log('Changes saved:', cinemaData);
-      navigate('/cinema');
+      toast.success('Edit Successfully');
+      navigate('/cinema'); 
     } catch (error) {
-      console.error('Error saving changes:', error);
-      toast.error('Failed to save changes');
+      // Hàm updateCinema đã xử lý showError, 
+      // chỉ cần log error ra console ở đây
+      console.error('Error saving changes:', error); 
     }
   };
+
 
   const confirmDeleteCinema = async () => {
     try {
@@ -295,7 +289,7 @@ const CinemaDetail: React.FC = () => {
         <div className="flex flex-col gap-9 py-9">
           <div className="rounded-sm ">
             <div className=" border-stroke  px-6.5">
-              <LoadScript googleMapsApiKey="AIzaSyDVTj5roBXMJwloduHiXL8eELpsJqSYLEs">
+              <LoadScript googleMapsApiKey={apiKey} >
                 <GoogleMap
                   mapContainerStyle={{ height: '475px', width: '100%' }}
                   center={mapCenter}

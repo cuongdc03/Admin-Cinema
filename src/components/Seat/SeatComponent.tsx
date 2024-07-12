@@ -6,10 +6,8 @@ interface SeatProps {
   onToggle: (seat: seat) => void; // Truyền object Seat vào onToggle
 }
 
-// ... (giao diện Seat)
-
 const SeatComponent: React.FC<SeatProps> = ({ seat, onToggle }) => {
-  const handleClick = () => {
+  const handleToggle = () => {
     onToggle({
       ...seat,
       isSeat: !seat.isSeat, // Đảo ngược trạng thái isSeat
@@ -18,7 +16,7 @@ const SeatComponent: React.FC<SeatProps> = ({ seat, onToggle }) => {
 
   return (
     <button
-      onClick={handleClick}
+      onClick={handleToggle}
       style={{
         backgroundColor: seat.isSeat ? 'white' : 'gray',
         border: '1px solid black',
