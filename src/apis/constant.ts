@@ -1,0 +1,5 @@
+export const ADMIN_CINEMA_URL = '/admin/cinema'
+export const CINEMA_URL = '/cinema'
+export const PROVINCE_CITY_URL = '/admin/provincecity'
+export const FILM_URL = '/film'
+export const ADMIN_FILM_URL = '/admin/film'
