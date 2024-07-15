@@ -92,12 +92,7 @@ const Table = <T extends { id: number; status?: boolean; [key: string]: any }>({
     renderCell: (params) => {
       if (key === 'status') {
         return (
-          <Switch
-            checked={params.row.status as boolean}
-            onChange={() => handleStatusChange(params.row)}
-            disabled
-            size='medium'
-          />
+          <Switch checked={params.row.status as boolean} onChange={() => handleStatusChange(params.row)} disabled />
         )
       } else if (key === 'provinceCityName') {
         return (params.row as any).provinceCity?.name
