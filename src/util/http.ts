@@ -1,5 +1,6 @@
 import * as httpConstants from '../constants/httpConstants'
 import { toast } from 'react-toastify'
+import { getTokenFromLocalStorage } from './localStorage'
 
 const ABORT_REQUEST_CONTROLLERS: Map<string, AbortController> = new Map()
 
@@ -33,6 +34,7 @@ export const request =
         headers: {
           'Content-Type': httpConstants.CONTENT_TYPE_JSON,
           ...(addCSRFToken && { [httpConstants.CSRF_HEADER]: _csrf }),
+          Authorization: `Bearer ${getTokenFromLocalStorage()}`,
           ...headers
         },
         credentials: httpConstants.SAME_ORIGIN,
