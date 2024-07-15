@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { film } from '../../types/film'
-import { getfilms } from '../../apis/film'
+import { deleteFilm, getfilms } from '../../apis/film'
 import Breadcrumb from '../Breadcrumbs/Breadcrumb'
 import Table from '../Table'
 
@@ -14,12 +14,16 @@ const Film: React.FC = () => {
   useEffect(() => {
     fetchFilmList()
   }, [])
-  const displayedColumns: (keyof film)[] = ['id', 'filmName', 'director', 'category', 'status']
+  const handleDelete= async(film:film) => {
+    await deleteFilm(film.id)
+  }
 
+  const displayedColumns: (keyof film)[] = ['id', 'filmName', 'director', 'category', 'status']
+  
   return (
     <div>
-      <Breadcrumb pageName='Cinema' />
-      <Table rows={films} displayedColumns={displayedColumns} onDelete onStatusChange isCinema={false} />
+      <Breadcrumb pageName='Film' />
+      <Table rows={films} displayedColumns={displayedColumns} onDelete={handleDelete} onStatusChange isCinema={false} />
     </div>
   )
 }

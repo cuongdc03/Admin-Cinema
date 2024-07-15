@@ -10,6 +10,7 @@ import Voucher from './pages/Voucher'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import Film from './components/Film/Film'
+import CreateFilm from './components/Film/CreateFilm'
 function App() {
   const [loading, setLoading] = useState<boolean>(true)
   const { pathname } = useLocation()
@@ -48,6 +49,15 @@ function App() {
             </>
           }
         />
+        <Route
+          path='/film/create'
+          element={
+            <>
+              <PageTitle title='Create Film | Cinestar' />
+              <CreateFilm/>
+            </>
+          }
+          />
         <Route
           path='/ticket'
           element={
