@@ -12,6 +12,9 @@ import Cinema from '@/components/Cinema/Cinema'
 import { PAGE_TITLES } from '@/constants/pageTitles'
 import CinemaCreate from '@/components/Cinema/CinemaCreate'
 import CinemaDetail from '@/components/Cinema/DetailCinema'
+import Film from '@/components/Film/Film'
+import CreateFilm from '@/components/Film/CreateFilm'
+import FilmDetail from '@/components/Film/FilmDetail'
 
 function ProtectedRoute() {
   const isAuthenticated = getTokenFromLocalStorage()
@@ -71,6 +74,14 @@ export default function useRouteElements() {
           )
         },
         {
+          path: path.film,
+          element: (
+            <DefaultLayout title={PAGE_TITLES.film}>
+              <Film />
+            </DefaultLayout>
+          )
+        },
+        {
           path: path.createCinema,
           element: (
             <DefaultLayout title={PAGE_TITLES.createCinema}>
@@ -79,10 +90,26 @@ export default function useRouteElements() {
           )
         },
         {
+          path: path.filmCreate,
+          element: (
+            <DefaultLayout title={PAGE_TITLES.filmCreate}>
+              <CreateFilm />
+            </DefaultLayout>
+          )
+        },
+        {
           path: path.cinemaDetail,
           element: (
             <DefaultLayout title={PAGE_TITLES.CinemaDetail}>
               <CinemaDetail />
+            </DefaultLayout>
+          )
+        },
+        {
+          path: path.filmDetail,
+          element: (
+            <DefaultLayout title={PAGE_TITLES.filmDetail}>
+              <FilmDetail />
             </DefaultLayout>
           )
         }
