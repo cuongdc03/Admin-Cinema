@@ -7,6 +7,9 @@ import PageTitle from '@/components/PageTitle'
 import Ticket from '@/pages/Ticket'
 import User from '@/pages/User'
 import Voucher from '@/pages/Voucher'
+import Film from '@/components/Film/Film'
+import FilmDetail from '@/components/Film/FilmDetail'
+import CreateFilm from '@/components/Film/CreateFilm'
 
 export default function useRouteElements() {
   return useRoutes([
@@ -23,6 +26,33 @@ export default function useRouteElements() {
         </DefaultLayout>
       ),
       index: true
+    },
+    {
+      path: path.film,
+      element: (
+        <DefaultLayout>
+          <PageTitle title='Film | CineStar' />
+          <Film />
+        </DefaultLayout>
+      )
+    },
+    {
+      path: `${path.film}/:id`,
+      element: (
+        <DefaultLayout>
+          <PageTitle title='Film Detail | CineStar' />
+          <FilmDetail />
+        </DefaultLayout>
+      )
+    },
+    {
+      path: `${path.film}/create`,
+      element: (
+        <DefaultLayout>
+          <PageTitle title='Create Film | CineStar' />
+          <CreateFilm />
+        </DefaultLayout>
+      )
     },
     {
       path: path.ticket,
