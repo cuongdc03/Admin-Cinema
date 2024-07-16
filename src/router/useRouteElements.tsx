@@ -8,7 +8,10 @@ import Ticket from '@/pages/Ticket'
 import User from '@/pages/User'
 import Voucher from '@/pages/Voucher'
 import { getTokenFromLocalStorage } from '@/util/localStorage'
+import Cinema from '@/components/Cinema/Cinema'
+import CinemaCreate from '@/components/Cinema/CinemaCreate'
 import { PAGE_TITTLES } from '@/constants/pageTitles'
+import CinemaDetail from '@/components/Cinema/DetailCinema'
 
 function ProtectedRoute() {
   const isAuthenticated = getTokenFromLocalStorage()
@@ -60,6 +63,33 @@ export default function useRouteElements() {
             <DefaultLayout>
               <PageTitle title={PAGE_TITTLES.voucher} />
               <Voucher />
+            </DefaultLayout>
+          )
+        },
+        {
+          path: path.cinema,
+          element: (
+            <DefaultLayout>
+              <PageTitle title={PAGE_TITTLES.cinema} />
+              <Cinema />
+            </DefaultLayout>
+          )
+        },
+        {
+          path: `${path.cinema}/create`,
+          element: (
+            <DefaultLayout>
+              <PageTitle title={PAGE_TITTLES.createCinema} />
+              <CinemaCreate />
+            </DefaultLayout>
+          )
+        },
+        {
+          path: `${path.cinema}/:id`,
+          element: (
+            <DefaultLayout>
+              <PageTitle title={PAGE_TITTLES.CinemaDetail} />
+              <CinemaDetail />
             </DefaultLayout>
           )
         }
