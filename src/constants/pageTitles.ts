@@ -1,4 +1,4 @@
-export const PAGE_TITTLES = {
+export const PAGE_TITLES = {
   dashboard: 'Dashboard | Cinestar',
   ticket: 'Ticket | CineStar',
   cinema: 'Cinema | CineStar',
