@@ -5,10 +5,12 @@ export const path = {
   filmDetail: '/film/:id',
   dashboard: '/dashboard',
   cinema: '/cinema',
+  createCinema: '/cinema/create',
+  detailCinema: '/cinema/:id',
+  createScreen: '/cinema/createScreen/:id',
   ticket: '/ticket',
   user: '/user',
   voucher: '/voucher',
-  createCinema: '/cinema/create',
   cinemaDetail: '/cinema/:id',
   show: '/show'
 }

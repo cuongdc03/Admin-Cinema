@@ -1,7 +1,7 @@
-import { ScreenType } from '../types/screen'
 import { customFetch, showError } from '../util/http'
-import { ADMIN_SCREEN_URL } from './constant'
+import { SCREEN_ADMIN_URL } from './constant'
+import { ScreenBodyType } from '../types/screen'
 
-export const getScreenByCinemaId = async (cinemaId: number): Promise<ScreenType[]> => {
-  return await customFetch.get(`${ADMIN_SCREEN_URL}/${cinemaId}`, { signalKey: 'getScreenByCinemaId' }).catch(showError)
+export const createScreen = async (data: ScreenBodyType) => {
+  return await customFetch.post(SCREEN_ADMIN_URL, { body: data, signalKey: 'createScreen' }).catch(showError)
 }

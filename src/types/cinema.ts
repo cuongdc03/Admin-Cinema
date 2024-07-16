@@ -1,4 +1,5 @@
-import { ProvinceCityType } from './provinceCity'
+import { ProvinceCityType } from './ProvinceCity'
+import { screen } from './screen'
 
 export type CinemaType = {
   id: number
@@ -7,5 +8,5 @@ export type CinemaType = {
   provinceCityId: number
   provinceCity: ProvinceCityType
   status: boolean
-  screenList: string
+  screens: screen[]
 }
