@@ -4,5 +4,7 @@ export const path = {
   cinema: '/cinema',
   ticket: '/ticket',
   user: '/user',
-  voucher: '/voucher'
+  voucher: '/voucher',
+  createCinema: '/cinema/create',
+  cinemaDetail: '/cinema/:id'
 }
