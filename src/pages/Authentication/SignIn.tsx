@@ -1,16 +1,13 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb'
 import LogoDark from '../../images/logo/logo-dark.svg'
 import Logo from '../../images/logo/logo.svg'
 
 const SignIn: React.FC = () => {
   return (
     <>
-      <Breadcrumb pageName='Sign In' />
-
-      <div className='rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark'>
-        <div className='flex flex-wrap items-center'>
+      <div className='h-[100vh] rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark'>
+        <div className='flex h-full flex-wrap items-center'>
           <div className='hidden w-full xl:block xl:w-1/2'>
             <div className='px-26 py-17.5 text-center'>
               <Link className='mb-5.5 inline-block' to='/'>
