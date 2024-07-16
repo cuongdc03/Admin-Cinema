@@ -11,5 +11,6 @@ export const PAGE_TITLES = {
   user: 'User | CineStar',
   voucher: 'Voucher | CineStar',
   login: 'Sign In | CineStar',
-  createScreen: 'Create Screen | CineStar'
+  createScreen: 'Create Screen | CineStar',
+  updateScreen: 'Update Screen | CineStar'
 }

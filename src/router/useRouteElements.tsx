@@ -119,7 +119,15 @@ export default function useRouteElements() {
           path: path.createScreen,
           element: (
             <DefaultLayout title={PAGE_TITLES.createScreen}>
-              <CreateScreen />
+              <CreateScreen isEdit={false} />
+            </DefaultLayout>
+          )
+        },
+        {
+          path: path.updateScreen,
+          element: (
+            <DefaultLayout title={PAGE_TITLES.updateScreen}>
+              <CreateScreen isEdit={true} />
             </DefaultLayout>
           )
         }
