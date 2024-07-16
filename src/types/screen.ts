@@ -2,6 +2,7 @@ export type ScreenType = {
   id: number
   name: string
   cinemaId: number
+  size: string
   seatMatrix: string
 }
 

@@ -20,3 +20,13 @@ export const SCREEN_SIZE = [
     cols: 18
   }
 ] as const
+
+export const CREATE_SCREEN = 'Create Screen'
+export const CREATE_SCREEN_SUCCESS = 'Create new screen successfully'
+export const CREATE_SCREEN_FAILED = 'Error occurred while creating a new screen. Try again!'
+
+export const UPDATE_SCREEN = 'Update Screen'
+export const UPDATE_SCREEN_SUCCESS = 'Update screen successfully'
+export const UPDATE_SCREEN_FAILED = 'Error occurred while updating screen. Try again!'
+
+export const SUCCESS_STATUS = 200

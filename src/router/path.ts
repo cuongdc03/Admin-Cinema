@@ -8,6 +8,7 @@ export const path = {
   createCinema: '/cinema/create',
   detailCinema: '/cinema/:id',
   createScreen: '/cinema/createScreen/:id',
+  updateScreen: '/cinema/updateScreen/:id',
   ticket: '/ticket',
   user: '/user',
   voucher: '/voucher',
