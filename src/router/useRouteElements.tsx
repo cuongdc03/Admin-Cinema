@@ -7,6 +7,10 @@ import PageTitle from '@/components/PageTitle'
 import Ticket from '@/pages/Ticket'
 import User from '@/pages/User'
 import Voucher from '@/pages/Voucher'
+import Cinema from '@/components/Cinema/Cinema'
+import CinemaCreate from '@/components/Cinema/CinemaCreate'
+import { PAGE_TITTLES } from '@/constants/pageTitles'
+import CinemaDetail from '@/components/Cinema/DetailCinema'
 
 export default function useRouteElements() {
   return useRoutes([
@@ -18,7 +22,7 @@ export default function useRouteElements() {
       path: path.dashboard,
       element: (
         <DefaultLayout>
-          <PageTitle title='Dashboard | Cinestar' />
+          <PageTitle title={PAGE_TITTLES.dashboard} />
           <Dashboard />
         </DefaultLayout>
       ),
@@ -28,8 +32,35 @@ export default function useRouteElements() {
       path: path.ticket,
       element: (
         <DefaultLayout>
-          <PageTitle title='Ticket | CineStar' />
+          <PageTitle title={PAGE_TITTLES.ticket} />
           <Ticket />
+        </DefaultLayout>
+      )
+    },
+    {
+      path: path.cinema,
+      element: (
+        <DefaultLayout>
+          <PageTitle title={PAGE_TITTLES.cinema} />
+          <Cinema />
+        </DefaultLayout>
+      )
+    },
+    {
+      path: `${path.cinema}/create`,
+      element: (
+        <DefaultLayout>
+          <PageTitle title={PAGE_TITTLES.createCinema} />
+          <CinemaCreate />
+        </DefaultLayout>
+      )
+    },
+    {
+      path: `${path.cinema}/:id`,
+      element: (
+        <DefaultLayout>
+          <PageTitle title={PAGE_TITTLES.CinemaDetail} />
+          <CinemaDetail />
         </DefaultLayout>
       )
     },
@@ -37,7 +68,7 @@ export default function useRouteElements() {
       path: path.user,
       element: (
         <DefaultLayout>
-          <PageTitle title='User | CineStar' />
+          <PageTitle title={PAGE_TITTLES.user} />
           <User />
         </DefaultLayout>
       )
@@ -46,7 +77,7 @@ export default function useRouteElements() {
       path: path.voucher,
       element: (
         <DefaultLayout>
-          <PageTitle title='Voucher | CineStar' />
+          <PageTitle title={PAGE_TITTLES.voucher} />
           <Voucher />
         </DefaultLayout>
       )
