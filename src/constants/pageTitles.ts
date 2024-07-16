@@ -10,5 +10,6 @@ export const PAGE_TITLES = {
   Show: 'Show | CineStar',
   user: 'User | CineStar',
   voucher: 'Voucher | CineStar',
-  login: 'Sign Up | CineStar'
+  login: 'Sign In | CineStar',
+  createScreen: 'Create Screen | CineStar'
 }

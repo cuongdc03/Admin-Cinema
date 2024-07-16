@@ -1,18 +1,93 @@
-const defaultTheme = require('tailwindcss/defaultTheme');
+const defaultTheme = require('tailwindcss/defaultTheme')
+const filters = [
+  {
+    name: '.filter-light-gray-custom',
+    filterValue: {
+      brightness: 0,
+      saturate: '100%',
+      invert: '88%',
+      sepia: '7%',
+      hueRotate: '131deg',
+      brightnessAfter: '100%',
+      contrast: '89%'
+    }
+  },
+  {
+    name: '.filter-dark-gray-custom',
+    filterValue: {
+      brightness: 0,
+      saturate: '100%',
+      invert: '32%',
+      sepia: '9%',
+      saturateAfter: '1380%',
+      hueRotate: '176deg',
+      brightnessAfter: '94%',
+      contrast: '88%'
+    }
+  },
+  {
+    name: '.filter-yellow-custom',
+    filterValue: {
+      brightness: 0,
+      saturate: '100%',
+      invert: '82%',
+      sepia: '85%',
+      saturateAfter: '423%',
+      hueRotate: '357deg',
+      brightnessAfter: '92%',
+      contrast: '107%'
+    }
+  },
+  {
+    name: '.filter-blue-custom',
+    filterValue: {
+      brightness: 0,
+      saturate: '100%',
+      invert: '33%',
+      sepia: '70%',
+      saturateAfter: '1284%',
+      hueRotate: '201deg',
+      brightnessAfter: '87%',
+      contrast: '89%'
+    }
+  }
+]
 
-/** @type {import('tailwindcss').Config} */
+const getFilterString = (filterValue) => {
+  return Object.entries(filterValue)
+    .map(([key, value]) => {
+      const keyWithoutAfter = key.replace(/After$/, '')
+      const cssProperty = keyWithoutAfter.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`)
+      return `${cssProperty}(${value})`
+    })
+    .join(' ')
+}
+
+const convertFiltersToUtilities = (filters) => {
+  const utilities = {}
+  filters.forEach((filter) => {
+    const filterString = getFilterString(filter.filterValue)
+    utilities[filter.name] = {
+      filter: filterString
+    }
+  })
+  return utilities
+}
+
+const filterUtilities = convertFiltersToUtilities(filters)
+
 module.exports = {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   darkMode: 'class',
   theme: {
     fontFamily: {
-      satoshi: ['Satoshi', 'sans-serif'],
+      satoshi: ['Satoshi', 'sans-serif']
     },
     screens: {
       '2xsm': '375px',
       xsm: '425px',
       '3xl': '2000px',
-      ...defaultTheme.screens,
+      ...defaultTheme.screens
     },
     extend: {
       colors: {
@@ -51,6 +126,7 @@ module.exports = {
         success: '#219653',
         danger: '#D34053',
         warning: '#FFA70B',
+        'dark-blue-900': '#0f172a'
       },
       fontSize: {
         'title-xxl': ['44px', '55px'],
@@ -60,7 +136,7 @@ module.exports = {
         'title-md': ['24px', '30px'],
         'title-md2': ['26px', '30px'],
         'title-sm': ['20px', '26px'],
-        'title-xsm': ['18px', '24px'],
+        'title-xsm': ['18px', '24px']
       },
       spacing: {
         4.5: '1.125rem',
@@ -146,7 +222,7 @@ module.exports = {
         187.5: '46.875rem',
         203: '50.75rem',
         230: '57.5rem',
-        242.5: '60.625rem',
+        242.5: '60.625rem'
       },
       maxWidth: {
         2.5: '0.625rem',
@@ -178,20 +254,20 @@ module.exports = {
         242.5: '60.625rem',
         270: '67.5rem',
         280: '70rem',
-        292.5: '73.125rem',
+        292.5: '73.125rem'
       },
       maxHeight: {
         35: '8.75rem',
         70: '17.5rem',
         90: '22.5rem',
         550: '34.375rem',
-        300: '18.75rem',
+        300: '18.75rem'
       },
       minWidth: {
         22.5: '5.625rem',
         42.5: '10.625rem',
         47.5: '11.875rem',
-        75: '18.75rem',
+        75: '18.75rem'
       },
       zIndex: {
         999999: '999999',
@@ -200,27 +276,26 @@ module.exports = {
         999: '999',
         99: '99',
         9: '9',
-        1: '1',
+        1: '1'
       },
       opacity: {
-        65: '.65',
+        65: '.65'
       },
       backgroundImage: {
-        video: "url('../images/video/video.png')",
+        video: "url('../images/video/video.png')"
       },
       content: {
-        'icon-copy': 'url("../images/icon/icon-copy-alt.svg")',
+        'icon-copy': 'url("../images/icon/icon-copy-alt.svg")'
       },
       transitionProperty: { width: 'width', stroke: 'stroke' },
       borderWidth: {
-        6: '6px',
+        6: '6px'
       },
       boxShadow: {
         default: '0px 8px 13px -3px rgba(0, 0, 0, 0.07)',
         card: '0px 1px 3px rgba(0, 0, 0, 0.12)',
         'card-2': '0px 1px 2px rgba(0, 0, 0, 0.05)',
-        switcher:
-          '0px 2px 4px rgba(0, 0, 0, 0.2), inset 0px 2px 2px #FFFFFF, inset 0px -1px 1px rgba(0, 0, 0, 0.1)',
+        switcher: '0px 2px 4px rgba(0, 0, 0, 0.2), inset 0px 2px 2px #FFFFFF, inset 0px -1px 1px rgba(0, 0, 0, 0.1)',
         'switch-1': '0px 0px 5px rgba(0, 0, 0, 0.15)',
         1: '0px 1px 3px rgba(0, 0, 0, 0.08)',
         2: '0px 1px 4px rgba(0, 0, 0, 0.12)',
@@ -229,26 +304,42 @@ module.exports = {
         5: '0px 1px 1px rgba(0, 0, 0, 0.15)',
         6: '0px 3px 15px rgba(0, 0, 0, 0.1)',
         7: '-5px 0 0 #313D4A, 5px 0 0 #313D4A',
-        8: '1px 0 0 #313D4A, -1px 0 0 #313D4A, 0 1px 0 #313D4A, 0 -1px 0 #313D4A, 0 3px 13px rgb(0 0 0 / 8%)',
+        8: '1px 0 0 #313D4A, -1px 0 0 #313D4A, 0 1px 0 #313D4A, 0 -1px 0 #313D4A, 0 3px 13px rgb(0 0 0 / 8%)'
       },
       dropShadow: {
         1: '0px 1px 0px #E2E8F0',
-        2: '0px 1px 4px rgba(0, 0, 0, 0.12)',
+        2: '0px 1px 4px rgba(0, 0, 0, 0.12)'
       },
       keyframes: {
         rotating: {
           '0%, 100%': { transform: 'rotate(360deg)' },
-          '50%': { transform: 'rotate(0deg)' },
-        },
+          '50%': { transform: 'rotate(0deg)' }
+        }
       },
       animation: {
         'ping-once': 'ping 5s cubic-bezier(0, 0, 0.2, 1)',
         rotating: 'rotating 30s linear infinite',
         'spin-1.5': 'spin 1.5s linear infinite',
         'spin-2': 'spin 2s linear infinite',
-        'spin-3': 'spin 3s linear infinite',
-      },
-    },
+        'spin-3': 'spin 3s linear infinite'
+      }
+    }
   },
-  plugins: [],
-};
+  plugins: [
+    function ({ addUtilities }) {
+      const values = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+
+      const underlineOffset = values.reduce((acc, value) => {
+        return {
+          ...acc,
+          [`.underline-offset-${value}`]: {
+            textUnderlineOffset: `${value}px`
+          }
+        }
+      }, {})
+
+      addUtilities(underlineOffset, ['responsive', 'hover'])
+      addUtilities(filterUtilities, ['responsive', 'hover'])
+    }
+  ]
+}
