@@ -10,3 +10,5 @@ export const ABORT_ERROR_MESSAGE: string = 'Abort Error'
 
 export const METHODS_WITH_CSRF_TOKEN: string[] = ['POST', 'PUT', 'PATCH']
 export const METHODS_WITH_BODY: string[] = ['POST', 'PUT', 'PATCH']
+
+export const STATUS_UNAUTHORIZED = 401
