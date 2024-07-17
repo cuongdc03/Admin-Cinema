@@ -7,6 +7,7 @@ import PageTitle from '@/components/PageTitle'
 import Ticket from '@/pages/Ticket'
 import User from '@/pages/User'
 import Voucher from '@/pages/Voucher'
+import Show from '@/components/Show/Show'
 import { getTokenFromLocalStorage } from '@/util/localStorage'
 import { PAGE_TITTLES } from '@/constants/pageTitles'
 
@@ -79,6 +80,15 @@ export default function useRouteElements() {
           )
         }
       ]
+    },
+    {
+      path: path.show,
+      element: (
+        <DefaultLayout>
+          <PageTitle title='Show | CineStar' />
+          <Show />
+        </DefaultLayout>
+      )
     }
   ])
 }
