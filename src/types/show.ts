@@ -1,11 +1,12 @@
-export type show = {
+import { FilmType } from './film'
+
+export type ShowType = {
   id: number
-  filmId: number
-  filmName: string
   screenId: number
-  dayStart: string
   timeStart: string
+  dateStart: string
   price: number
   seatMatrix: string
-  status: boolean
+  film: FilmType
+  status: string
 }

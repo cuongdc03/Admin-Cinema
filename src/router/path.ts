@@ -9,5 +9,6 @@ export const path = {
   user: '/user',
   voucher: '/voucher',
   createCinema: '/cinema/create',
-  cinemaDetail: '/cinema/:id'
+  cinemaDetail: '/cinema/:id',
+  show: '/show'
 }
