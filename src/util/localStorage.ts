@@ -1,9 +1,9 @@
 export const setTokenToLocalStorage = (token: string) => {
-  localStorage.setItem('token', JSON.stringify(token))
+  localStorage.setItem('token', token)
 }
 
 export const getTokenFromLocalStorage = () => {
-  return JSON.parse(localStorage.getItem('token') || '')
+  return localStorage.getItem('token') || ''
 }
 
 export const removeTokenFromLocalStorage = () => {
