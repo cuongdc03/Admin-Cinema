@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-// components/Input.tsx
-=======
->>>>>>> e21787c7c13b8f8c8c731a31c0dfbff527d7be3a
 import React from 'react'
 import { UseFormRegisterReturn } from 'react-hook-form'
 

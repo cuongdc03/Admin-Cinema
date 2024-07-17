@@ -11,6 +11,8 @@ import { setTokenToLocalStorage } from '@/util/localStorage'
 import { useNavigate } from 'react-router-dom'
 import { path } from '@/router/path'
 
+const loginSchema = schema.pick(['userName', 'password'])
+
 const SignIn: React.FC = () => {
   const navigate = useNavigate()
   const {
@@ -18,7 +20,7 @@ const SignIn: React.FC = () => {
     handleSubmit,
     formState: { errors }
   } = useForm({
-    resolver: yupResolver(schema)
+    resolver: yupResolver(loginSchema)
   })
 
   const onSubmit = handleSubmit(async (data) => {

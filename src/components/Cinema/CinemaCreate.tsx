@@ -1,15 +1,5 @@
 import { createCinema } from '@/apis/cinema'
 import { getprovinceCities } from '@/apis/provincecity'
-<<<<<<< HEAD
-import { cinema } from '@/types/cinema'
-import React, { useEffect, useState } from 'react'
-import { useForm, SubmitHandler } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
-import { toast } from 'react-toastify'
-import Breadcrumb from '../Breadcrumbs/Breadcrumb'
-import Input from '../InputComponent/Input'
-import { provinceCity } from '@/types/provinceCity'
-=======
 import React, { useEffect, useState } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
@@ -18,7 +8,6 @@ import Input from '../InputComponent/Input'
 import { CinemaType } from '@/types/Cinema'
 import { path } from '@/router/path'
 import { ProvinceCityType } from '@/types/ProvinceCity'
->>>>>>> e21787c7c13b8f8c8c731a31c0dfbff527d7be3a
 
 const CinemaCreate: React.FC = () => {
   const {
@@ -27,13 +16,8 @@ const CinemaCreate: React.FC = () => {
     formState: { errors },
     setValue,
     watch
-<<<<<<< HEAD
-  } = useForm<cinema>()
-  const [provinceCities, setProvinceCities] = useState<provinceCity[]>([])
-=======
   } = useForm<CinemaType>()
   const [provinceCities, setProvinceCities] = useState<ProvinceCityType[]>([])
->>>>>>> e21787c7c13b8f8c8c731a31c0dfbff527d7be3a
   const navigate = useNavigate()
 
   const fetchProvinceCities = async () => {
@@ -45,42 +29,18 @@ const CinemaCreate: React.FC = () => {
     fetchProvinceCities()
   }, [])
 
-<<<<<<< HEAD
-  const onSubmit: SubmitHandler<cinema> = async (data) => {
-    try {
-      const selectedCity = provinceCities.find((city) => city.name === data.provinceCity)
-      const payload = {
-        name: data.name,
-        address: data.address,
-        provinceCityId: selectedCity ? selectedCity.id : 0
-      }
-      await createCinema(payload)
-      setTimeout(() => {
-        navigate('/cinema')
-      }, 1000)
-    } catch (error: any) {
-      toast.error('Error creating cinema: ' + error.message)
-    }
-=======
   const onSubmit: SubmitHandler<CinemaType> = async (data) => {
     await createCinema(data)
     setTimeout(() => {
       navigate(path.cinema)
     }, 1000)
->>>>>>> e21787c7c13b8f8c8c731a31c0dfbff527d7be3a
   }
 
   useEffect(() => {
     const subscription = watch((value, { name }) => {
-<<<<<<< HEAD
-      if (name === 'provinceCity') {
-        const selectedCity = provinceCities.find((city) => city.name === value.provinceCity)
-        setValue('provinceCityId', selectedCity ? selectedCity.id : 0)
-=======
       if (name === 'provinceCity.name') {
         const selectedCity = provinceCities.find((city) => city.name === value.provinceCity?.name)
         setValue('provinceCity.id', selectedCity?.id)
->>>>>>> e21787c7c13b8f8c8c731a31c0dfbff527d7be3a
       }
     })
     return () => subscription.unsubscribe()
@@ -111,11 +71,7 @@ const CinemaCreate: React.FC = () => {
                   Province/City <span className='text-red-500'>*</span>
                 </label>
                 <select
-<<<<<<< HEAD
-                  {...register('provinceCity', { required: 'Province/City is required' })}
-=======
                   {...register('provinceCity.name', { required: 'Province/City is required' })}
->>>>>>> e21787c7c13b8f8c8c731a31c0dfbff527d7be3a
                   className='w-full rounded-lg border-[1.5px] border-graydark bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary'
                 >
                   <option value='' disabled>
@@ -131,10 +87,6 @@ const CinemaCreate: React.FC = () => {
                 </select>
                 {errors.provinceCity && <span className='text-red-500'>{errors.provinceCity.message}</span>}
               </div>
-<<<<<<< HEAD
-
-=======
->>>>>>> e21787c7c13b8f8c8c731a31c0dfbff527d7be3a
               <button
                 type='submit'
                 className='hover:bg-primary-dark mt-4 rounded-lg bg-primary px-4 py-2 text-white shadow-md focus:outline-none focus:ring-2 focus:ring-primary'

@@ -9,9 +9,10 @@ import User from '@/pages/User'
 import Voucher from '@/pages/Voucher'
 import { getTokenFromLocalStorage } from '@/util/localStorage'
 import Cinema from '@/components/Cinema/Cinema'
-import CinemaCreate from '@/components/Cinema/CinemaCreate'
-import { PAGE_TITTLES } from '@/constants/pageTitles'
+import CinemaCreate from '@/components/Cinema/CreateCinema'
 import CinemaDetail from '@/components/Cinema/DetailCinema'
+import CreateScreen from '@/components/Cinema/CreateScreen'
+import { PAGE_TITLES } from '@/constants/pageTitles'
 
 function ProtectedRoute() {
   const isAuthenticated = getTokenFromLocalStorage()
@@ -33,7 +34,7 @@ export default function useRouteElements() {
           path: path.dashboard,
           element: (
             <DefaultLayout>
-              <PageTitle title={PAGE_TITTLES.dashboard} />
+              <PageTitle title={PAGE_TITLES.dashboard} />
               <Dashboard />
             </DefaultLayout>
           ),
@@ -43,7 +44,7 @@ export default function useRouteElements() {
           path: path.ticket,
           element: (
             <DefaultLayout>
-              <PageTitle title={PAGE_TITTLES.ticket} />
+              <PageTitle title={PAGE_TITLES.ticket} />
               <Ticket />
             </DefaultLayout>
           )
@@ -52,7 +53,7 @@ export default function useRouteElements() {
           path: path.user,
           element: (
             <DefaultLayout>
-              <PageTitle title={PAGE_TITTLES.user} />
+              <PageTitle title={PAGE_TITLES.user} />
               <User />
             </DefaultLayout>
           )
@@ -61,7 +62,7 @@ export default function useRouteElements() {
           path: path.voucher,
           element: (
             <DefaultLayout>
-              <PageTitle title={PAGE_TITTLES.voucher} />
+              <PageTitle title={PAGE_TITLES.voucher} />
               <Voucher />
             </DefaultLayout>
           )
@@ -70,26 +71,35 @@ export default function useRouteElements() {
           path: path.cinema,
           element: (
             <DefaultLayout>
-              <PageTitle title={PAGE_TITTLES.cinema} />
+              <PageTitle title={PAGE_TITLES.cinema} />
               <Cinema />
             </DefaultLayout>
           )
         },
         {
-          path: `${path.cinema}/create`,
+          path: path.createCinema,
           element: (
             <DefaultLayout>
-              <PageTitle title={PAGE_TITTLES.createCinema} />
+              <PageTitle title={PAGE_TITLES.createCinema} />
               <CinemaCreate />
             </DefaultLayout>
           )
         },
         {
-          path: `${path.cinema}/:id`,
+          path: path.detailCinema,
           element: (
             <DefaultLayout>
-              <PageTitle title={PAGE_TITTLES.CinemaDetail} />
+              <PageTitle title={PAGE_TITLES.detailCinema} />
               <CinemaDetail />
+            </DefaultLayout>
+          )
+        },
+        {
+          path: path.createScreen,
+          element: (
+            <DefaultLayout>
+              <PageTitle title={PAGE_TITLES.createScreen} />
+              <CreateScreen />
             </DefaultLayout>
           )
         }
@@ -103,7 +113,7 @@ export default function useRouteElements() {
           path: path.login,
           element: (
             <>
-              <PageTitle title={PAGE_TITTLES.login} />
+              <PageTitle title={PAGE_TITLES.login} />
               <SignIn />
             </>
           )

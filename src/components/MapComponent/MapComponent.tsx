@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import { toast } from 'react-toastify'
+import { API_URL } from './constant'
 interface MapComponentProps {
   address: string
   provinceCity: string
@@ -16,7 +17,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ address, provinceCity }) =>
       setLoading(true)
       try {
         const encodedAddress = encodeURIComponent(`${address}, ${provinceCity}`)
-        const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodedAddress}`)
+        const response = await fetch(`${API_URL}?format=json&q=${encodedAddress}`)
         if (!response.ok) {
           throw new Error('Failed to fetch coordinates')
         }
@@ -28,10 +29,6 @@ const MapComponent: React.FC<MapComponentProps> = ({ address, provinceCity }) =>
           toast.error('Location not found')
         }
       } catch (error) {
-<<<<<<< HEAD
-        console.error('Error fetching coordinates:', error)
-=======
->>>>>>> e21787c7c13b8f8c8c731a31c0dfbff527d7be3a
         toast.error('Failed to fetch coordinates')
       } finally {
         setLoading(false)
