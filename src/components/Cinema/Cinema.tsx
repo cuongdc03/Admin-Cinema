@@ -13,7 +13,6 @@ const Cinema: React.FC = () => {
       fetchCinemaList()
     } catch (error) {
       toast.error('Failed to delete cinema')
-      
     }
   }
 
