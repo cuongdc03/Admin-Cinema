@@ -7,6 +7,7 @@ import PageTitle from '@/components/PageTitle'
 import Ticket from '@/pages/Ticket'
 import User from '@/pages/User'
 import Voucher from '@/pages/Voucher'
+import Show from '@/components/Show/Show'
 
 export default function useRouteElements() {
   return useRoutes([
@@ -48,6 +49,15 @@ export default function useRouteElements() {
         <DefaultLayout>
           <PageTitle title='Voucher | CineStar' />
           <Voucher />
+        </DefaultLayout>
+      )
+    },
+    {
+      path: path.show,
+      element: (
+        <DefaultLayout>
+          <PageTitle title='Show | CineStar' />
+          <Show />
         </DefaultLayout>
       )
     }
