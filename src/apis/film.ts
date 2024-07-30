@@ -10,12 +10,11 @@ export const getFilm = async (id: number): Promise<FilmType> => {
 export const deleteFilm = async (id: number): Promise<void> => {
   return await customFetch.delete(`${ADMIN_FILM_URL}/${id}`, { signalKey: 'deleteFilm' }).catch(showError)
 }
-
-
 export const createFilm = async (newFilm: FilmType): Promise<void> => {
   return await customFetch.post(ADMIN_FILM_URL, { body: newFilm, signalKey: 'createFilm' }).catch(showError)
 }
-
 export const updateFilm = async (newFilm: FilmType): Promise<void> => {
-    return await customFetch.put(`${ADMIN_FILM_URL}/${newFilm.id}`, { body:newFilm,signalKey: 'updateFilm' }).catch(showError)
-    }
+  return await customFetch
+    .put(`${ADMIN_FILM_URL}/${newFilm.id}`, { body: newFilm, signalKey: 'updateFilm' })
+    .catch(showError)
+}

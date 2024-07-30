@@ -15,6 +15,7 @@ import CinemaDetail from '@/components/Cinema/DetailCinema'
 import Film from '@/components/Film/Film'
 import FilmDetail from '@/components/Film/FilmDetail'
 import Show from '@/components/Show/Show'
+import CreateFilm from '@/components/Film/CreateFilm'
 
 function ProtectedRoute() {
   const isAuthenticated = getTokenFromLocalStorage()
@@ -97,6 +98,33 @@ export default function useRouteElements() {
         </DefaultLayout>
       ),
       index: true
+    },
+    {
+      path: path.film,
+      element: (
+        <DefaultLayout>
+          <PageTitle title='Film | CineStar' />
+          <Film />
+        </DefaultLayout>
+      )
+    },
+    {
+      path: `${path.film}/:id`,
+      element: (
+        <DefaultLayout>
+          <PageTitle title='Film Detail | CineStar' />
+          <FilmDetail />
+        </DefaultLayout>
+      )
+    },
+    {
+      path: `${path.film}/create`,
+      element: (
+        <DefaultLayout>
+          <PageTitle title='Create Film | CineStar' />
+          <CreateFilm />
+        </DefaultLayout>
+      )
     },
     {
       path: path.ticket,

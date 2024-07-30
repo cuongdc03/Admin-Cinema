@@ -4,10 +4,11 @@ import { toast } from 'react-toastify'
 import { createFilm } from '../../apis/film'
 import { useNavigate } from 'react-router-dom'
 import Breadcrumb from '../Breadcrumbs/Breadcrumb'
-import { film } from '../../types/film'
 import { WidgetLoader } from 'react-cloudinary-upload-widget'
-import { CLOUDINARY_OPTIONS, MESSAGES } from './constant'
+import { CLOUDINARY_OPTIONS, MESSAGES, LANGUAGES_LIST, FORMATS_LIST, AGE_RATE_LIST, CATEGORIES_LIST } from './constant'
 import Input from '../InputComponent/Input'
+import { Select, MenuItem, FormControl, InputLabel, FormHelperText } from '@mui/material'
+import { FilmType } from '@/types/film'
 
 const CreateFilm: React.FC = () => {
   const {
@@ -15,7 +16,7 @@ const CreateFilm: React.FC = () => {
     handleSubmit,
     control,
     formState: { errors }
-  } = useForm<film>()
+  } = useForm<FilmType>()
   const [poster, setPoster] = useState<string>('')
   const navigate = useNavigate()
 
@@ -25,9 +26,14 @@ const CreateFilm: React.FC = () => {
     }
   }
 
-  const onSubmit = async (data: film) => {
+  const onSubmit = async (data: FilmType) => {
     try {
-      await createFilm({ ...data, poster })
+      const filmData = {
+        ...data,
+        duration: Number(data.duration),
+        poster
+      }
+      await createFilm(filmData)
       navigate('/film')
     } catch (error) {
       toast.error(MESSAGES.uploadError)
@@ -60,18 +66,78 @@ const CreateFilm: React.FC = () => {
               </h2>
             </div>
             <div className='grid grid-cols-2 gap-5.5 p-6.5'>
-              <Input
-                label='Duration'
-                type='number'
-                register={register('duration', { required: 'Duration is required' })}
-                error={errors.duration?.message}
-              />
-              <Input
-                label='Category'
-                type='text'
-                register={register('category', { required: 'Category is required' })}
-                error={errors.category?.message}
-              />
+              <FormControl error={Boolean(errors.language)}>
+                <InputLabel>Language</InputLabel>
+                <Controller
+                  name='language'
+                  control={control}
+                  defaultValue=''
+                  render={({ field }) => (
+                    <Select {...field} label='Language'>
+                      {LANGUAGES_LIST.map((lang) => (
+                        <MenuItem key={lang} value={lang}>
+                          {lang}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  )}
+                />
+                {errors.language && <FormHelperText>{errors.language.message}</FormHelperText>}
+              </FormControl>
+              <FormControl error={Boolean(errors.category)}>
+                <InputLabel>Category</InputLabel>
+                <Controller
+                  name='category'
+                  control={control}
+                  defaultValue=''
+                  render={({ field }) => (
+                    <Select {...field} label='Category'>
+                      {CATEGORIES_LIST.map((category) => (
+                        <MenuItem key={category} value={category}>
+                          {category}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  )}
+                />
+                {errors.category && <FormHelperText>{errors.category.message}</FormHelperText>}
+              </FormControl>
+              <FormControl error={Boolean(errors.format)}>
+                <InputLabel>Format</InputLabel>
+                <Controller
+                  name='format'
+                  control={control}
+                  defaultValue=''
+                  render={({ field }) => (
+                    <Select {...field} label='Format'>
+                      {FORMATS_LIST.map((format) => (
+                        <MenuItem key={format} value={format}>
+                          {format}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  )}
+                />
+                {errors.format && <FormHelperText>{errors.format.message}</FormHelperText>}
+              </FormControl>
+              <FormControl error={Boolean(errors.ageRate)}>
+                <InputLabel>Age Rate</InputLabel>
+                <Controller
+                  name='ageRate'
+                  control={control}
+                  defaultValue=''
+                  render={({ field }) => (
+                    <Select {...field} label='Age Rate'>
+                      {AGE_RATE_LIST.map((ageRate) => (
+                        <MenuItem key={ageRate} value={ageRate}>
+                          {ageRate}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  )}
+                />
+                {errors.ageRate && <FormHelperText>{errors.ageRate.message}</FormHelperText>}
+              </FormControl>
               <Input
                 label='Date Start'
                 type='date'
@@ -95,6 +161,18 @@ const CreateFilm: React.FC = () => {
                 type='text'
                 register={register('actor', { required: 'Actor is required' })}
                 error={errors.actor?.message}
+              />
+              <Input
+                label='Duration'
+                type='number'
+                register={register('duration', { required: 'Duration is required' })}
+                error={errors.duration?.message}
+              />
+              <Input
+                label='Trailer'
+                type='text'
+                register={register('trailer', { required: 'Trailer is required' })}
+                error={errors.trailer?.message}
               />
               <div>
                 <label className='mb-3 block font-extrabold text-black dark:text-white'>Subtitle</label>
@@ -124,18 +202,6 @@ const CreateFilm: React.FC = () => {
                   )}
                 />
               </div>
-              <Input
-                label='Format'
-                type='text'
-                register={register('format', { required: 'Format is required' })}
-                error={errors.format?.message}
-              />
-              <Input
-                label='Age Rate'
-                type='text'
-                register={register('ageRate', { required: 'Age rate is required' })}
-                error={errors.ageRate?.message}
-              />
               <div className='col-span-2'>
                 <Input
                   label='Description'
