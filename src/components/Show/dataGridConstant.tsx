@@ -3,6 +3,9 @@ import moment from 'moment'
 import { FaTableCells } from 'react-icons/fa6'
 import { Link } from 'react-router-dom'
 
+export const formatPrice = (price: number) =>
+  new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price)
+
 export const DATA_GRID_COLUMNS: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 100 },
   {
@@ -30,8 +33,7 @@ export const DATA_GRID_COLUMNS: GridColDef[] = [
     headerName: 'Price',
     width: 250,
     valueFormatter: (params) => {
-      const valueFormatted = params.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-      return `${valueFormatted} VND`
+      return formatPrice(params)
     }
   },
   {

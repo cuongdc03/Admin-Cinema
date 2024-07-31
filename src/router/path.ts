@@ -6,6 +6,5 @@ export const path = {
   ticket: '/ticket',
   user: '/user',
   voucher: '/voucher',
-  show: '/show',
-  film: '/film',
+  show: '/show'
 }

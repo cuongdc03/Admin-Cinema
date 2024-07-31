@@ -20,9 +20,11 @@ const Show: React.FC = () => {
   const [selectedCinema, setSelectedCinema] = useState<CinemaType | null>(null)
   const [selectedScreen, setSelectedScreen] = useState<ScreenType | null>(null)
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().slice(0, 10))
-  const [shows, setShows] = useState<ShowType[]>([])
+  const [shows, setShows] = useState<CinemaType[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [showModal, setShowModal] = useState(false)
+  const [currentCinema, setCurrentCinema] = useState<CinemaType | null>(null)
+  const [currentScreen, setCurrentScreen] = useState<ScreenType | null>(null)
 
   const fetchCinemas = async () => {
     try {
@@ -92,7 +94,9 @@ const Show: React.FC = () => {
     }
   }
 
-  const handleCreateShow = () => {
+  const handleCreateShow = (cinema: CinemaType, screen: ScreenType) => {
+    setCurrentCinema(cinema)
+    setCurrentScreen(screen)
     setShowModal(true)
   }
 
@@ -102,6 +106,7 @@ const Show: React.FC = () => {
 
   const handleSave = () => {
     closeModal()
+    handleSearch()
   }
 
   return (
@@ -166,14 +171,14 @@ const Show: React.FC = () => {
               <h2 className='mb-2 rounded bg-blue-500 py-2 text-center text-xl  font-bold text-white'>{cinema.name}</h2>
               {cinema.screens.map((screen) => (
                 <div key={screen.id}>
-                  <h3 className='text-md mb-1 font-semibold text-purple-500'>{screen.name}</h3>
+                  <h3 className='text-md mb-1 font-semibold text-black'>{screen.name}</h3>
                   <DataGrid
                     rows={screen.shows.map((show) => ({
                       id: show.id,
                       filmName: show.film.filmName,
                       timeStart: show.timeStart,
                       price: show.price,
-                      filmId: show.filmId
+                      filmId: show.filmId,
                     }))}
                     columns={DATA_GRID_COLUMNS}
                     {...DATA_GRID_SETTINGS}
@@ -181,14 +186,14 @@ const Show: React.FC = () => {
                   <div className='py-2'>
                     <button
                       className='mr-2 rounded bg-blue-500 px-2 py-2 font-bold text-white hover:bg-blue-700'
-                      onClick={handleCreateShow}
+                      onClick={() => handleCreateShow(cinema, screen)}
                     >
                       Create Show
                     </button>
-                    {showModal && (
+                    {showModal && currentCinema && currentScreen && (
                       <ShowModal
-                        cinema={cinema}
-                        screen={screen}
+                        cinema={currentCinema}
+                        screen={currentScreen}
                         selectedDate={selectedDate}
                         onClose={closeModal}
                         onSave={handleSave}

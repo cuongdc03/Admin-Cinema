@@ -11,6 +11,7 @@ import { CinemaType } from '../../types/cinema'
 import { FilmType } from '../../types/film'
 import { ScreenType } from '../../types/screen'
 import { postShow } from '../../apis/show'
+import { formatPrice } from './dataGridConstant'
 
 interface ShowModalProps {
   cinema: CinemaType | null
@@ -35,15 +36,13 @@ const ShowModal: React.FC<ShowModalProps> = ({ cinema, screen, selectedDate, fil
   })
 
   const prices = [50000, 75000, 100000]
-  const formatPrice = (price: number) =>
-    new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price)
 
   const onSubmit = async (data: any) => {
     if (cinema && screen) {
       const showData = {
         cinemaId: cinema.id,
         screenId: screen.id,
-        date: selectedDate,
+        dateStart: selectedDate,
         filmId: Number(data.film),
         price: data.price,
         timeStart: data.time.format('HH:mm')
@@ -136,7 +135,6 @@ const ShowModal: React.FC<ShowModalProps> = ({ cinema, screen, selectedDate, fil
                     renderInput={(params) => (
                       <TextField
                         {...params}
-                        fullWidth
                         error={!!errors.time}
                         helperText={errors.time ? errors.time.message : ''}
                         InputLabelProps={{ shrink: true }}
