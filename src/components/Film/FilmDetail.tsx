@@ -7,6 +7,10 @@ import { WidgetLoader } from 'react-cloudinary-upload-widget'
 import Input from '../InputComponent/Input'
 import { CLOUDINARY_OPTIONS, LANGUAGES_LIST, FORMATS_LIST, AGE_RATE_LIST, CATEGORIES_LIST } from './constant'
 import { FilmType } from '@/types/film'
+import TextField from '@mui/material/TextField'
+import MenuItem from '@mui/material/MenuItem'
+import Checkbox from '@mui/material/Checkbox'
+import FormControlLabel from '@mui/material/FormControlLabel'
 
 const FilmDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>()
@@ -82,19 +86,21 @@ const FilmDetail: React.FC = () => {
                 rules={{ required: 'Language is required' }}
                 render={({ field }) => (
                   <div>
-                    <label className='mb-3 block font-extrabold text-black dark:text-white'>Language</label>
-                    <select
-                      {...register('language', { required: 'Language is required' })}
-                      className='w-full rounded-lg border border-stroke px-3 py-2'
+                    <TextField
                       {...field}
+                      select
+                      label='Language'
+                      fullWidth
+                      value={field.value || ''}
+                      error={!!errors.language}
+                      helperText={errors.language ? errors.language.message : ''}
                     >
                       {LANGUAGES_LIST.map((lang) => (
-                        <option key={lang} value={lang}>
+                        <MenuItem key={lang} value={lang}>
                           {lang}
-                        </option>
+                        </MenuItem>
                       ))}
-                    </select>
-                    {errors.language && <p className='text-red-500'>{errors.language.message}</p>}
+                    </TextField>
                   </div>
                 )}
               />
@@ -104,19 +110,21 @@ const FilmDetail: React.FC = () => {
                 rules={{ required: 'Category is required' }}
                 render={({ field }) => (
                   <div>
-                    <label className='mb-3 block font-extrabold text-black dark:text-white'>Category</label>
-                    <select
-                      {...register('category', { required: 'Category is required' })}
-                      className='w-full rounded-lg border border-stroke px-3 py-2'
+                    <TextField
                       {...field}
+                      select
+                      label='Category'
+                      fullWidth
+                      value={field.value || ''}
+                      error={!!errors.category}
+                      helperText={errors.category ? errors.category.message : ''}
                     >
                       {CATEGORIES_LIST.map((category) => (
-                        <option key={category} value={category}>
+                        <MenuItem key={category} value={category}>
                           {category}
-                        </option>
+                        </MenuItem>
                       ))}
-                    </select>
-                    {errors.category && <p className='text-red-500'>{errors.category.message}</p>}
+                    </TextField>
                   </div>
                 )}
               />
@@ -126,19 +134,21 @@ const FilmDetail: React.FC = () => {
                 rules={{ required: 'Format is required' }}
                 render={({ field }) => (
                   <div>
-                    <label className='mb-3 block font-extrabold text-black dark:text-white'>Format</label>
-                    <select
-                      {...register('format', { required: 'Format is required' })}
-                      className='w-full rounded-lg border border-stroke px-3 py-2'
+                    <TextField
                       {...field}
+                      select
+                      label='Format'
+                      fullWidth
+                      value={field.value || ''}
+                      error={!!errors.format}
+                      helperText={errors.format ? errors.format.message : ''}
                     >
                       {FORMATS_LIST.map((format) => (
-                        <option key={format} value={format}>
+                        <MenuItem key={format} value={format}>
                           {format}
-                        </option>
+                        </MenuItem>
                       ))}
-                    </select>
-                    {errors.format && <p className='text-red-500'>{errors.format.message}</p>}
+                    </TextField>
                   </div>
                 )}
               />
@@ -148,19 +158,21 @@ const FilmDetail: React.FC = () => {
                 rules={{ required: 'Age Rate is required' }}
                 render={({ field }) => (
                   <div>
-                    <label className='mb-3 block font-extrabold text-black dark:text-white'>Age Rate</label>
-                    <select
-                      {...register('ageRate', { required: 'Age Rate is required' })}
-                      className='w-full rounded-lg border border-stroke px-3 py-2'
+                    <TextField
                       {...field}
+                      select
+                      label='Age Rate'
+                      fullWidth
+                      value={field.value || ''}
+                      error={!!errors.ageRate}
+                      helperText={errors.ageRate ? errors.ageRate.message : ''}
                     >
                       {AGE_RATE_LIST.map((ageRate) => (
-                        <option key={ageRate} value={ageRate}>
+                        <MenuItem key={ageRate} value={ageRate}>
                           {ageRate}
-                        </option>
+                        </MenuItem>
                       ))}
-                    </select>
-                    {errors.ageRate && <p className='text-red-500'>{errors.ageRate.message}</p>}
+                    </TextField>
                   </div>
                 )}
               />
@@ -220,36 +232,6 @@ const FilmDetail: React.FC = () => {
                   />
                 )}
               />
-              <div>
-                <label className='mb-3 block font-extrabold text-black dark:text-white'>Subtitle</label>
-                <Controller
-                  name='subtitle'
-                  control={control}
-                  render={({ field }) => (
-                    <input
-                      type='checkbox'
-                      {...register('subtitle')}
-                      className='bg-gray-100 border-gray-300 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600 h-4 w-4 rounded border text-blue-600 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600'
-                      {...field}
-                    />
-                  )}
-                />
-              </div>
-              <div>
-                <label className='mb-3 block font-extrabold text-black dark:text-white'>Dubbing</label>
-                <Controller
-                  name='dubbing'
-                  control={control}
-                  render={({ field }) => (
-                    <input
-                      type='checkbox'
-                      {...register('dubbing')}
-                      className='bg-gray-100 border-gray-300 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600 h-4 w-4 rounded border text-blue-600 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600'
-                      {...field}
-                    />
-                  )}
-                />
-              </div>
               <Controller
                 name='duration'
                 control={control}
@@ -275,6 +257,30 @@ const FilmDetail: React.FC = () => {
                     register={register('trailer', { required: 'Trailer is required' })}
                     error={errors.trailer?.message}
                     {...field}
+                  />
+                )}
+              />
+              <Controller
+                name='subtitle'
+                control={control}
+                render={({ field }) => (
+                  <FormControlLabel
+                    control={
+                      <Checkbox checked={field.value || false} onChange={(e) => field.onChange(e.target.checked)} />
+                    }
+                    label='Subtitle'
+                  />
+                )}
+              />
+              <Controller
+                name='dubbing'
+                control={control}
+                render={({ field }) => (
+                  <FormControlLabel
+                    control={
+                      <Checkbox checked={field.value || false} onChange={(e) => field.onChange(e.target.checked)} />
+                    }
+                    label='Dubbing'
                   />
                 )}
               />

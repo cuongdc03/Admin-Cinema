@@ -40,7 +40,7 @@ const CinemaCreate: React.FC = () => {
     const subscription = watch((value, { name }) => {
       if (name === 'provinceCity.name') {
         const selectedCity = provinceCities.find((city) => city.name === value.provinceCity?.name)
-        setValue('provinceCity.id', selectedCity?.id)
+        setValue('provinceCityId',selectedCity?.id)
       }
     })
     return () => subscription.unsubscribe()

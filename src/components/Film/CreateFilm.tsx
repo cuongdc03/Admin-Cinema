@@ -7,7 +7,7 @@ import Breadcrumb from '../Breadcrumbs/Breadcrumb'
 import { WidgetLoader } from 'react-cloudinary-upload-widget'
 import { CLOUDINARY_OPTIONS, MESSAGES, LANGUAGES_LIST, FORMATS_LIST, AGE_RATE_LIST, CATEGORIES_LIST } from './constant'
 import Input from '../InputComponent/Input'
-import { Select, MenuItem, FormControl, InputLabel, FormHelperText } from '@mui/material'
+import { Select, MenuItem, FormControl, InputLabel, FormHelperText, Checkbox, FormControlLabel } from '@mui/material'
 import { FilmType } from '@/types/film'
 
 const CreateFilm: React.FC = () => {
@@ -16,7 +16,12 @@ const CreateFilm: React.FC = () => {
     handleSubmit,
     control,
     formState: { errors }
-  } = useForm<FilmType>()
+  } = useForm<FilmType>({
+    defaultValues: {
+      subtitle: false,
+      dubbing: false
+    }
+  })
   const [poster, setPoster] = useState<string>('')
   const navigate = useNavigate()
 
@@ -174,34 +179,26 @@ const CreateFilm: React.FC = () => {
                 register={register('trailer', { required: 'Trailer is required' })}
                 error={errors.trailer?.message}
               />
-              <div>
-                <label className='mb-3 block font-extrabold text-black dark:text-white'>Subtitle</label>
-                <Controller
-                  name='subtitle'
-                  control={control}
-                  render={({ field }) => (
-                    <input
-                      type='checkbox'
-                      {...field}
-                      className='bg-gray-100 border-gray-300 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600 h-4 w-4 rounded border border-stone-500 px-3 py-2 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600'
-                    />
-                  )}
-                />
-              </div>
-              <div>
-                <label className='mb-3 block font-extrabold text-black dark:text-white'>Dubbing</label>
-                <Controller
-                  name='dubbing'
-                  control={control}
-                  render={({ field }) => (
-                    <input
-                      type='checkbox'
-                      {...field}
-                      className='bg-gray-100 border-gray-300 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600 h-4 w-4 rounded border border-stone-500 px-3 py-2 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600'
-                    />
-                  )}
-                />
-              </div>
+              <Controller
+                name='subtitle'
+                control={control}
+                render={({ field }) => (
+                  <FormControlLabel
+                    control={<Checkbox {...field} checked={field.value || false} />}
+                    label='Subtitle'
+                  />
+                )}
+              />
+              <Controller
+                name='dubbing'
+                control={control}
+                render={({ field }) => (
+                  <FormControlLabel
+                    control={<Checkbox {...field} checked={field.value || false} />}
+                    label='Dubbing'
+                  />
+                )}
+              />
               <div className='col-span-2'>
                 <Input
                   label='Description'

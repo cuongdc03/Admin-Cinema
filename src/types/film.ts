@@ -2,13 +2,18 @@ export type FilmType = {
   id: number
   filmName: string
   duration: number
-  genre: string
-  director: string
-  actors: string
   description: string
-  image: string
-  trailer: string
-  status: string
-  dubbing: boolean
+  dateStart: string
+  dateEnd: string
+  director: string
+  actor: string
   subtitle: boolean
+  dubbing: boolean
+  format: string
+  ageRate: string
+  category: string
+  poster: string
+  status: boolean
+  language: string
+  trailer: string
 }
