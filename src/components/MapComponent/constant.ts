@@ -1,1 +1,1 @@
-export const API_URL='https://nominatim.openstreetmap.org/search'
+export const API_URL = 'https://nominatim.openstreetmap.org/search'

@@ -3,24 +3,33 @@ import { schema } from '@/util/rules'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
 import Input from '@/components/Input/Input'
-import ImgScreen from '@/assets/img-screen.png'
-import { useEffect, useRef, useState } from 'react'
-import SeatLegendItem from './SeatLegendItem'
-import { adjustSeatNameToMatrix, changeStatusOfSeat, createSeatMatrix } from '@/util/createMatrix'
-import { SCREEN_SIZE } from '@/components/Cinema/constants'
+import { useEffect, useState } from 'react'
+import { adjustSeatNameToMatrix, createSeatMatrix } from '@/util/createMatrix'
+import {
+  CREATE_SCREEN,
+  CREATE_SCREEN_FAILED,
+  CREATE_SCREEN_SUCCESS,
+  SCREEN_SIZE,
+  SUCCESS_STATUS,
+  UPDATE_SCREEN,
+  UPDATE_SCREEN_FAILED,
+  UPDATE_SCREEN_SUCCESS
+} from '@/components/Cinema/constants'
 import { SeatRow } from '@/types/seat'
-import Seat from './Seat'
-import IconEditAll from '@/assets/ic-edit-all.svg?react'
-import IconHideAll from '@/assets/ic-hide-all.svg?react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { ScreenBodyType } from '@/types/screen'
-import { createScreen } from '@/apis/screen'
+import { ScreenBodyType, ScreenType } from '@/types/screen'
+import { createScreen, getScreenById, updateScreen } from '@/apis/screen'
 import { toast } from 'react-toastify'
 import { path } from '@/router/path'
+import SeatMatrixTable from './SeatMatrixTable'
 
 const createScreenSchema = schema.pick(['name', 'size'])
 
-const CreateScreen: React.FC = () => {
+interface CreateScreenProps {
+  isEdit: boolean
+}
+
+const CreateScreen: React.FC<CreateScreenProps> = ({ isEdit }) => {
   const {
     register,
     handleSubmit,
@@ -31,12 +40,10 @@ const CreateScreen: React.FC = () => {
     resolver: yupResolver(createScreenSchema)
   })
 
-  const tableRef = useRef<HTMLTableElement | null>(null)
-  const [tableWidth, setTableWidth] = useState('auto')
   const [seatMatrix, setSeatMatrix] = useState<SeatRow[]>([])
-  const [isDisabled, setIsDisabled] = useState<boolean>(true)
+  const [editScreen, setEditScreen] = useState<ScreenType>({} as ScreenType)
 
-  const params = useParams()
+  const { id } = useParams()
   const navigate = useNavigate()
 
   const changeSeatMatrixBySize = (sizeName: string) => {
@@ -51,58 +58,48 @@ const CreateScreen: React.FC = () => {
     changeSeatMatrixBySize(sizeName)
   }
 
-  const chooseRow = (rowName: string, isSeat: boolean) => {
-    const newSeatMatrix = seatMatrix.map((row) => {
-      if (row.rowName === rowName) {
-        const newRowSeats = row.rowSeats.map((seat) => ({ ...seat, isSeat, name: isSeat ? seat.name : '' }))
-        return {
-          ...row,
-          rowSeats: newRowSeats
-        }
-      } else {
-        return row
-      }
-    })
-    setSeatMatrix(adjustSeatNameToMatrix(newSeatMatrix))
-  }
-
-  const chooseCol = (colId: number, isSeat: boolean) => {
-    const newSeatMatrix = seatMatrix.map((row) => {
-      return {
-        ...row,
-        rowSeats: row.rowSeats.map((seat) =>
-          seat.colId === colId ? { ...seat, isSeat, name: isSeat ? seat.name : '' } : seat
-        )
-      }
-    })
-    setSeatMatrix(adjustSeatNameToMatrix(newSeatMatrix))
-  }
-
-  const toggleSeatStatus = (seatMatrix: SeatRow[], rowName: string, colId: number) => {
-    setSeatMatrix(changeStatusOfSeat(seatMatrix, rowName, colId))
-  }
-
-  const addNewScreen = async (screen: ScreenBodyType) => {
+  const handleAddNewScreen = async (screen: ScreenBodyType) => {
     const response = await createScreen(screen)
-    if (response.status === 200) {
-      toast.success('Create new screen successfully')
-      navigate(path.detailCinema.replace(':id', params.id as string))
+    if (response.status === SUCCESS_STATUS) {
+      toast.success(CREATE_SCREEN_SUCCESS)
+      navigate(path.detailCinema.replace(':id', id as string))
     } else {
-      toast.error('Error occurred while creating a new screen. Try again!')
+      toast.error(CREATE_SCREEN_FAILED)
+    }
+  }
+
+  const handleUpdateScreen = async (screen: ScreenType) => {
+    const response = await updateScreen(screen)
+    if (response.status === SUCCESS_STATUS) {
+      toast.success(UPDATE_SCREEN_SUCCESS)
+      navigate(path.detailCinema.replace(':id', screen.cinemaId.toString()))
+    } else {
+      toast.error(UPDATE_SCREEN_FAILED)
     }
   }
 
   const handleSaveChanges = async () => {
-    // TODO
-    const screen: ScreenBodyType = {
-      cinemaId: Number(params.id),
-      name: getValues('name'),
-      size: getValues('size'),
-      seatMatrix: JSON.stringify({
-        data: seatMatrix
-      })
+    if (isEdit) {
+      const screen: ScreenType = {
+        ...editScreen,
+        name: getValues('name'),
+        size: getValues('size'),
+        seatMatrix: JSON.stringify({
+          data: seatMatrix
+        })
+      }
+      handleUpdateScreen(screen)
+    } else {
+      const screen: ScreenBodyType = {
+        cinemaId: Number(id),
+        name: getValues('name'),
+        size: getValues('size'),
+        seatMatrix: JSON.stringify({
+          data: seatMatrix
+        })
+      }
+      handleAddNewScreen(screen)
     }
-    addNewScreen(screen)
   }
 
   const onSubmit = handleSubmit(() => {
@@ -111,25 +108,33 @@ const CreateScreen: React.FC = () => {
     }
   })
 
-  useEffect(() => {
-    if (tableRef.current) {
-      setTableWidth(tableRef.current.offsetWidth + 'px')
+  const fetchScreen = async (id: number) => {
+    const response = await getScreenById(id)
+    if (response) {
+      setValue('name', response.name)
+      setValue('size', response.size)
+      setSeatMatrix(JSON.parse(response.seatMatrix).data)
+      setEditScreen(response)
     }
-  }, [seatMatrix])
+  }
+
+  useEffect(() => {
+    if (isEdit) {
+      fetchScreen(Number(id))
+    }
+  }, [])
 
   return (
     <>
       <form onSubmit={onSubmit}>
         <div className='flex items-center justify-between'>
-          <Breadcrumb pageName='Create New Screen' />
-          {isDisabled && (
-            <button
-              className='hover:bg-primary-dark mt-4 rounded-lg bg-primary px-4 py-2 text-white shadow-md focus:outline-none focus:ring-2 focus:ring-primary'
-              type='submit'
-            >
-              Create Screen
-            </button>
-          )}
+          <Breadcrumb pageName={isEdit ? UPDATE_SCREEN : CREATE_SCREEN} />
+          <button
+            className='hover:bg-primary-dark mt-4 rounded-lg bg-primary px-4 py-2 text-white shadow-md focus:outline-none focus:ring-2 focus:ring-primary'
+            type='submit'
+          >
+            {isEdit ? UPDATE_SCREEN : CREATE_SCREEN}
+          </button>
         </div>
         <div className='grid grid-cols-2 gap-4'>
           <Input
@@ -165,92 +170,7 @@ const CreateScreen: React.FC = () => {
           </div>
         </div>
         {getValues().size && getValues().size !== 'NONE' && (
-          <div className='mt-2 overflow-auto rounded-lg bg-dark-blue-900 px-10 pb-4 pt-1'>
-            <div className='relative mx-auto mt-10 flex justify-center' style={{ width: tableWidth }}>
-              <img src={ImgScreen} alt='screen' />
-              <h4 className='absolute left-1/2 top-[6px] -translate-x-1/2 text-xl font-bold tracking-wider'>Screen</h4>
-            </div>
-
-            <table ref={tableRef} className='mx-auto mt-3'>
-              <tbody>
-                {seatMatrix.length > 0 &&
-                  seatMatrix.map((seatRow, rowIndex) => (
-                    <tr key={seatRow.rowName}>
-                      <td key={seatRow.rowName} className='px-1 py-[3px]'>
-                        <div className='flex min-h-[30px] w-full min-w-[40px] items-center justify-center text-lg font-bold'>
-                          {seatRow.rowName}
-                        </div>
-                      </td>
-                      {seatRow.rowSeats.map((seat) => {
-                        return (
-                          <td key={`${seat.colId}-${seat.seatId}`} className='px-1 py-[3px]' colSpan={1}>
-                            <Seat
-                              seat={seat}
-                              toggleSeatStatus={() => toggleSeatStatus(seatMatrix, seatRow.rowName, seat.colId)}
-                            />
-                          </td>
-                        )
-                      })}
-                      <td key={`${seatRow.rowName}-${rowIndex}-edit-btn`} className='px-1 py-[3px]'>
-                        <div
-                          className='flex h-[30px] w-[40px] items-center justify-center rounded-md bg-stone-700 hover:cursor-pointer hover:bg-stone-800'
-                          onClick={() => chooseRow(seatRow.rowName, true)}
-                        >
-                          <IconEditAll />
-                        </div>
-                      </td>
-                      <td key={`${seatRow.rowName}-${rowIndex}-hide-btn`} className='px-1 py-[3px]'>
-                        <div
-                          className='flex h-[30px] w-[40px] items-center justify-center rounded-md bg-red-800 hover:cursor-pointer hover:bg-red-900'
-                          onClick={() => chooseRow(seatRow.rowName, false)}
-                        >
-                          <IconHideAll />
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                {seatMatrix.length > 0 && (
-                  <tr key='select-all'>
-                    <td className='px-1 py-[3px]'>
-                      <div className='flex min-h-[30px] w-full min-w-[40px] items-center justify-center text-lg font-bold'></div>
-                    </td>
-                    {Array.from({ length: seatMatrix[0].rowSeats.length }, (_, index) => index).map((colId: number) => (
-                      <td key={`${colId}-btn`} className='px-1 py-[3px]'>
-                        <div
-                          className='flex h-[30px] w-[40px] items-center justify-center rounded-md bg-stone-700 hover:cursor-pointer hover:bg-stone-800'
-                          onClick={() => chooseCol(colId, true)}
-                        >
-                          <IconEditAll />
-                        </div>
-                      </td>
-                    ))}
-                  </tr>
-                )}
-                {seatMatrix.length > 0 && (
-                  <tr key='delete-all'>
-                    <td className='px-1 py-[3px]'>
-                      <div className='flex min-h-[30px] w-full min-w-[40px] items-center justify-center text-lg font-bold'></div>
-                    </td>
-                    {Array.from({ length: seatMatrix[0].rowSeats.length }, (_, index) => index).map((colId: number) => (
-                      <td key={`${colId}-btn`} className='px-1 py-[3px]'>
-                        <div
-                          className='flex h-[30px] w-[40px] items-center justify-center rounded-md bg-red-800 hover:cursor-pointer hover:bg-red-900'
-                          onClick={() => chooseCol(colId, false)}
-                        >
-                          <IconHideAll />
-                        </div>
-                      </td>
-                    ))}
-                  </tr>
-                )}
-              </tbody>
-            </table>
-
-            <div className='mt-10 flex w-full items-center justify-center gap-8'>
-              <SeatLegendItem className='h-[30px] w-[40px]' label='Regular Seat' />
-              <SeatLegendItem className='h-[30px] w-[40px] opacity-[0.05]' label='No Seat' />
-            </div>
-          </div>
+          <SeatMatrixTable seatMatrix={seatMatrix} setSeatMatrix={setSeatMatrix} />
         )}
       </form>
     </>

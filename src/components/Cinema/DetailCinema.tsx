@@ -49,7 +49,7 @@ const CinemaDetail: React.FC = () => {
       toast.error('Failed to fetch province/cities')
     }
   }
-  
+
   const fetchData = async () => {
     await Promise.all([fetchCinemaDetail(), fetchProvinceCities()])
     setLoading(false)

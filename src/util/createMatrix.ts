@@ -44,7 +44,7 @@ export const changeStatusOfSeat = (seatMatrix: SeatRow[], rowName: string, colId
     if (row.rowName === rowName) {
       row.rowSeats = row.rowSeats.map((seat) => {
         if (seat.colId === colId) {
-          seat.isSeat = !seat.isSeat 
+          seat.isSeat = !seat.isSeat
           seat.name = ''
         }
         return seat

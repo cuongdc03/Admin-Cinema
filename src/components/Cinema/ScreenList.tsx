@@ -8,10 +8,9 @@ import { path } from '@/router/path'
 interface ScreenListProps {
   cinemaId: number
   screens: ScreenType[]
-  onEdit: (screen: ScreenType) => void
 }
 
-const ScreenList: React.FC<ScreenListProps> = ({ cinemaId, screens: initialScreens, onEdit }) => {
+const ScreenList: React.FC<ScreenListProps> = ({ cinemaId, screens: initialScreens }) => {
   const [screens, setScreens] = useState<ScreenType[]>(initialScreens)
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
@@ -62,7 +61,9 @@ const ScreenList: React.FC<ScreenListProps> = ({ cinemaId, screens: initialScree
       renderCell: (params) => (
         <div className='flex h-full items-center justify-center gap-4'>
           <button
-            onClick={() => onEdit(params.row)}
+            onClick={() => {
+              navigate(path.updateScreen.replace(':id', params.row.id))
+            }}
             className='flex rounded bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-700'
           >
             <MdEdit />
