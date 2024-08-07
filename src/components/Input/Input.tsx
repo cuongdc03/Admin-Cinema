@@ -34,7 +34,7 @@ export default function Input<T extends FieldValues>({
     <div className={className}>
       <div className={classNameLabel}>{labelName}</div>
       <div className='relative'>
-        <input type='email' placeholder='Enter your email' className={classNameInput} {...registerResult} {...rest} />
+        <input className={classNameInput} {...registerResult} {...rest} />
         {IconComponent && (
           <span className={classNameIcon}>
             <IconComponent />

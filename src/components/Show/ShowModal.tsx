@@ -170,7 +170,7 @@ const ShowModal: React.FC<ShowModalProps> = ({ cinema, screen, selectedDate, fil
                   <MenuItem value=''>Select a Film</MenuItem>
                   {films.map((film) => (
                     <MenuItem key={film.id} value={film.id}>
-                      {film.title}
+                      {film.filmName}
                     </MenuItem>
                   ))}
                 </TextField>

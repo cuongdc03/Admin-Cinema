@@ -287,9 +287,9 @@ const FilmDetail: React.FC = () => {
               <div className='col-span-2'>
                 <Input
                   label='Description'
-                  type='text'
                   register={register('description', { required: 'Description is required' })}
                   error={errors.description?.message}
+                  isTextArea={true}
                 />
               </div>
               <div className='col-span-2 flex justify-center'>

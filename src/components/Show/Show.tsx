@@ -12,7 +12,7 @@ import { FilmType } from '../../types/film'
 import { ShowType } from '../../types/show'
 import { ScreenType } from '../../types/screen'
 import { getShowsByQuery } from '@/apis/show'
-import { getOnCastingFilms } from '@/apis/film'
+import { getFilms, getOnCastingFilms } from '@/apis/film'
 
 const Show: React.FC = () => {
   const [cinemas, setCinemas] = useState<CinemaType[]>([])
@@ -37,7 +37,7 @@ const Show: React.FC = () => {
 
   const fetchFilms = async () => {
     try {
-      const response = await getOnCastingFilms()
+      const response = await getFilms()
       setFilms(response)
     } catch (error) {
       toast.error('Failed to fetch films')

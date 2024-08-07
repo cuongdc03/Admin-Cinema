@@ -16,12 +16,7 @@ const CreateFilm: React.FC = () => {
     handleSubmit,
     control,
     formState: { errors }
-  } = useForm<FilmType>({
-    defaultValues: {
-      subtitle: false,
-      dubbing: false
-    }
-  })
+  } = useForm<FilmType>()
   const [poster, setPoster] = useState<string>('')
   const navigate = useNavigate()
 
@@ -179,32 +174,28 @@ const CreateFilm: React.FC = () => {
                 register={register('trailer', { required: 'Trailer is required' })}
                 error={errors.trailer?.message}
               />
-              <Controller
-                name='subtitle'
-                control={control}
-                render={({ field }) => (
-                  <FormControlLabel
-                    control={<Checkbox {...field} checked={field.value || false} />}
-                    label='Subtitle'
-                  />
-                )}
-              />
-              <Controller
-                name='dubbing'
-                control={control}
-                render={({ field }) => (
-                  <FormControlLabel
-                    control={<Checkbox {...field} checked={field.value || false} />}
-                    label='Dubbing'
-                  />
-                )}
-              />
+              <div>
+                <FormControlLabel
+                  control={
+                    <Controller name='subtitle' control={control} render={({ field }) => <Checkbox {...field} />} />
+                  }
+                  label='Subtitle'
+                />
+              </div>
+              <div>
+                <FormControlLabel
+                  control={
+                    <Controller name='dubbing' control={control} render={({ field }) => <Checkbox {...field} />} />
+                  }
+                  label='Dubbing'
+                />
+              </div>
               <div className='col-span-2'>
                 <Input
                   label='Description'
-                  type='text'
                   register={register('description', { required: 'Description is required' })}
                   error={errors.description?.message}
+                  isTextArea={true}
                 />
               </div>
               <div className='col-span-2 flex justify-center'>

@@ -9,13 +9,14 @@ import User from '@/pages/User'
 import Voucher from '@/pages/Voucher'
 import { getTokenFromLocalStorage } from '@/util/localStorage'
 import Cinema from '@/components/Cinema/Cinema'
-import { PAGE_TITTLES } from '@/constants/pageTitles'
-import CinemaCreate from '@/components/Cinema/CinemaCreate'
+import { PAGE_TITLES } from '@/constants/pageTitles'
 import CinemaDetail from '@/components/Cinema/DetailCinema'
 import Film from '@/components/Film/Film'
 import FilmDetail from '@/components/Film/FilmDetail'
 import Show from '@/components/Show/Show'
 import CreateFilm from '@/components/Film/CreateFilm'
+import CreateScreen from '@/components/Cinema/CreateScreen'
+import CinemaCreate from '@/components/Cinema/CreateCinema'
 
 function ProtectedRoute() {
   const isAuthenticated = getTokenFromLocalStorage()
@@ -36,7 +37,7 @@ export default function useRouteElements() {
           path: path.dashboard,
           element: (
             <DefaultLayout>
-              <PageTitle title={PAGE_TITTLES.dashboard} />
+              <PageTitle title={PAGE_TITLES.dashboard} />
               <Dashboard />
             </DefaultLayout>
           ),
@@ -46,7 +47,7 @@ export default function useRouteElements() {
           path: path.ticket,
           element: (
             <DefaultLayout>
-              <PageTitle title={PAGE_TITTLES.ticket} />
+              <PageTitle title={PAGE_TITLES.ticket} />
               <Ticket />
             </DefaultLayout>
           )
@@ -55,7 +56,7 @@ export default function useRouteElements() {
           path: path.user,
           element: (
             <DefaultLayout>
-              <PageTitle title={PAGE_TITTLES.user} />
+              <PageTitle title={PAGE_TITLES.user} />
               <User />
             </DefaultLayout>
           )
@@ -64,12 +65,84 @@ export default function useRouteElements() {
           path: path.voucher,
           element: (
             <DefaultLayout>
-              <PageTitle title={PAGE_TITTLES.voucher} />
+              <PageTitle title={PAGE_TITLES.voucher} />
               <Voucher />
+            </DefaultLayout>
+          )
+        },
+        {
+          path: path.cinema,
+          element: (
+            <DefaultLayout>
+              <PageTitle title={PAGE_TITLES.cinema} />
+              <Cinema />
+            </DefaultLayout>
+          )
+        },
+        {
+          path: path.createCinema,
+          element: (
+            <DefaultLayout>
+              <PageTitle title={PAGE_TITLES.createCinema} />
+              <CinemaCreate />
+            </DefaultLayout>
+          )
+        },
+        {
+          path: path.detailCinema,
+          element: (
+            <DefaultLayout>
+              <PageTitle title={PAGE_TITLES.detailCinema} />
+              <CinemaDetail />
+            </DefaultLayout>
+          )
+        },
+        {
+          path: path.createScreen,
+          element: (
+            <DefaultLayout>
+              <PageTitle title={PAGE_TITLES.createScreen} />
+              <CreateScreen isEdit={false} />
+            </DefaultLayout>
+          )
+        },
+        {
+          path: path.updateScreen,
+          element: (
+            <DefaultLayout>
+              <PageTitle title={PAGE_TITLES.createScreen} />
+              <CreateScreen isEdit={true} />
             </DefaultLayout>
           )
         }
       ]
+    },
+    {
+      path: path.film,
+      element: (
+        <DefaultLayout>
+          <PageTitle title={PAGE_TITLES.film} />
+          <Film />
+        </DefaultLayout>
+      )
+    },
+    {
+      path: path.filmCreate,
+      element: (
+        <DefaultLayout>
+          <PageTitle title={PAGE_TITLES.filmCreate} />
+          <CreateFilm />
+        </DefaultLayout>
+      )
+    },
+    {
+      path: path.filmDetail,
+      element: (
+        <DefaultLayout>
+          <PageTitle title={PAGE_TITLES.filmDetail} />
+          <FilmDetail />
+        </DefaultLayout>
+      )
     },
     {
       path: '',
@@ -79,7 +152,7 @@ export default function useRouteElements() {
           path: path.login,
           element: (
             <>
-              <PageTitle title={PAGE_TITTLES.login} />
+              <PageTitle title={PAGE_TITLES.login} />
               <SignIn />
             </>
           )

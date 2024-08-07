@@ -4,12 +4,13 @@ import { useForm, SubmitHandler, FormProvider } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import Breadcrumb from '../Breadcrumbs/Breadcrumb'
+import { CinemaType } from '@/types/Cinema'
 import { getCinema, updateCinema } from '@/apis/cinema'
 import { getprovinceCities } from '@/apis/provincecity'
 import Input from '../InputComponent/Input'
 import MapComponent from '../MapComponent/MapComponent'
 import { path } from '@/router/path'
-import { CinemaType } from '@/types/cinema'
+import ScreenList from './ScreenList'
 
 const CinemaDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>()
@@ -48,6 +49,7 @@ const CinemaDetail: React.FC = () => {
       toast.error('Failed to fetch province/cities')
     }
   }
+
   const fetchData = async () => {
     await Promise.all([fetchCinemaDetail(), fetchProvinceCities()])
     setLoading(false)
@@ -78,6 +80,8 @@ const CinemaDetail: React.FC = () => {
 
   const address = watch('address')
   const provinceCity = watch('provinceCity')
+  const cinemaId = watch('id')
+  const screens = watch('screens') || []
 
   useEffect(() => {
     if (address && provinceCity) {
@@ -150,6 +154,7 @@ const CinemaDetail: React.FC = () => {
           </div>
         </form>
       </FormProvider>
+      <ScreenList cinemaId={cinemaId} screens={screens} />
     </>
   )
 }

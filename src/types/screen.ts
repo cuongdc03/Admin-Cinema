@@ -1,10 +1,14 @@
-import { ShowType } from './show'
-
 export type ScreenType = {
   id: number
   name: string
-  seats: number
-  status: string
+  cinemaId: number
+  size: string
   seatMatrix: string
-  shows: ShowType[]
+}
+
+export type ScreenBodyType = {
+  cinemaId: number
+  name: string
+  size: string
+  seatMatrix: string
 }
