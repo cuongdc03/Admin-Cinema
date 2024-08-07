@@ -1,6 +1,7 @@
 import * as httpConstants from '../constants/httpConstants'
 import { toast } from 'react-toastify'
-import { getTokenFromLocalStorage } from './localStorage'
+import { getTokenFromLocalStorage, removeTokenFromLocalStorage } from './localStorage'
+import { path } from '../router/path'
 
 const ABORT_REQUEST_CONTROLLERS: Map<string, AbortController> = new Map()
 
@@ -115,7 +116,12 @@ const handleError = (error: any): Promise<never> => {
 
 export const showError = (error: ErrorData): void => {
   if (!isAbortError(error)) {
-    toast.error(error.message)
+    if (error.status === httpConstants.STATUS_UNAUTHORIZED) {
+      removeTokenFromLocalStorage()
+      window.location.href = path.login
+    } else {
+      toast.error(error.message)
+    }
   }
 }
 

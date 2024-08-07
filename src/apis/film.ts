@@ -20,3 +20,6 @@ export const updateFilm = async (newFilm: FilmType): Promise<void> => {
 export const createFilm = async (newFilm: FilmType): Promise<void> => {
   return await customFetch.post(ADMIN_FILM_URL, { body: newFilm, signalKey: 'createFilm' }).catch(showError)
 }
+export const getOnCastingFilms = async (): Promise<FilmType[]> => {
+  return await customFetch.get(`${FILM_URL}/OnCasting`, { signalKey: 'getFilms' }).catch(showError)
+}

@@ -12,7 +12,7 @@ export const deleteShow = async (id: number): Promise<void> => {
 export const editShow = async (newShow: ShowType): Promise<void> => {
   return await customFetch.put(ADMIN_SHOW_URL, { body: newShow, signalKey: 'editShow' }).catch(showError)
 }
-export const getShowsbyquery = async (
+export const getShowsByQuery = async (
   dateStart: string,
   cinemaId?: string,
   screenId?: string

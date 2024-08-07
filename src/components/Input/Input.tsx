@@ -1,5 +1,5 @@
 import { InputHTMLAttributes } from 'react'
-import type { FieldValues, RegisterOptions, UseFormRegister } from 'react-hook-form'
+import type { FieldValues, RegisterOptions, UseFormRegister, Path } from 'react-hook-form'
 
 interface InputProps<T extends FieldValues> extends InputHTMLAttributes<HTMLInputElement> {
   className?: string
@@ -11,10 +11,11 @@ interface InputProps<T extends FieldValues> extends InputHTMLAttributes<HTMLInpu
   errorMessage?: string
   icon?: React.ElementType
   register?: UseFormRegister<T>
-  rules?: RegisterOptions
+  rules?: RegisterOptions<T>
+  name: Path<T>
 }
 
-export default function Input({
+export default function Input<T extends FieldValues>({
   className = 'mb-4',
   classNameLabel = 'text-md mt-2 mb-1 font-semibold',
   classNameInput = 'w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary',
@@ -27,7 +28,7 @@ export default function Input({
   errorMessage,
   icon: IconComponent,
   ...rest
-}: InputProps<FieldValues>) {
+}: InputProps<T>) {
   const registerResult = register && name ? register(name, rules) : null
   return (
     <div className={className}>

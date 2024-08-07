@@ -22,9 +22,10 @@ export const DATA_GRID_COLUMNS: GridColDef[] = [
     field: 'timeStart',
     headerName: 'Show Time',
     width: 250,
-    valueGetter: (params) => {
-      const startTime = moment(params, 'HH:mm:ss')
-      const endTime = startTime.clone().add(2.5, 'hours')
+    renderCell: (params) => {
+      const startTime = moment(params.row.timeStart, 'HH:mm:ss')
+
+      const endTime = startTime.clone().add(params.row.duration, 'minutes')
       return `${startTime.format('HH:mm')} - ${endTime.format('HH:mm')}`
     }
   },
@@ -77,5 +78,5 @@ export const DATA_GRID_SETTINGS = {
 }
 
 export const handleShowMatrix = (showId: number) => {
-  //To do : handle show Seat Matrix
+  // TODO: Show SeatMatrix
 }

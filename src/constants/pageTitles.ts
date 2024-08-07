@@ -8,4 +8,5 @@ export const PAGE_TITTLES = {
   user: 'User | CineStar',
   voucher: 'Voucher | CineStar',
   film: 'Film | CineStar',
+  login: 'Sign Up | CineStar'
 }
