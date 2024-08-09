@@ -126,7 +126,12 @@ module.exports = {
         success: '#219653',
         danger: '#D34053',
         warning: '#FFA70B',
-        'dark-blue-900': '#0f172a'
+        'dark-blue-900': '#0f172a',
+        'white-custom-700': 'var(--white-color-700)',
+        'black-custom-700': 'var(--black-color-700)',
+        'blue-custom-700': 'var(--blue-color-700)',
+        'purple-custom-700': 'var(--purple-color-700)',
+        'gray-custom-500': 'var(--gray-color-500)'
       },
       fontSize: {
         'title-xxl': ['44px', '55px'],

@@ -1,14 +1,12 @@
-import { deleteShow } from '@/apis/show'
 import { GridColDef } from '@mui/x-data-grid'
 import moment from 'moment'
-import { FaTableCells, FaTrash } from 'react-icons/fa6'
+import { FaTableCells } from 'react-icons/fa6'
 import { Link } from 'react-router-dom'
-import { toast } from 'react-toastify'
 
 export const formatPrice = (price: number) =>
   new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price)
 
-export const DATA_GRID_COLUMNS: GridColDef[] = [
+export const getDataGridColumns = (handleShowMatrix: (showId: number) => void): GridColDef[] => [
   { field: 'id', headerName: 'ID', width: 100 },
   {
     field: 'filmName',
@@ -40,26 +38,18 @@ export const DATA_GRID_COLUMNS: GridColDef[] = [
     }
   },
   {
-    field: 'Action',
-    headerName: 'Action',
+    field: 'seatMatrix',
+    headerName: 'Seat Matrix',
     align: 'center',
-    width: 200,
+    width: 150,
     headerAlign: 'center',
     renderCell: (params) => (
-      <div className='flex h-full w-full items-center justify-center gap-4'>
-        <button
-          onClick={() => handleShowMatrix(params.row.id)}
-          className='rounded bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-700'
-        >
-          <FaTableCells />
-        </button>
-        <button
-          onClick={() => handleDeleteShow(params.row.id)}
-          className='rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700'
-        >
-          <FaTrash />
-        </button>
-      </div>
+      <button
+        onClick={() => handleShowMatrix(params.row.id)}
+        className='mr-2 rounded bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-700'
+      >
+        <FaTableCells />
+      </button>
     )
   }
 ]
@@ -84,18 +74,5 @@ export const DATA_GRID_SETTINGS = {
     '& .MuiDataGrid-footerContainer': {
       display: 'none'
     }
-  }
-}
-
-export const handleShowMatrix = (showId: number) => {
-  // TODO: Show SeatMatrix
-}
-
-export const handleDeleteShow = async (showId: number) => {
-  try {
-    await deleteShow(showId)
-    toast.success('Show deleted successfully')
-  } catch (error) {
-    toast.error('Failed to delete show')
   }
 }

@@ -1,18 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import TextField from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
 import moment from 'moment'
 import { DataGrid } from '@mui/x-data-grid'
 import { getCinemas } from '../../apis/cinema'
 import { toast } from 'react-toastify'
-import { DATA_GRID_COLUMNS, DATA_GRID_SETTINGS } from './dataGridConstant'
+import { DATA_GRID_SETTINGS, getDataGridColumns } from './dataGridConstant'
 import ShowModal from './ShowModal'
 import { CinemaType } from '../../types/cinema'
 import { FilmType } from '../../types/film'
 import { ShowType } from '../../types/show'
 import { ScreenType } from '../../types/screen'
-import { getShowsByQuery } from '@/apis/show'
-import { getFilms } from '@/apis/film'
+import { getShowById, getShowsByQuery } from '@/apis/show'
+import { getOnCastingFilms } from '@/apis/film'
+import SeatMatrixTable from '../Cinema/SeatMatrixTable'
+import { SeatRow } from '@/types/seat'
 
 const Show: React.FC = () => {
   const [cinemas, setCinemas] = useState<CinemaType[]>([])
@@ -25,6 +27,10 @@ const Show: React.FC = () => {
   const [showModal, setShowModal] = useState(false)
   const [currentCinema, setCurrentCinema] = useState<CinemaType | null>(null)
   const [currentScreen, setCurrentScreen] = useState<ScreenType | null>(null)
+  const [showSeatMatrix, setShowSeatMatrix] = useState<boolean>(false)
+  const [seatMatrix, setSeatMatrix] = useState<SeatRow[]>([])
+
+  const modalRef = useRef<HTMLDivElement>(null)
 
   const fetchCinemas = async () => {
     try {
@@ -37,7 +43,7 @@ const Show: React.FC = () => {
 
   const fetchFilms = async () => {
     try {
-      const response = await getFilms()
+      const response = await getOnCastingFilms()
       setFilms(response)
     } catch (error) {
       toast.error('Failed to fetch films')
@@ -110,6 +116,25 @@ const Show: React.FC = () => {
     handleSearch()
   }
 
+  const handleShowMatrix = async (showId: number) => {
+    const response = await getShowById(showId)
+    const seatMatrix = JSON.parse(response.seatMatrix).data
+    if (seatMatrix) {
+      setShowSeatMatrix(true)
+      setSeatMatrix(seatMatrix)
+    }
+  }
+
+  const hideShowSeatMatrix = () => {
+    setShowSeatMatrix(false)
+  }
+
+  const handleBackdropClick: React.MouseEventHandler<HTMLDivElement> = (event) => {
+    if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+      hideShowSeatMatrix()
+    }
+  }
+
   return (
     <div className='container mx-auto p-4'>
       <div className='mb-4 flex items-center space-x-4 text-black dark:text-white'>
@@ -173,22 +198,20 @@ const Show: React.FC = () => {
             <div key={cinema.id}>
               <h2 className='mb-2 rounded bg-blue-500 py-2 text-center text-xl  font-bold text-white'>{cinema.name}</h2>
               {cinema.screens
-                .filter((screen) => screen.shows.filter((show) => show.status).length > 0)
+                .filter((screen) => screen.status)
                 .map((screen) => (
                   <div key={screen.id}>
                     <h3 className='text-md mb-1 font-semibold text-black'>{screen.name}</h3>
                     <DataGrid
-                      rows={screen.shows
-                        .filter((show) => show.status)
-                        .map((show) => ({
-                          id: show.id,
-                          filmName: show.film.filmName,
-                          timeStart: show.timeStart,
-                          price: show.price,
-                          filmId: show.filmId,
-                          duration: show.film.duration
-                        }))}
-                      columns={DATA_GRID_COLUMNS}
+                      rows={screen.shows.map((show) => ({
+                        id: show.id,
+                        filmName: show.film.filmName,
+                        timeStart: show.timeStart,
+                        price: show.price,
+                        filmId: show.filmId,
+                        duration: show.film.duration
+                      }))}
+                      columns={getDataGridColumns(handleShowMatrix)}
                       {...DATA_GRID_SETTINGS}
                     />
                     <div className='py-2'>
@@ -232,6 +255,16 @@ const Show: React.FC = () => {
               films={films}
             />
           )}
+        </div>
+      )}
+      {showSeatMatrix && (
+        <div
+          className='text-md fixed left-0 top-0 z-9999 flex h-[100vh] w-[100vw] items-center justify-center bg-black/80 text-white'
+          onClick={handleBackdropClick}
+        >
+          <div ref={modalRef}>
+            <SeatMatrixTable seatMatrix={seatMatrix} isReadOnly={true} hideShowSeatMatrix={hideShowSeatMatrix} />
+          </div>
         </div>
       )}
     </div>

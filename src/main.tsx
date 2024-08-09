@@ -5,6 +5,7 @@ import App from './App'
 import './css/style.css'
 import './css/satoshi.css'
 import 'flatpickr/dist/flatpickr.min.css'
+import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>

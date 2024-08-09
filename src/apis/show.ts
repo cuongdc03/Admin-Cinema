@@ -27,3 +27,7 @@ export const getShowsByQuery = async (
 export const postShow = async (newShow: ShowType): Promise<void> => {
   return await customFetch.post(ADMIN_SHOW_URL, { body: newShow, signalKey: 'postShow' }).catch(showError)
 }
+
+export const getShowById = async (showId: number): Promise<ShowType> => {
+  return await customFetch.get(ADMIN_SHOW_URL, { query: { showId }, signalKey: 'getShowById' }).catch(showError)
+}
