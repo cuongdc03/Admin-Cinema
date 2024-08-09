@@ -173,19 +173,21 @@ const Show: React.FC = () => {
             <div key={cinema.id}>
               <h2 className='mb-2 rounded bg-blue-500 py-2 text-center text-xl  font-bold text-white'>{cinema.name}</h2>
               {cinema.screens
-                .filter((screen) => screen.status)
+                .filter((screen) => screen.shows.filter((show) => show.status).length > 0)
                 .map((screen) => (
                   <div key={screen.id}>
                     <h3 className='text-md mb-1 font-semibold text-black'>{screen.name}</h3>
                     <DataGrid
-                      rows={screen.shows.map((show) => ({
-                        id: show.id,
-                        filmName: show.film.filmName,
-                        timeStart: show.timeStart,
-                        price: show.price,
-                        filmId: show.filmId,
-                        duration: show.film.duration
-                      }))}
+                      rows={screen.shows
+                        .filter((show) => show.status)
+                        .map((show) => ({
+                          id: show.id,
+                          filmName: show.film.filmName,
+                          timeStart: show.timeStart,
+                          price: show.price,
+                          filmId: show.filmId,
+                          duration: show.film.duration
+                        }))}
                       columns={DATA_GRID_COLUMNS}
                       {...DATA_GRID_SETTINGS}
                     />
