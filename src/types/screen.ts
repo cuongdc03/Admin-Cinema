@@ -11,4 +11,5 @@ export type ScreenBodyType = {
   name: string
   size: string
   seatMatrix: string
+  status: boolean
 }

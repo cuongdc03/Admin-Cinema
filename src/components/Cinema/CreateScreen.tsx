@@ -96,7 +96,8 @@ const CreateScreen: React.FC<CreateScreenProps> = ({ isEdit }) => {
         size: getValues('size'),
         seatMatrix: JSON.stringify({
           data: seatMatrix
-        })
+        }),
+        status: true
       }
       handleAddNewScreen(screen)
     }

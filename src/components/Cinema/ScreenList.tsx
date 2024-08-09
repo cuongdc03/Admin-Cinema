@@ -4,6 +4,10 @@ import { MdDelete, MdEdit } from 'react-icons/md'
 import { ScreenType } from '@/types/screen'
 import { useNavigate } from 'react-router-dom'
 import { path } from '@/router/path'
+import { deleteScreen } from '@/apis/screen'
+import { DELETE_SCREEN_FAILED, DELETE_SCREEN_SUCCESS, SUCCESS_STATUS } from '@/components/Cinema/constants'
+import { toast } from 'react-toastify'
+import ModalConfirm from '@/components/ModalConfirm/ModalConfirm'
 
 interface ScreenListProps {
   cinemaId: number
@@ -13,6 +17,9 @@ interface ScreenListProps {
 const ScreenList: React.FC<ScreenListProps> = ({ cinemaId, screens: initialScreens }) => {
   const [screens, setScreens] = useState<ScreenType[]>(initialScreens)
   const [loading, setLoading] = useState(false)
+  const [showModal, setShowModal] = useState(false)
+  const [selectedScreen, setSelectedScreen] = useState<ScreenType>()
+
   const navigate = useNavigate()
 
   const countSeats = useCallback((screen: ScreenType) => {
@@ -33,6 +40,32 @@ const ScreenList: React.FC<ScreenListProps> = ({ cinemaId, screens: initialScree
       }))
     )
   }, [initialScreens, countSeats])
+
+  const handleUpdateScreen = (id: string) => {
+    navigate(path.updateScreen.replace(':id', id))
+  }
+
+  const handleDeleteScreen = async (id: number) => {
+    const response = await deleteScreen(id)
+    if (response.status === SUCCESS_STATUS) {
+      toast.success(DELETE_SCREEN_SUCCESS)
+      setLoading(true)
+      const updatedScreens = screens.filter((screen) => screen.id !== id)
+      setScreens(updatedScreens)
+      setLoading(false)
+    } else {
+      toast.error(DELETE_SCREEN_FAILED)
+    }
+  }
+
+  const handleSelectedScreenForRemoving = (screen: ScreenType) => {
+    setSelectedScreen(screen)
+    setShowModal(true)
+  }
+
+  const handleCloseModal = () => {
+    setShowModal(false)
+  }
 
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 300, resizable: false },
@@ -61,14 +94,15 @@ const ScreenList: React.FC<ScreenListProps> = ({ cinemaId, screens: initialScree
       renderCell: (params) => (
         <div className='flex h-full items-center justify-center gap-4'>
           <button
-            onClick={() => {
-              navigate(path.updateScreen.replace(':id', params.row.id))
-            }}
+            onClick={() => handleUpdateScreen(params.row.id)}
             className='flex rounded bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-700'
           >
             <MdEdit />
           </button>
-          <button className='mr-2 rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700'>
+          <button
+            className='mr-2 rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700'
+            onClick={() => handleSelectedScreenForRemoving(params.row)}
+          >
             <MdDelete />
           </button>
         </div>
@@ -103,6 +137,14 @@ const ScreenList: React.FC<ScreenListProps> = ({ cinemaId, screens: initialScree
             autoHeight
             disableColumnFilter
             disableColumnSelector
+          />
+          <ModalConfirm
+            heading='Delete this screen'
+            desc='Are you sure you want to delete this screen?'
+            showModal={showModal}
+            confirmBtnTitle='Delete'
+            onCancel={handleCloseModal}
+            onConfirm={() => handleDeleteScreen(selectedScreen?.id as number)}
           />
         </>
       )}

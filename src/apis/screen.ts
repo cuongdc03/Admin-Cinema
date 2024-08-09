@@ -17,3 +17,7 @@ export const updateScreen = async (screen: ScreenType) => {
     body: screen
   })
 }
+
+export const deleteScreen = async (id: number) => {
+  return await customFetch.delete(`${SCREEN_ADMIN_URL}/${id}`)
+}

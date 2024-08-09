@@ -154,7 +154,7 @@ const CinemaDetail: React.FC = () => {
           </div>
         </form>
       </FormProvider>
-      <ScreenList cinemaId={cinemaId} screens={screens} />
+      <ScreenList cinemaId={cinemaId} screens={screens.filter((screen) => screen.status)} />
     </>
   )
 }

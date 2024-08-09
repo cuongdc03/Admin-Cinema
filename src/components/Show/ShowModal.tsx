@@ -75,7 +75,7 @@ const ShowModal: React.FC<ShowModalProps> = ({ cinema, screen, selectedDate, fil
   }
 
   return (
-    <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50' onClick={onClose}>
+    <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/10' onClick={onClose}>
       <div className='relative w-1/3 rounded-lg bg-white p-6 shadow-lg' onClick={(e) => e.stopPropagation()}>
         <h2 className='mb-4 text-lg font-bold'>Create Show</h2>
         <form onSubmit={handleSubmit(onSubmit)}>
