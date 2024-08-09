@@ -1,7 +1,7 @@
-import { ProvinceCityType } from '../types/provincecity'
+import { ProvinceCityType } from '../types/provinceCity'
 import { customFetch, showError } from '../util/http'
 import { PROVINCE_CITY_URL } from './constant'
 
-export const getprovinceCities = async (): Promise<ProvinceCityType[]> => {
-  return await customFetch.get(PROVINCE_CITY_URL, { signalKey: 'getprovinceCities' }).catch(showError)
+export const getProvinceCities = async (): Promise<ProvinceCityType[]> => {
+  return await customFetch.get(PROVINCE_CITY_URL, { signalKey: 'getProvinceCities' }).catch(showError)
 }

@@ -1,4 +1,4 @@
-import { ProvinceCityType } from './provincecity'
+import { ProvinceCityType } from './provinceCity'
 import { ScreenType } from './screen'
 
 export type CinemaType = {

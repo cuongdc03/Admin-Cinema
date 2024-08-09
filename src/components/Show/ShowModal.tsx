@@ -61,7 +61,7 @@ const ShowModal: React.FC<ShowModalProps> = ({ cinema, screen, selectedDate, fil
         dateStart: selectedDate,
         filmId: Number(data.film),
         price: data.price,
-        timeStart: data.time.format('HH:mm')
+        timeStart: data.time.format('HH:mm:ss')
       }
       try {
         await postShow(showData)

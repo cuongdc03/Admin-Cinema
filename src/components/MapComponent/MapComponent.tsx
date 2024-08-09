@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import { toast } from 'react-toastify'
-import { API_URL } from './constant'
 interface MapComponentProps {
   address: string
   provinceCity: string
@@ -17,7 +16,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ address, provinceCity }) =>
       setLoading(true)
       try {
         const encodedAddress = encodeURIComponent(`${address}, ${provinceCity}`)
-        const response = await fetch(`${API_URL}?format=json&q=${encodedAddress}`)
+        const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodedAddress}`)
         if (!response.ok) {
           throw new Error('Failed to fetch coordinates')
         }
@@ -39,11 +38,11 @@ const MapComponent: React.FC<MapComponentProps> = ({ address, provinceCity }) =>
   }, [address, provinceCity])
 
   return (
-    <div style={{ height: '400px', width: '100%' }}>
+    <div className='h-100 min-w-full'>
       {loading ? (
         <div>Loading map...</div>
       ) : (
-        <MapContainer center={mapCenter} zoom={25} style={{ height: '100%', width: '100%', zIndex: '10' }}>
+        <MapContainer center={mapCenter} zoom={25} className='z-10 h-full w-full'>
           <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
           <Marker position={mapCenter}>
             <Popup>Cinema Location</Popup>

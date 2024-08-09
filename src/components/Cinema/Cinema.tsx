@@ -9,19 +9,13 @@ const Cinema: React.FC = () => {
   const [cinemas, setCinemas] = useState<CinemaType[]>([])
   const handleDeleteCinema = async (cinema: CinemaType) => {
     try {
-      await deleteCinema(cinema.id, setCinemas)
+      await deleteCinema(cinema.id)
+      fetchCinemaList()
     } catch (error) {
       toast.error('Failed to delete cinema')
     }
   }
 
-  const handleStatusChange = async (cinema: CinemaType) => {
-    try {
-      await updateCinema(cinema)
-    } catch (error) {
-      toast.error('Failed to archive cinema')
-    }
-  }
   const fetchCinemaList = async () => {
     const cinemas = await getCinemas()
     setCinemas(cinemas)
@@ -30,15 +24,17 @@ const Cinema: React.FC = () => {
   useEffect(() => {
     fetchCinemaList()
   }, [])
+
+  const filteredCinemas = (cinemas || []).filter((cinema) => cinema.status)
   const displayedColumns: (keyof CinemaType)[] = ['id', 'name', 'address', 'provinceCityName', 'status']
   return (
     <div>
       <Breadcrumb pageName='Cinema' />
       <Table
-        rows={cinemas}
+        rows={filteredCinemas}
         displayedColumns={displayedColumns}
         onDelete={handleDeleteCinema}
-        onStatusChange={handleStatusChange}
+        onStatusChange={handleDeleteCinema}
         isCinema={true}
       />
     </div>

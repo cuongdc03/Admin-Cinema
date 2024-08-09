@@ -157,7 +157,7 @@ const Table = <T extends { id: number; status?: boolean; [key: string]: any }>({
         </div>
       </div>
       <ThemeProvider theme={theme}>
-        <div style={{ height: 600, width: '100%' }}>
+        <div className='h-150 w-full'>
           <DataGrid
             className='rounded-sm border border-stroke shadow-default dark:border-strokedark dark:bg-boxdark'
             rows={filteredRows}

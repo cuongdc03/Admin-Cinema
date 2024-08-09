@@ -16,5 +16,4 @@ export type FilmType = {
   status: boolean
   language: string
   trailer: string
-  title: string
 }

@@ -10,13 +10,13 @@ import Voucher from '@/pages/Voucher'
 import { getTokenFromLocalStorage } from '@/util/localStorage'
 import Cinema from '@/components/Cinema/Cinema'
 import { PAGE_TITLES } from '@/constants/pageTitles'
+import CinemaCreate from '@/components/Cinema/CinemaCreate'
 import CinemaDetail from '@/components/Cinema/DetailCinema'
-import Film from '@/components/Film/Film'
-import FilmDetail from '@/components/Film/FilmDetail'
-import Show from '@/components/Show/Show'
-import CreateFilm from '@/components/Film/CreateFilm'
 import CreateScreen from '@/components/Cinema/CreateScreen'
-import CinemaCreate from '@/components/Cinema/CreateCinema'
+import CreateFilm from '@/components/Film/CreateFilm'
+import Film from '@/components/Film/Film'
+import Show from '@/components/Show/Show'
+import FilmDetail from '@/components/Film/FilmDetail'
 
 function ProtectedRoute() {
   const isAuthenticated = getTokenFromLocalStorage()
@@ -27,6 +27,7 @@ function RejectedRoute() {
   const isAuthenticated = getTokenFromLocalStorage()
   return !isAuthenticated ? <Outlet /> : <Navigate to={path.dashboard} />
 }
+
 export default function useRouteElements() {
   return useRoutes([
     {
@@ -36,8 +37,7 @@ export default function useRouteElements() {
         {
           path: path.dashboard,
           element: (
-            <DefaultLayout>
-              <PageTitle title={PAGE_TITLES.dashboard} />
+            <DefaultLayout title={PAGE_TITLES.dashboard}>
               <Dashboard />
             </DefaultLayout>
           ),
@@ -46,8 +46,7 @@ export default function useRouteElements() {
         {
           path: path.ticket,
           element: (
-            <DefaultLayout>
-              <PageTitle title={PAGE_TITLES.ticket} />
+            <DefaultLayout title={PAGE_TITLES.ticket}>
               <Ticket />
             </DefaultLayout>
           )
@@ -55,8 +54,7 @@ export default function useRouteElements() {
         {
           path: path.user,
           element: (
-            <DefaultLayout>
-              <PageTitle title={PAGE_TITLES.user} />
+            <DefaultLayout title={PAGE_TITLES.user}>
               <User />
             </DefaultLayout>
           )
@@ -64,8 +62,7 @@ export default function useRouteElements() {
         {
           path: path.voucher,
           element: (
-            <DefaultLayout>
-              <PageTitle title={PAGE_TITLES.voucher} />
+            <DefaultLayout title={PAGE_TITLES.voucher}>
               <Voucher />
             </DefaultLayout>
           )
@@ -73,26 +70,47 @@ export default function useRouteElements() {
         {
           path: path.cinema,
           element: (
-            <DefaultLayout>
-              <PageTitle title={PAGE_TITLES.cinema} />
+            <DefaultLayout title={PAGE_TITLES.cinema}>
               <Cinema />
+            </DefaultLayout>
+          )
+        },
+        {
+          path: path.film,
+          element: (
+            <DefaultLayout title={PAGE_TITLES.film}>
+              <Film />
             </DefaultLayout>
           )
         },
         {
           path: path.createCinema,
           element: (
-            <DefaultLayout>
-              <PageTitle title={PAGE_TITLES.createCinema} />
+            <DefaultLayout title={PAGE_TITLES.createCinema}>
               <CinemaCreate />
             </DefaultLayout>
           )
         },
         {
-          path: path.detailCinema,
+          path: path.filmCreate,
           element: (
-            <DefaultLayout>
-              <PageTitle title={PAGE_TITLES.detailCinema} />
+            <DefaultLayout title={PAGE_TITLES.filmCreate}>
+              <CreateFilm />
+            </DefaultLayout>
+          )
+        },
+        {
+          path: path.filmDetail,
+          element: (
+            <DefaultLayout title={PAGE_TITLES.filmDetail}>
+              <FilmDetail />
+            </DefaultLayout>
+          )
+        },
+        {
+          path: path.cinemaDetail,
+          element: (
+            <DefaultLayout title={PAGE_TITLES.CinemaDetail}>
               <CinemaDetail />
             </DefaultLayout>
           )
@@ -100,8 +118,7 @@ export default function useRouteElements() {
         {
           path: path.createScreen,
           element: (
-            <DefaultLayout>
-              <PageTitle title={PAGE_TITLES.createScreen} />
+            <DefaultLayout title={PAGE_TITLES.createScreen}>
               <CreateScreen isEdit={false} />
             </DefaultLayout>
           )
@@ -109,40 +126,20 @@ export default function useRouteElements() {
         {
           path: path.updateScreen,
           element: (
-            <DefaultLayout>
-              <PageTitle title={PAGE_TITLES.createScreen} />
+            <DefaultLayout title={PAGE_TITLES.createScreen}>
               <CreateScreen isEdit={true} />
+            </DefaultLayout>
+          )
+        },
+        {
+          path: path.show,
+          element: (
+            <DefaultLayout title={PAGE_TITLES.Show}>
+              <Show />
             </DefaultLayout>
           )
         }
       ]
-    },
-    {
-      path: path.film,
-      element: (
-        <DefaultLayout>
-          <PageTitle title={PAGE_TITLES.film} />
-          <Film />
-        </DefaultLayout>
-      )
-    },
-    {
-      path: path.filmCreate,
-      element: (
-        <DefaultLayout>
-          <PageTitle title={PAGE_TITLES.filmCreate} />
-          <CreateFilm />
-        </DefaultLayout>
-      )
-    },
-    {
-      path: path.filmDetail,
-      element: (
-        <DefaultLayout>
-          <PageTitle title={PAGE_TITLES.filmDetail} />
-          <FilmDetail />
-        </DefaultLayout>
-      )
     },
     {
       path: '',
@@ -158,15 +155,6 @@ export default function useRouteElements() {
           )
         }
       ]
-    },
-    {
-      path: path.show,
-      element: (
-        <DefaultLayout>
-          <PageTitle title='Show | CineStar' />
-          <Show />
-        </DefaultLayout>
-      )
     }
   ])
 }

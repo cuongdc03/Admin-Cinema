@@ -1,5 +1,5 @@
-import { customFetch, showError } from '../util/http'
 import { CinemaType } from '../types/cinema'
+import { customFetch, showError } from '../util/http'
 import { CINEMA_ADMIN_URL } from './constant'
 
 export const getCinemas = async (): Promise<CinemaType[]> => {
@@ -18,12 +18,10 @@ export const updateCinema = async (data: CinemaType): Promise<CinemaType> => {
   return await customFetch.put(`${CINEMA_ADMIN_URL}`, { body: data, signalKey: 'updateCinema' }).catch(showError)
 }
 
-export const deleteCinema = async (
-  id: number,
-  setCinemas: React.Dispatch<React.SetStateAction<CinemaType[]>>
-): Promise<void> => {
-  const response = await customFetch.delete(`${CINEMA_ADMIN_URL}`, {
-    signalKey: 'deleteCinema'
-  })
-  setCinemas((prevCinemas) => prevCinemas.filter((c) => c.id !== id))
+export const deleteCinema = async (id: number): Promise<void> => {
+  return await customFetch
+    .delete(`${CINEMA_ADMIN_URL}/${id}`, {
+      signalKey: 'deleteCinema'
+    })
+    .catch(showError)
 }
