@@ -6,13 +6,21 @@ import IconHideAll from '@/assets/ic-hide-all.svg?react'
 import SeatLegendItem from './SeatLegendItem'
 import { adjustSeatNameToMatrix, changeStatusOfSeat } from '@/util/createMatrix'
 import { SeatRow } from '@/types/seat'
+import IconClose from '@/assets/ic-close.svg?react'
 
 interface SeatMatrixTableProps {
   seatMatrix: SeatRow[]
-  setSeatMatrix: React.Dispatch<React.SetStateAction<SeatRow[]>>
+  setSeatMatrix?: React.Dispatch<React.SetStateAction<SeatRow[]>>
+  isReadOnly?: boolean
+  hideShowSeatMatrix?: () => void
 }
 
-const SeatMatrixTable: React.FC<SeatMatrixTableProps> = ({ seatMatrix, setSeatMatrix }) => {
+const SeatMatrixTable: React.FC<SeatMatrixTableProps> = ({
+  seatMatrix,
+  setSeatMatrix,
+  isReadOnly = false,
+  hideShowSeatMatrix
+}) => {
   const tableRef = useRef<HTMLTableElement | null>(null)
   const [tableWidth, setTableWidth] = useState('auto')
 
@@ -28,7 +36,7 @@ const SeatMatrixTable: React.FC<SeatMatrixTableProps> = ({ seatMatrix, setSeatMa
         return row
       }
     })
-    setSeatMatrix(adjustSeatNameToMatrix(newSeatMatrix))
+    setSeatMatrix && setSeatMatrix(adjustSeatNameToMatrix(newSeatMatrix))
   }
 
   const chooseCol = (colId: number, isSeat: boolean) => {
@@ -40,11 +48,11 @@ const SeatMatrixTable: React.FC<SeatMatrixTableProps> = ({ seatMatrix, setSeatMa
         )
       }
     })
-    setSeatMatrix(adjustSeatNameToMatrix(newSeatMatrix))
+    setSeatMatrix && setSeatMatrix(adjustSeatNameToMatrix(newSeatMatrix))
   }
 
   const toggleSeatStatus = (seatMatrix: SeatRow[], rowName: string, colId: number) => {
-    setSeatMatrix(changeStatusOfSeat(seatMatrix, rowName, colId))
+    setSeatMatrix && setSeatMatrix(changeStatusOfSeat(seatMatrix, rowName, colId))
   }
 
   useEffect(() => {
@@ -54,10 +62,18 @@ const SeatMatrixTable: React.FC<SeatMatrixTableProps> = ({ seatMatrix, setSeatMa
   }, [seatMatrix])
 
   return (
-    <div className='mt-2 overflow-auto rounded-lg bg-dark-blue-900 px-10 pb-4 pt-1'>
+    <div className='relative mt-2 overflow-auto rounded-lg bg-dark-blue-900 px-10 pb-4 pt-1'>
+      {isReadOnly && (
+        <IconClose
+          className='absolute right-3 top-3 h-[26px] w-[26px] filter-light-gray-custom hover:cursor-pointer hover:filter-dark-gray-custom'
+          onClick={hideShowSeatMatrix}
+        />
+      )}
       <div className='relative mx-auto mt-10 flex justify-center' style={{ width: tableWidth }}>
         <img src={ImgScreen} alt='screen' />
-        <h4 className='absolute left-1/2 top-[6px] -translate-x-1/2 text-xl font-bold tracking-wider'>Screen</h4>
+        <h4 className='absolute left-1/2 top-[6px] -translate-x-1/2 text-xl font-bold tracking-wider text-white'>
+          Screen
+        </h4>
       </div>
 
       <table ref={tableRef} className='mx-auto mt-3'>
@@ -76,29 +92,34 @@ const SeatMatrixTable: React.FC<SeatMatrixTableProps> = ({ seatMatrix, setSeatMa
                       <Seat
                         seat={seat}
                         toggleSeatStatus={() => toggleSeatStatus(seatMatrix, seatRow.rowName, seat.colId)}
+                        isReadOnly={isReadOnly}
                       />
                     </td>
                   )
                 })}
-                <td key={`${seatRow.rowName}-${rowIndex}-edit-btn`} className='px-1 py-[3px]'>
-                  <div
-                    className='flex h-[30px] w-[40px] items-center justify-center rounded-md bg-stone-700 hover:cursor-pointer hover:bg-stone-800'
-                    onClick={() => chooseRow(seatRow.rowName, true)}
-                  >
-                    <IconEditAll />
-                  </div>
-                </td>
-                <td key={`${seatRow.rowName}-${rowIndex}-hide-btn`} className='px-1 py-[3px]'>
-                  <div
-                    className='flex h-[30px] w-[40px] items-center justify-center rounded-md bg-red-800 hover:cursor-pointer hover:bg-red-900'
-                    onClick={() => chooseRow(seatRow.rowName, false)}
-                  >
-                    <IconHideAll />
-                  </div>
-                </td>
+                {!isReadOnly && (
+                  <>
+                    <td key={`${seatRow.rowName}-${rowIndex}-edit-btn`} className='px-1 py-[3px]'>
+                      <div
+                        className='flex h-[30px] w-[40px] items-center justify-center rounded-md bg-stone-700 hover:cursor-pointer hover:bg-stone-800'
+                        onClick={() => chooseRow(seatRow.rowName, true)}
+                      >
+                        <IconEditAll />
+                      </div>
+                    </td>
+                    <td key={`${seatRow.rowName}-${rowIndex}-hide-btn`} className='px-1 py-[3px]'>
+                      <div
+                        className='flex h-[30px] w-[40px] items-center justify-center rounded-md bg-red-800 hover:cursor-pointer hover:bg-red-900'
+                        onClick={() => chooseRow(seatRow.rowName, false)}
+                      >
+                        <IconHideAll />
+                      </div>
+                    </td>
+                  </>
+                )}
               </tr>
             ))}
-          {seatMatrix.length > 0 && (
+          {!isReadOnly && seatMatrix.length > 0 && (
             <tr key='select-all'>
               <td className='px-1 py-[3px]'>
                 <div className='flex min-h-[30px] w-full min-w-[40px] items-center justify-center text-lg font-bold'></div>
@@ -115,7 +136,7 @@ const SeatMatrixTable: React.FC<SeatMatrixTableProps> = ({ seatMatrix, setSeatMa
               ))}
             </tr>
           )}
-          {seatMatrix.length > 0 && (
+          {!isReadOnly && seatMatrix.length > 0 && (
             <tr key='delete-all'>
               <td className='px-1 py-[3px]'>
                 <div className='flex min-h-[30px] w-full min-w-[40px] items-center justify-center text-lg font-bold'></div>
@@ -137,7 +158,13 @@ const SeatMatrixTable: React.FC<SeatMatrixTableProps> = ({ seatMatrix, setSeatMa
 
       <div className='mt-10 flex w-full items-center justify-center gap-8'>
         <SeatLegendItem className='h-[30px] w-[40px]' label='Regular Seat' />
-        <SeatLegendItem className='h-[30px] w-[40px] opacity-[0.05]' label='No Seat' />
+        {isReadOnly && (
+          <>
+            <SeatLegendItem className='h-[30px] w-[40px] filter-blue-custom' label='Held Seat' />
+            <SeatLegendItem className='h-[30px] w-[40px] filter-dark-gray-custom' label='Booked Seat' />
+          </>
+        )}
+        {!isReadOnly && <SeatLegendItem className='h-[30px] w-[40px] opacity-[0.05]' label='No Seat' />}
       </div>
     </div>
   )

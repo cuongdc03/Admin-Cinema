@@ -2,7 +2,7 @@ export type seat = {
   name: string
   isSeat: boolean
   isSold: boolean
-  onHold: boolean
+  onHold: string
   colId: number
   seatId: number
   price: number
