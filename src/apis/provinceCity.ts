@@ -1,4 +1,4 @@
-import { ProvinceCityType } from '../types/ProvinceCity'
+import { ProvinceCityType } from '../types/provinceCity'
 import { customFetch, showError } from '../util/http'
 import { PROVINCE_CITY_URL } from './constant'
 

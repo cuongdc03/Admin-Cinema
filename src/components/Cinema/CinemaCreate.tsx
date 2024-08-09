@@ -6,7 +6,7 @@ import Breadcrumb from '../Breadcrumbs/Breadcrumb'
 import Input from '../InputComponent/Input'
 import { path } from '@/router/path'
 import { CinemaType } from '@/types/cinema'
-import { ProvinceCityType } from '@/types/ProvinceCity'
+import { ProvinceCityType } from '@/types/provinceCity'
 import { getProvinceCities } from '@/apis/provinceCity'
 
 const CinemaCreate: React.FC = () => {

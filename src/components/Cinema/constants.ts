@@ -29,4 +29,7 @@ export const UPDATE_SCREEN = 'Update Screen'
 export const UPDATE_SCREEN_SUCCESS = 'Update screen successfully'
 export const UPDATE_SCREEN_FAILED = 'Error occurred while updating screen. Try again!'
 
+export const DELETE_SCREEN_SUCCESS = 'Delete screen successfully'
+export const DELETE_SCREEN_FAILED = 'Error occurred while deleting screen. Try again!'
+
 export const SUCCESS_STATUS = 200
