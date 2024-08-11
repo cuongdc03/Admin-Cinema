@@ -1,7 +1,9 @@
+import { deleteShow } from '@/apis/show'
 import { GridColDef } from '@mui/x-data-grid'
 import moment from 'moment'
-import { FaTableCells } from 'react-icons/fa6'
+import { FaTableCells, FaTrash } from 'react-icons/fa6'
 import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 export const formatPrice = (price: number) =>
   new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price)
@@ -38,18 +40,26 @@ export const getDataGridColumns = (handleShowMatrix: (showId: number) => void): 
     }
   },
   {
-    field: 'seatMatrix',
-    headerName: 'Seat Matrix',
+    field: 'Action',
+    headerName: 'Action',
     align: 'center',
-    width: 150,
+    width: 200,
     headerAlign: 'center',
     renderCell: (params) => (
-      <button
-        onClick={() => handleShowMatrix(params.row.id)}
-        className='mr-2 rounded bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-700'
-      >
-        <FaTableCells />
-      </button>
+      <div className='flex h-full w-full items-center justify-center gap-4'>
+        <button
+          onClick={() => handleShowMatrix(params.row.id)}
+          className='rounded bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-700'
+        >
+          <FaTableCells />
+        </button>
+        <button
+          onClick={() => handleDeleteShow(params.row.id)}
+          className='rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700'
+        >
+          <FaTrash />
+        </button>
+      </div>
     )
   }
 ]
@@ -74,5 +84,14 @@ export const DATA_GRID_SETTINGS = {
     '& .MuiDataGrid-footerContainer': {
       display: 'none'
     }
+  }
+}
+
+export const handleDeleteShow = async (showId: number) => {
+  try {
+    await deleteShow(showId)
+    toast.success('Show deleted successfully')
+  } catch (error) {
+    toast.error('Failed to delete show')
   }
 }

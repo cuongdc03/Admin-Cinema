@@ -45,9 +45,7 @@ const CinemaDetail: React.FC = () => {
         name: city.name
       }))
       setProvinceCities(data)
-    } catch (error) {
-      toast.error('Failed to fetch province/cities')
-    }
+    } catch (error) {}
   }
 
   const fetchData = async () => {
