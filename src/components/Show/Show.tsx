@@ -12,9 +12,9 @@ import { FilmType } from '../../types/film'
 import { ShowType } from '../../types/show'
 import { ScreenType } from '../../types/screen'
 import { getShowById, getShowsByQuery } from '@/apis/show'
-import { getOnCastingFilms } from '@/apis/film'
 import SeatMatrixTable from '../Cinema/SeatMatrixTable'
 import { SeatRow } from '@/types/seat'
+import { getFilms } from '@/apis/film'
 
 const Show: React.FC = () => {
   const [cinemas, setCinemas] = useState<CinemaType[]>([])
@@ -43,7 +43,7 @@ const Show: React.FC = () => {
 
   const fetchFilms = async () => {
     try {
-      const response = await getOnCastingFilms()
+      const response = await getFilms()
       setFilms(response)
     } catch (error) {
       toast.error('Failed to fetch films')
@@ -94,7 +94,6 @@ const Show: React.FC = () => {
 
       setShows(showsData)
     } catch (error) {
-      toast.error('Failed to fetch shows')
       setShows([])
     } finally {
       setIsLoading(false)
@@ -198,19 +197,21 @@ const Show: React.FC = () => {
             <div key={cinema.id}>
               <h2 className='mb-2 rounded bg-blue-500 py-2 text-center text-xl  font-bold text-white'>{cinema.name}</h2>
               {cinema.screens
-                .filter((screen) => screen.status)
+                .filter((screen) => screen.shows.filter((show) => show.status).length > 0)
                 .map((screen) => (
                   <div key={screen.id}>
                     <h3 className='text-md mb-1 font-semibold text-black'>{screen.name}</h3>
                     <DataGrid
-                      rows={screen.shows.map((show) => ({
-                        id: show.id,
-                        filmName: show.film.filmName,
-                        timeStart: show.timeStart,
-                        price: show.price,
-                        filmId: show.filmId,
-                        duration: show.film.duration
-                      }))}
+                      rows={screen.shows
+                        .filter((show) => show.status)
+                        .map((show) => ({
+                          id: show.id,
+                          filmName: show.film.filmName,
+                          timeStart: show.timeStart,
+                          price: show.price,
+                          filmId: show.filmId,
+                          duration: show.film.duration
+                        }))}
                       columns={getDataGridColumns(handleShowMatrix)}
                       {...DATA_GRID_SETTINGS}
                     />
