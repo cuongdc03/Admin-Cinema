@@ -212,7 +212,7 @@ const Show: React.FC = () => {
                           filmId: show.filmId,
                           duration: show.film.duration
                         }))}
-                      columns={getDataGridColumns(handleShowMatrix)}
+                      columns={getDataGridColumns(handleShowMatrix, handleSearch)}
                       {...DATA_GRID_SETTINGS}
                     />
                     <div className='py-2'>
