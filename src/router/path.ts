@@ -3,7 +3,7 @@ export const path = {
   film: '/film',
   filmCreate: '/film/create',
   filmDetail: '/film/:id',
-  dashboard: '/dashboard',
+  dashboard: '/',
   cinema: '/cinema',
   createCinema: '/cinema/create',
   detailCinema: '/cinema/:id',

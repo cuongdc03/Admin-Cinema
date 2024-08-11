@@ -8,7 +8,7 @@ import { toast } from 'react-toastify'
 export const formatPrice = (price: number) =>
   new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price)
 
-export const getDataGridColumns = (handleShowMatrix: (showId: number) => void): GridColDef[] => [
+export const getDataGridColumns = (handleShowMatrix: (showId: number) => void, fetchShows: () => void): GridColDef[] => [
   { field: 'id', headerName: 'ID', width: 100 },
   {
     field: 'filmName',
@@ -54,7 +54,7 @@ export const getDataGridColumns = (handleShowMatrix: (showId: number) => void): 
           <FaTableCells />
         </button>
         <button
-          onClick={() => handleDeleteShow(params.row.id)}
+          onClick={() => handleDeleteShow(params.row.id, fetchShows)}
           className='rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700'
         >
           <FaTrash />
@@ -87,10 +87,11 @@ export const DATA_GRID_SETTINGS = {
   }
 }
 
-export const handleDeleteShow = async (showId: number) => {
+export const handleDeleteShow = async (showId: number, fetchShows: () => void) => {
   try {
     await deleteShow(showId)
     toast.success('Show deleted successfully')
+    fetchShows() // Fetch lại dữ liệu show sau khi xóa thành công
   } catch (error) {
     toast.error('Failed to delete show')
   }
