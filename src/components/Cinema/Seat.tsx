@@ -45,10 +45,9 @@ export default function Seat({ seat, toggleSeatStatus, isReadOnly }: Props) {
       {(isReadOnly || isSelected) && (
         <span
           className={cn('absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-sm font-semibold', {
-            'text-white-custom-700':
-              isReadOnly && !seat.isSold && seat.onHold && !isCurrentTimeWithOtherTimezoneGreaterThan(seat.onHold),
-            'text-blue-custom-700': (isReadOnly && seat.isSold) || (!isReadOnly && isSelected),
             'text-purple-custom-700': isReadOnly && !seat.isSold,
+            'text-white-custom-700':
+              isReadOnly && (seat.isSold || (seat.onHold && !isCurrentTimeWithOtherTimezoneGreaterThan(seat.onHold)))
           })}
         >
           {seat.name}

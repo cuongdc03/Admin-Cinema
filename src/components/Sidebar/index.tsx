@@ -99,7 +99,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               icon: <GiFilmSpool />,
               path: '/show',
               active: pathname.startsWith('/show')
-            },
+            }
           ]}
         />
       </div>

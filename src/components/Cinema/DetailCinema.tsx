@@ -28,34 +28,48 @@ const CinemaDetail: React.FC = () => {
     formState: { errors }
   } = methods
 
-  const fetchCinemaDetail = async () => {
-    try {
-      const response = await getCinema(Number(id))
-      reset(response)
-    } catch (error) {
-      toast.error('Failed to fetch cinema details')
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch province cities first
+        const provinceCitiesData = await getProvinceCities()
+        const formattedProvinceCities = provinceCitiesData.map((city) => ({
+          id: city.id,
+          name: city.name,
+        }))
+        setProvinceCities(formattedProvinceCities)
+
+        // Fetch cinema details after province cities are loaded
+        const response = await getCinema(Number(id))
+        reset(response)
+
+        if (response.provinceCityId) {
+          const selectedCity = formattedProvinceCities.find((city) => city.id === response.provinceCityId)
+          if (selectedCity) {
+            setValue('provinceCity.name', selectedCity.name)
+          }
+        }
+      } catch (error) {
+      } finally {
+        setLoading(false)
+      }
     }
-  }
 
-  const fetchProvinceCities = async () => {
-    try {
-      const provinceCities = await getProvinceCities()
-      const data = provinceCities.map((city) => ({
-        id: city.id,
-        name: city.name
-      }))
-      setProvinceCities(data)
-    } catch (error) {}
-  }
-
-  const fetchData = async () => {
-    await Promise.all([fetchCinemaDetail(), fetchProvinceCities()])
-    setLoading(false)
-  }
+    fetchData()
+  }, [id, reset, setValue])
 
   useEffect(() => {
-    fetchData()
-  }, [id, setValue])
+    const subscription = watch((value, { name }) => {
+      if (name === 'provinceCity.name') {
+        const selectedCity = provinceCities.find((city) => city.name === value.provinceCity?.name)
+        if (selectedCity) {
+          setValue('provinceCityId', selectedCity.id)
+        }
+      }
+    })
+
+    return () => subscription.unsubscribe()
+  }, [watch, provinceCities, setValue])
 
   const onSubmit: SubmitHandler<CinemaType> = async (data) => {
     try {
@@ -65,16 +79,6 @@ const CinemaDetail: React.FC = () => {
       toast.error('Failed to save changes')
     }
   }
-
-  useEffect(() => {
-    const subscription = watch((value, { name }) => {
-      if (name === 'provinceCity') {
-        const selectedCity = provinceCities.find((city) => city.name === value.provinceCity?.name)
-        setValue('provinceCity.id', selectedCity ? selectedCity.id : 0)
-      }
-    })
-    return () => subscription.unsubscribe()
-  }, [watch, provinceCities, setValue])
 
   const address = watch('address')
   const provinceCity = watch('provinceCity')
@@ -121,19 +125,25 @@ const CinemaDetail: React.FC = () => {
                   </label>
                   <select
                     {...register('provinceCity.name', { required: 'Province/City is required' })}
+                    defaultValue={provinceCity?.name || ''}
                     className='w-full rounded-lg border-[1.5px] border-graydark bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary'
                   >
-                    <option value='' disabled>
-                      Select Province/City
-                    </option>
-                    {provinceCities.map((city) => (
-                      <option key={city.id} value={city.name}>
-                        {city.name}
+                    {provinceCity?.name && (
+                      <option value={provinceCity.name} key={provinceCity.id}>
+                        {provinceCity.name}
                       </option>
-                    ))}
+                    )}
+                    {provinceCities
+                      .filter((city) => city.name !== provinceCity?.name)
+                      .map((city) => (
+                        <option key={city.id} value={city.name}>
+                          {city.name}
+                        </option>
+                      ))}
                   </select>
                   {errors.provinceCity && <span className='text-red-500'>{errors.provinceCity.message}</span>}
                 </div>
+
                 <button
                   className='hover:bg-primary-dark mt-4 rounded-lg bg-primary px-4 py-2 text-white shadow-md focus:outline-none focus:ring-2 focus:ring-primary'
                   type='submit'

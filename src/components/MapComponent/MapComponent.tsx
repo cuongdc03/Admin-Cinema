@@ -2,11 +2,20 @@ import React, { useEffect, useState } from 'react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import { toast } from 'react-toastify'
+import { Icon } from 'leaflet'
+import { FaMapMarkerAlt } from 'react-icons/fa'
+import ReactDOMServer from 'react-dom/server'
 import { API_URL } from './constant'
+
 interface MapComponentProps {
   address: string
   provinceCity: string
 }
+
+const customIcon = new Icon({
+  iconUrl: `data:image/svg+xml;base64,${btoa(ReactDOMServer.renderToString(<FaMapMarkerAlt size={38} color='red' />))}`,
+  iconSize: [30, 30]
+})
 
 const MapComponent: React.FC<MapComponentProps> = ({ address, provinceCity }) => {
   const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number }>({ lat: 0, lng: 0 })
@@ -45,7 +54,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ address, provinceCity }) =>
       ) : (
         <MapContainer center={mapCenter} zoom={25} className='z-10 h-full w-full'>
           <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
-          <Marker position={mapCenter}>
+          <Marker position={mapCenter} icon={customIcon}>
             <Popup>Cinema Location</Popup>
           </Marker>
         </MapContainer>

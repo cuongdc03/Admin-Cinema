@@ -17,7 +17,7 @@ export const AGE_RATE_LIST = ['U', 'PG', '12A', '12', '15', '18']
 export const CATEGORIES_LIST = [
   'Action',
   'Adventure',
-  'Animation',
+  'Animated',
   'Comedy',
   'Drama',
   'Fantasy',

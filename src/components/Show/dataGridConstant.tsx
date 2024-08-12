@@ -8,7 +8,10 @@ import { toast } from 'react-toastify'
 export const formatPrice = (price: number) =>
   new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price)
 
-export const getDataGridColumns = (handleShowMatrix: (showId: number) => void, fetchShows: () => void): GridColDef[] => [
+export const getDataGridColumns = (
+  handleShowMatrix: (showId: number) => void,
+  fetchShows: () => void
+): GridColDef[] => [
   { field: 'id', headerName: 'ID', width: 100 },
   {
     field: 'filmName',
